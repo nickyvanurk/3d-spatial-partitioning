@@ -69,9 +69,9 @@ class Octree {
             const height = this.region.height / 2;
             const depth = this.region.depth / 2;
 
-            const x = (i & 1) * width;
-            const y = ((i >> 1) & 1) * height;
-            const z = ((i >> 2) & 1) * depth;
+            const x = this.region.position.x + (i & 1) * width;
+            const y = this.region.position.y + ((i >> 1) & 1) * height;
+            const z = this.region.position.z + ((i >> 2) & 1) * depth;
 
             const region = new BoundingBox(x, y, z, width, height, depth);
 
@@ -79,5 +79,48 @@ class Octree {
         }
 
         this.divided = true;
+    }
+
+    // Used for octree visualisation; not essential
+    show(scene) {
+        var material = new THREE.LineBasicMaterial({
+            color: 0xff0000,
+            transparent: true,
+            opacity: 0.1
+        });
+        var geometry = new THREE.Geometry();
+
+        const r = this.region;
+        const p = this.region.position;
+
+        geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z));
+        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z));
+        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z));
+        geometry.vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z));
+
+        geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z));
+        geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z + r.depth));
+        geometry.vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z + r.depth));
+        geometry.vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z));
+
+        geometry.vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z + r.depth));
+        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z + r.depth));
+        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z + r.depth));
+        geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z + r.depth));
+
+        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z + r.depth));
+        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z));
+        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z));
+        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z + r.depth));
+
+        const wireframe = new THREE.Line(geometry, material);
+
+        scene.add(wireframe);
+
+        if (this.divided) {
+            for (const child of this.children) {
+                child.show(scene);
+            }
+        }   
     }
 }

@@ -1,16 +1,16 @@
 const fpsLimit = 30;
 
-const regionWidth = 200;
-const regionHeight = 200;
-const regionDepth = 200;
+const regionWidth = 300;
+const regionHeight = 300;
+const regionDepth = 300;
 const regionCapacity = 4;
 
-const points = 100;
+const points = 50;
 
 const region = new BoundingBox(
-    regionWidth / 2,
-    regionHeight / 2,
-    regionDepth / 2,
+    -regionWidth / 2,
+    -regionHeight / 2,
+    -regionDepth / 2,
     regionWidth,
     regionHeight,
     regionDepth
@@ -32,9 +32,9 @@ function init() {
 
     for (let i = 0; i < points; i++) {
         let point = new Point(
-            parseInt(Math.random() * regionWidth - region.position.x),
-            parseInt(Math.random() * regionHeight  - region.position.y),
-            parseInt(Math.random() * regionDepth  - region.position.z)
+            parseInt(Math.random() * regionWidth + region.position.x),
+            parseInt(Math.random() * regionHeight  + region.position.y),
+            parseInt(Math.random() * regionDepth  + region.position.z)
         );
 
         pointsGeometry.vertices.push(new THREE.Vector3(
@@ -46,10 +46,11 @@ function init() {
         octree.insert(point);
     }
 
-    scene.add(new THREE.Points(
-        pointsGeometry, 
-        new THREE.PointsMaterial({ color: 0x00afaf })
-    ));
+    const particleMaterial = new THREE.PointsMaterial({ color: 0xffffff });
+
+    particleMaterial.size = 2;
+
+    scene.add(new THREE.Points(pointsGeometry, particleMaterial));
 
     // init the WebGL renderer and append it to the Dom
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -60,6 +61,8 @@ function init() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     window.addEventListener('resize', onWindowResize, false);
+
+    octree.show(scene);
 }
 
 
