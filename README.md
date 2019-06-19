@@ -2,7 +2,7 @@
 
 A 3D boids simulation optimised by using a quadtree, the 3D rendering has been done with three.js.
 
-<img src="screenshot.png">
+![](simulation.gif)
 
 ## License
 
