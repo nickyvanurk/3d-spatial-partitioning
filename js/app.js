@@ -23,6 +23,7 @@ let camera,
 scene,
 renderer,
 controls,
+boids,
 queryPoints,
 queryRegion,
 queryRegionWireframe,
@@ -36,7 +37,7 @@ function init() {
     // create the Scene
     scene = new THREE.Scene();
 
-    generateBoids(boidsNum);
+    boids = generateBoids(boidsNum);
 
     // region to query boids in
     queryRegion = new BoundingBox(0, 0, 0, 156, 133, 165);
@@ -104,9 +105,21 @@ function onWindowKeyDown(event) {
     queryRegionWireframe.position.x = queryRegion.position.x;
     queryRegionWireframe.position.y = queryRegion.position.y;
     queryRegionWireframe.position.z = queryRegion.position.z;
+};
 
-    scene.remove(queryRegionBoids);
+function update() {
+    controls.update();
 
+    for (const boid of boids) {
+        boid.update();
+    }
+}
+
+function render() {
+    scene.remove(scene.getObjectByName('boids'));
+    scene.remove(scene.getObjectByName('queryRegionBoids'));
+
+    renderBoids(scene, boids);
     queryRegionBoids = renderBoids(
         scene,
         queryPoints,
@@ -114,13 +127,7 @@ function onWindowKeyDown(event) {
         4,
         'queryRegionBoids'
     );
-};
 
-function update() {
-    controls.update();
-}
-
-function render() {
     renderer.render(scene, camera);
 }
 
@@ -140,6 +147,8 @@ function generateBoids(boidsNum) {
     }
 
     renderBoids(scene, boids);
+
+    return boids;
 }
 
 function animate() {
