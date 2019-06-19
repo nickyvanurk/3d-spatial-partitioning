@@ -25,9 +25,11 @@ class Boid {
         this.acceleration.set(0, 0, 0);
 
         const alignment = this.align(boids);
+        const separation = this.separation(boids);
         const cohesion = this.cohesion(boids);
 
         this.acceleration.add(alignment);
+        this.acceleration.add(separation);
         this.acceleration.add(cohesion);
     }
 
@@ -46,6 +48,44 @@ class Boid {
 
             if (boid != this && distance < perceptionRadius) {
                 steering.add(boid.velocity);
+                nearbyBoids++;
+            }
+        }
+
+        if (nearbyBoids > 0) {
+            steering.divideScalar(nearbyBoids);
+            steering.setLength(this.maxSpeed);
+            steering.sub(this.velocity);
+
+            if (steering.length() > this.maxForce)
+                steering.setLength(this.maxForce);
+        };
+
+        return steering;
+    }
+
+    separation(boids) {
+        const perceptionRadius = 300;
+
+        let steering = new THREE.Vector3(0, 0, 0);
+        let nearbyBoids = 0;
+
+        for (const boid of boids) {
+            const distance = (
+                Math.pow(this.position.x - boid.position.x, 2) +
+                Math.pow(this.position.y - boid.position.y, 2) +
+                Math.pow(this.position.z - boid.position.z, 2)
+            ) * 0.5;
+
+            if (boid != this && distance < perceptionRadius) {
+                let difference = new THREE.Vector3()
+                    .copy(this.position)
+                    .sub(boid.position);
+
+                difference.divideScalar(distance);
+
+                steering.add(difference);
+
                 nearbyBoids++;
             }
         }
