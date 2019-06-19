@@ -1,4 +1,4 @@
-# [3D Boids Spatial Partitioning](http://nickyvanurk.com/boids-octree-simulation/)
+# [3D Spatial Partitioning](http://nickyvanurk.com/boids-octree-simulation/)
 
 A 3D [Boids](https://en.wikipedia.org/wiki/Boids) implementation to demonstrate **Spatial Partitioning** implemented with an **Octree**.
 
