@@ -33,3 +33,20 @@ function renderCubeWireframe(scene, region, color, opacity = 0.1) {
 
     scene.add(wireframe);
 }
+
+function renderParticles(scene, points, color = 'white', size = 2) {
+    const pointsGeometry = new THREE.Geometry();
+    const particleMaterial = new THREE.PointsMaterial({ color, size });
+
+    // particleMaterial.size = 2;
+
+    for (let i = 0; i < points.length; i++) {
+        pointsGeometry.vertices.push(new THREE.Vector3(
+            points[i].position.x,
+            points[i].position.y,
+            points[i].position.z
+        ));
+    }
+
+    scene.add(new THREE.Points(pointsGeometry, particleMaterial));
+}
