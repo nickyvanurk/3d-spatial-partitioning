@@ -23,9 +23,20 @@ class BoundingBox {
     contains(point) {
         const p = point.position;
 
-        return p.x >= this.position.x && p.x < this.position.x + this.width &&
-               p.y >= this.position.y && p.y < this.position.y + this.height &&
-               p.z >= this.position.z && p.z < this.position.z + this.depth;
+        return p.x >= this.position.x && p.x <= this.position.x + this.width &&
+               p.y >= this.position.y && p.y <= this.position.y + this.height &&
+               p.z >= this.position.z && p.z <= this.position.z + this.depth;
+    }
+
+    intersects(range) {
+        const r = range.position;
+
+        return !(r.x - r.width > this.position.x + this.width ||
+               r.x + r.width < this.position.x - this.width ||
+               r.y - r.height > this.position.y + this.height ||
+               r.y + r.height < this.position.y - this.height ||
+               r.z - r.depth > this.position.z + this.depth ||
+               r.z + r.depth < this.position.z - this.depth);
     }
 }
 
@@ -81,41 +92,27 @@ class Octree {
         this.divided = true;
     }
 
+    query(range, found) {
+        if (!this.region.intersects(range)) {
+            return [];
+        }
+
+        for (const p of this.points) {
+            if (range.contains(p)) {
+                found.push(p);
+            }
+        }
+
+        if (this.divided) {
+            for (const child of this.children) {
+                child.query(range, found);
+            }
+        }
+    }
+
     // Used for octree visualisation; not essential
     show(scene) {
-        var material = new THREE.LineBasicMaterial({
-            color: 0xff0000,
-            transparent: true,
-            opacity: 0.1
-        });
-        var geometry = new THREE.Geometry();
-
-        const r = this.region;
-        const p = this.region.position;
-
-        geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z));
-        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z));
-        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z));
-        geometry.vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z));
-
-        geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z));
-        geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z + r.depth));
-        geometry.vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z + r.depth));
-        geometry.vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z));
-
-        geometry.vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z + r.depth));
-        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z + r.depth));
-        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z + r.depth));
-        geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z + r.depth));
-
-        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z + r.depth));
-        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z));
-        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z));
-        geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z + r.depth));
-
-        const wireframe = new THREE.Line(geometry, material);
-
-        scene.add(wireframe);
+        renderCubeWireframe(scene, this.region, 'red');
 
         if (this.divided) {
             for (const child of this.children) {

@@ -5,7 +5,7 @@ const regionHeight = 300;
 const regionDepth = 300;
 const regionCapacity = 4;
 
-const points = 50;
+const particlesNum = 300;
 
 const region = new BoundingBox(
     -regionWidth / 2,
@@ -27,30 +27,16 @@ function init() {
     // create the Scene
     scene = new THREE.Scene();
 
-    // generate points
-    const pointsGeometry = new THREE.Geometry();
+    generateParticles(particlesNum);
 
-    for (let i = 0; i < points; i++) {
-        let point = new Point(
-            parseInt(Math.random() * regionWidth + region.position.x),
-            parseInt(Math.random() * regionHeight  + region.position.y),
-            parseInt(Math.random() * regionDepth  + region.position.z)
-        );
-
-        pointsGeometry.vertices.push(new THREE.Vector3(
-            point.position.x,
-            point.position.y,
-            point.position.z
-        ));
-
-        octree.insert(point);
-    }
-
-    const particleMaterial = new THREE.PointsMaterial({ color: 0xffffff });
-
-    particleMaterial.size = 2;
-
-    scene.add(new THREE.Points(pointsGeometry, particleMaterial));
+    // region to query particles in
+    const queryRegion = new BoundingBox(0, 0, 0, 156, 133, 165);
+    renderCubeWireframe(scene, queryRegion, 'skyblue', 0.8);
+    
+    // query region for intersecintg particles
+    let queryPoints = [];
+    octree.query(queryRegion, queryPoints);
+    renderParticles(scene, queryPoints, 'yellow', 3);
 
     // init the WebGL renderer and append it to the Dom
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -80,13 +66,29 @@ function render() {
     renderer.render(scene, camera);
 }
 
+function generateParticles(particles) {
+    let points = [];
+
+    for (let i = 0; i < particles; i++) {
+        let point = new Point(
+            parseInt(Math.random() * regionWidth + region.position.x),
+            parseInt(Math.random() * regionHeight  + region.position.y),
+            parseInt(Math.random() * regionDepth  + region.position.z)
+        );
+
+        points.push(point);
+
+        octree.insert(point);
+    }
+
+    renderParticles(scene, points);
+}
+
 function animate() {
     setTimeout( function() {
         requestAnimationFrame(animate);
     }, 1000 / fpsLimit);
 
-    console.log('l');
-    
     update();
     render();
 }
