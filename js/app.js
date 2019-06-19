@@ -5,7 +5,7 @@ const regionHeight = 300;
 const regionDepth = 300;
 const regionCapacity = 4;
 
-const boidsNum = 300;
+const boidsNum = 200;
 
 const speed = 10;
 
@@ -31,7 +31,7 @@ queryRegionBoids;
 
 function init() {
     // create the camera
-    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
+    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000 );
     camera.position.z = 400;
 
     // create the Scene
@@ -111,6 +111,8 @@ function update() {
     controls.update();
 
     for (const boid of boids) {
+        boid.wrapOnEdges(region);
+        boid.flock(boids);
         boid.update();
     }
 }
