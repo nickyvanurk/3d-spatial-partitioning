@@ -1,6 +1,6 @@
 class BoundingBox {
     constructor(x, y, z, width, height, depth) {
-        this.position = new Vector3(x, y, z);
+        this.position = new THREE.Vector3(x, y, z);
         this.width = width;
         this.height = height;
         this.depth = depth;

@@ -5,7 +5,7 @@ const regionHeight = 400;
 const regionDepth = 400;
 const regionCapacity = 8;
 
-const boidsNum = 500;
+const boidsNum = 400;
 const boidBoundBoxRange = 20;
 
 const speed = 10;
@@ -30,13 +30,12 @@ queryRegion,
 queryRegionWireframe,
 queryRegionBoids;
 
-
 let uiObj = {
-    perceptionRadius: 300,
+    perceptionRadius: 30,
     alignment: 1,
     separation: 1,
     cohesion: 1,
-    maxSpeed: 4,
+    maxSpeed: 2,
     maxForce: 0.2,
     octreeWireframe: true,
     regionWireframe: true,
@@ -125,6 +124,7 @@ function onWindowKeyDown(event) {
 };
 
 function update() {
+
     controls.update();
 
     queryPoints = [];
@@ -140,7 +140,9 @@ function update() {
         octree.insert(boid);
     }
 
-    for (const boid of boids) {
+    for (let i = 0; i < boids.length; i++) {
+        let boid = boids[i];
+
         boid.alignmentMultiplier = uiObj.alignment;
         boid.separationMultiplier = uiObj.separation;
         boid.cohesionMultiplier = uiObj.cohesion;
@@ -155,7 +157,7 @@ function update() {
             boidBoundBoxRange,
             boidBoundBoxRange
         );
-
+        
         nearbyBoids = octree.query(boidBoundBox);
 
         boid.wrapOnEdges(region);
@@ -165,34 +167,29 @@ function update() {
 }
 
 function render() {
-    scene.remove(scene.getObjectByName('boids'));
-    scene.remove(scene.getObjectByName('queryRegionBoids'));
+    removeObjects('boids');
+    removeObjects('queryRegionBoids');
+    removeObjects('octreeWireframe');
 
     renderBoids(scene, boids);
-    renderBoids(scene, queryPoints, 'yellow', 4, 'queryRegionBoids');
 
-    const octreeWireframes = [];
+    if (uiObj.regionWireframe) {
+        renderBoids(scene, queryPoints, 'yellow', 4, 'queryRegionBoids');
+    }
+
+    queryRegionWireframe.visible = uiObj.regionWireframe;
+
+    if (uiObj.octreeWireframe) {
+        octree.show(scene);
+    }
+
     scene.traverse ((child) => {
         if (child instanceof THREE.Line) {
             if (child.name === 'octreeWireframe') {
-                octreeWireframes.push(child);
+                child.visible = uiObj.octreeWireframe;
             }
         }
     });
-
-    for (const octreeWireframe of octreeWireframes) {
-        scene.remove(octreeWireframe);
-    }
-
-    octree.show(scene);
-
-    scene.traverse ((child) => {
-        if (child instanceof THREE.Line) {
-            child.visible = uiObj.octreeWireframe;
-        }
-    });
-
-    scene.getObjectByName('regionWireframe').visible = uiObj.regionWireframe;
 
     renderer.render(scene, camera);
 }
@@ -215,6 +212,19 @@ function generateBoids(boidsNum) {
     renderBoids(scene, boids);
 
     return boids;
+}
+
+function removeObjects(name) {
+    const objects = [];
+    scene.traverse ((child) => {
+        if (child.name === name) {
+            objects.push(child);
+        }
+    });
+
+    for (const object of objects) {
+        scene.remove(object);
+    }
 }
 
 function animate() {
