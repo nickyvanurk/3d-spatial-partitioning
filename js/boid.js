@@ -11,6 +11,12 @@ class Boid {
 
         this.maxForce = 0.2;
         this.maxSpeed = 4;
+
+        this.alignmentMultiplier = 1;
+        this.separationMultiplier = 1;
+        this.cohesionMultiplier = 1;
+
+        this.perceptionRadius = 300;
     }
 
     update() {
@@ -28,14 +34,16 @@ class Boid {
         const separation = this.separation(boids);
         const cohesion = this.cohesion(boids);
 
+        alignment.multiplyScalar(this.alignmentMultiplier);
+        separation.multiplyScalar(this.separationMultiplier);
+        cohesion.multiplyScalar(this.cohesionMultiplier);
+
         this.acceleration.add(alignment);
         this.acceleration.add(separation);
         this.acceleration.add(cohesion);
     }
 
     align(boids) {
-        const perceptionRadius = 300;
-
         let steering = new THREE.Vector3(0, 0, 0);
         let nearbyBoids = 0;
 
@@ -46,7 +54,7 @@ class Boid {
                 Math.pow(this.position.z - boid.position.z, 2)
             ) * 0.5;
 
-            if (boid != this && distance < perceptionRadius) {
+            if (boid != this && distance < this.perceptionRadius) {
                 steering.add(boid.velocity);
                 nearbyBoids++;
             }
@@ -65,8 +73,6 @@ class Boid {
     }
 
     separation(boids) {
-        const perceptionRadius = 300;
-
         let steering = new THREE.Vector3(0, 0, 0);
         let nearbyBoids = 0;
 
@@ -77,7 +83,7 @@ class Boid {
                 Math.pow(this.position.z - boid.position.z, 2)
             ) * 0.5;
 
-            if (boid != this && distance < perceptionRadius) {
+            if (boid != this && distance < this.perceptionRadius) {
                 let difference = new THREE.Vector3()
                     .copy(this.position)
                     .sub(boid.position);
@@ -103,8 +109,6 @@ class Boid {
     }
 
     cohesion(boids) {
-        const perceptionRadius = 300;
-
         let steering = new THREE.Vector3(0, 0, 0);
         let nearbyBoids = 0;
 
@@ -115,7 +119,7 @@ class Boid {
                 Math.pow(this.position.z - boid.position.z, 2)
             ) * 0.5;
 
-            if (boid != this && distance < perceptionRadius) {
+            if (boid != this && distance < this.perceptionRadius) {
                 steering.add(boid.position);
                 nearbyBoids++;
             }

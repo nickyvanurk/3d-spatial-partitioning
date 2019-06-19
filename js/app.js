@@ -29,6 +29,16 @@ queryRegion,
 queryRegionWireframe,
 queryRegionBoids;
 
+let uiObj = {
+    perceptionRadius: 300,
+    alignment: 1,
+    separation: 1,
+    cohesion: 1,
+    maxSpeed: 4,
+    maxForce: 0.2
+};
+let gui = new dat.GUI({ height : 5 * 32 - 1, width: 310 });
+
 function init() {
     // create the camera
     camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000 );
@@ -71,6 +81,13 @@ function init() {
 
     window.addEventListener('resize', onWindowResize, false);
     window.addEventListener("keydown", onWindowKeyDown, false);
+
+    gui.add(uiObj, 'perceptionRadius', 0, 1000, 10);
+    gui.add(uiObj, 'alignment', 0, 5, 0.1);
+    gui.add(uiObj, 'separation', 0, 5, 0.1);
+    gui.add(uiObj, 'cohesion', 0, 5, 0.1);
+    gui.add(uiObj, 'maxSpeed', 0, 10, 0.1);
+    gui.add(uiObj, 'maxForce', 0, 1, 0.02);
 }
 
 
@@ -111,6 +128,12 @@ function update() {
     controls.update();
 
     for (const boid of boids) {
+        boid.alignmentMultiplier = uiObj.alignment;
+        boid.separationMultiplier = uiObj.separation;
+        boid.cohesionMultiplier = uiObj.cohesion;
+        boid.maxSpeed = uiObj.maxSpeed;
+        boid.maxForce = uiObj.maxForce;
+
         boid.wrapOnEdges(region);
         boid.flock(boids);
         boid.update();
