@@ -169,13 +169,7 @@ function render() {
     scene.remove(scene.getObjectByName('queryRegionBoids'));
 
     renderBoids(scene, boids);
-    queryRegionBoids = renderBoids(
-        scene,
-        queryPoints,
-        'yellow',
-        4,
-        'queryRegionBoids'
-    );
+    renderBoids(scene, queryPoints, 'yellow', 4, 'queryRegionBoids');
 
     const octreeWireframes = [];
     scene.traverse ((child) => {
