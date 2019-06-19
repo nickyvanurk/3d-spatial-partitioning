@@ -1,8 +1,8 @@
-function renderCubeWireframe(scene, region, color) {
+function renderCubeWireframe(scene, region, color, opacity = 0.1) {
     var material = new THREE.LineBasicMaterial({
         color: color,
         transparent: true,
-        opacity: 0.1
+        opacity
     });
     var geometry = new THREE.Geometry();
 
