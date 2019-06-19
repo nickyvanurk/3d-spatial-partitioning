@@ -117,9 +117,9 @@ function onWindowKeyDown(event) {
     } else if (keyCode == 32) {
         queryRegion.position.set(0, 0, 0);
     } else if (keyCode == 81) {
-        queryRegion.position.z += speed;
-    } else if (keyCode == 69) {
         queryRegion.position.z -= speed;
+    } else if (keyCode == 69) {
+        queryRegion.position.z += speed;
     }
 };
 

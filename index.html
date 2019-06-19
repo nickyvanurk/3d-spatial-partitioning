@@ -9,7 +9,6 @@
         body {
             margin: 0 auto;
             overflow: hidden;
-            
         }
 
         .github-corner svg {
@@ -24,8 +23,33 @@
             bottom: 5px;
         }
 
-        .github-button {
-            
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            right: 0;
+            z-index: 100;
+        }
+
+        .controls p {
+            display: block;
+            padding: 0 1rem;
+            height: 0.5rem;
+            color: white;
+            opacity: 0.5;
+            font-size: 12px;
+        }
+
+        .controls span {
+            font-weight: bold;
+        }
+
+        .controls .bg {
+            position: absolute;
+            background-color: white;
+            min-width: 100%;
+            min-height: 200%;
+            z-index: -1;
+            opacity: 0.05;
         }
     </style>
 
@@ -36,6 +60,12 @@
     
     <div class="bttn-wrapper">
         <a class="github-button" href="https://github.com/nickyvanurk/boids-octree-simulation/stargazers" data-icon="octicon-star" aria-label="Star ntkme/github-buttons on GitHub">Star project!</a>
+    </div>
+
+    <div class="controls">
+        <div class="bg"></div>
+        <p><span>Camera</span> mouse</p>
+        <p><span>Cube</span> W S: up and down<br>A D: left and right<br>Q E: forward and backward </p>
     </div>
     
     <script src="./js/vendor/three.min.js"></script>
