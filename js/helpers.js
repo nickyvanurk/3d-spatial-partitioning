@@ -1,3 +1,11 @@
+class Vector3 {
+    constructor(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+}
+
 function renderCubeWireframe(scene, region, color, opacity = 0.1) {
     var material = new THREE.LineBasicMaterial({
         color: color,
@@ -36,24 +44,22 @@ function renderCubeWireframe(scene, region, color, opacity = 0.1) {
     return wireframe;
 }
 
-function renderParticles(scene, points, color = 'white', size = 2, name = 'particles') {
-    const pointsGeometry = new THREE.Geometry();
-    const particleMaterial = new THREE.PointsMaterial({ color, size });
+function renderBoids(scene, points, color = 'white', size = 2, name = 'boids') {
+    const boidMaterial = new THREE.PointsMaterial({ color, size });
+    const boidsGeometry = new THREE.Geometry();
 
     for (let i = 0; i < points.length; i++) {
-        pointsGeometry.vertices.push(new THREE.Vector3(
+        boidsGeometry.vertices.push(new THREE.Vector3(
             points[i].position.x,
             points[i].position.y,
             points[i].position.z
         ));
     }
 
+    const boids = new THREE.Points(boidsGeometry, boidMaterial);
+    boids.name = name;
 
-    const particles = new THREE.Points(pointsGeometry, particleMaterial);
-    console.log(name);
-    particles.name = name;
+    scene.add(boids);
 
-    scene.add(particles);
-
-    return scene.getObjectByName(particles.name);
+    return scene.getObjectByName(boids.name);
 }

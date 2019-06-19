@@ -5,7 +5,7 @@ const regionHeight = 300;
 const regionDepth = 300;
 const regionCapacity = 4;
 
-const particlesNum = 300;
+const boidsNum = 300;
 
 const speed = 10;
 
@@ -26,7 +26,7 @@ controls,
 queryPoints,
 queryRegion,
 queryRegionWireframe,
-queryRegionparticles;
+queryRegionBoids;
 
 function init() {
     // create the camera
@@ -36,9 +36,9 @@ function init() {
     // create the Scene
     scene = new THREE.Scene();
 
-    generateParticles(particlesNum);
+    generateBoids(boidsNum);
 
-    // region to query particles in
+    // region to query boids in
     queryRegion = new BoundingBox(0, 0, 0, 156, 133, 165);
     queryRegionWireframe = renderCubeWireframe(
         scene,
@@ -47,15 +47,15 @@ function init() {
         0.8
     );
 
-    // query region for intersecintg particles
+    // query region for intersecting boids
     queryPoints = [];
     octree.query(queryRegion, queryPoints);
-    queryRegionparticles = renderParticles(
+    queryRegionBoids = renderBoids(
         scene,
         queryPoints,
         'yellow',
         4,
-        'queryRegionParticles'
+        'queryRegionBoids'
     );
 
     // init the WebGL renderer and append it to the Dom
@@ -105,14 +105,14 @@ function onWindowKeyDown(event) {
     queryRegionWireframe.position.y = queryRegion.position.y;
     queryRegionWireframe.position.z = queryRegion.position.z;
 
-    scene.remove(queryRegionparticles);
+    scene.remove(queryRegionBoids);
 
-    queryRegionparticles = renderParticles(
+    queryRegionBoids = renderBoids(
         scene,
         queryPoints,
         'yellow',
         4,
-        'queryRegionParticles'
+        'queryRegionBoids'
     );
 };
 
@@ -124,22 +124,22 @@ function render() {
     renderer.render(scene, camera);
 }
 
-function generateParticles(particles) {
-    let points = [];
+function generateBoids(boidsNum) {
+    let boids = [];
 
-    for (let i = 0; i < particles; i++) {
-        let point = new Point(
+    for (let i = 0; i < boidsNum; i++) {
+        let boid = new Boid(
             parseInt(Math.random() * regionWidth + region.position.x),
             parseInt(Math.random() * regionHeight  + region.position.y),
             parseInt(Math.random() * regionDepth  + region.position.z)
         );
 
-        points.push(point);
+        boids.push(boid);
 
-        octree.insert(point);
+        octree.insert(boid);
     }
 
-    renderParticles(scene, points);
+    renderBoids(scene, boids);
 }
 
 function animate() {

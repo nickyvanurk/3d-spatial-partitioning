@@ -1,17 +1,3 @@
-class Vector3 {
-    constructor(x, y, z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-}
-
-class Point {
-    constructor(x, y, z) {
-        this.position = new Vector3(x, y, z);
-    }
-}
-
 class BoundingBox {
     constructor(x, y, z, width, height, depth) {
         this.position = new Vector3(x, y, z);
