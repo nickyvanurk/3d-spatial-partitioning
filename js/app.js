@@ -35,7 +35,9 @@ let uiObj = {
     separation: 1,
     cohesion: 1,
     maxSpeed: 4,
-    maxForce: 0.2
+    maxForce: 0.2,
+    octreeWireframe: true,
+    regionWireframe: true
 };
 let gui = new dat.GUI({ height : 5 * 32 - 1, width: 310 });
 
@@ -55,6 +57,7 @@ function init() {
         scene,
         queryRegion,
         'skyblue',
+        'regionWireframe',
         0.8
     );
 
@@ -88,6 +91,8 @@ function init() {
     gui.add(uiObj, 'cohesion', 0, 5, 0.1);
     gui.add(uiObj, 'maxSpeed', 0, 10, 0.1);
     gui.add(uiObj, 'maxForce', 0, 1, 0.02);
+    gui.add(uiObj, 'octreeWireframe');
+    gui.add(uiObj, 'regionWireframe');
 }
 
 
@@ -138,6 +143,14 @@ function update() {
         boid.flock(boids);
         boid.update();
     }
+
+    scene.traverse ((child) => {
+        if (child instanceof THREE.Line) {
+            child.visible = uiObj.octreeWireframe;
+        }
+    });
+
+    scene.getObjectByName('regionWireframe').visible = uiObj.regionWireframe;
 }
 
 function render() {

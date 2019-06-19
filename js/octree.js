@@ -98,7 +98,7 @@ class Octree {
 
     // Used for octree visualisation; not essential
     show(scene) {
-        renderCubeWireframe(scene, this.region, 'red');
+        renderCubeWireframe(scene, this.region, 'red', 'octreeWireframe');
 
         if (this.divided) {
             for (const child of this.children) {

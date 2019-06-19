@@ -6,7 +6,7 @@ class Vector3 {
     }
 }
 
-function renderCubeWireframe(scene, region, color, opacity = 0.1) {
+function renderCubeWireframe(scene, region, color, name, opacity = 0.1) {
     var material = new THREE.LineBasicMaterial({
         color: color,
         transparent: true,
@@ -38,6 +38,7 @@ function renderCubeWireframe(scene, region, color, opacity = 0.1) {
     geometry.vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z + r.depth));
 
     const wireframe = new THREE.Line(geometry, material);
+    wireframe.name = name;
 
     scene.add(wireframe);
 
