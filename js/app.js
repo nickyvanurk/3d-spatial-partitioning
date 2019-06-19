@@ -62,8 +62,8 @@ function init() {
     );
 
     // query region for intersecting boids
-    queryPoints = [];
-    octree.query(queryRegion, queryPoints);
+    queryPoints = octree.query(queryRegion);
+    console.log(queryPoints);
     queryRegionBoids = renderBoids(
         scene,
         queryPoints,
@@ -122,7 +122,7 @@ function onWindowKeyDown(event) {
     }
 
     queryPoints = [];
-    octree.query(queryRegion, queryPoints);
+    queryPoints = octree.query(queryRegion, queryPoints);
 
     queryRegionWireframe.position.x = queryRegion.position.x;
     queryRegionWireframe.position.y = queryRegion.position.y;

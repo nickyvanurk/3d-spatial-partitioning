@@ -79,6 +79,10 @@ class Octree {
     }
 
     query(range, found) {
+        if (!found) {
+            found = [];
+        }
+
         if (!this.region.intersects(range)) {
             return [];
         }
@@ -94,6 +98,8 @@ class Octree {
                 child.query(range, found);
             }
         }
+        
+        return found;
     }
 
     // Used for octree visualisation; not essential
