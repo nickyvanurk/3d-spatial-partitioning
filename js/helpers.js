@@ -32,13 +32,13 @@ function renderCubeWireframe(scene, region, color, opacity = 0.1) {
     const wireframe = new THREE.Line(geometry, material);
 
     scene.add(wireframe);
+
+    return wireframe;
 }
 
-function renderParticles(scene, points, color = 'white', size = 2) {
+function renderParticles(scene, points, color = 'white', size = 2, name = 'particles') {
     const pointsGeometry = new THREE.Geometry();
     const particleMaterial = new THREE.PointsMaterial({ color, size });
-
-    // particleMaterial.size = 2;
 
     for (let i = 0; i < points.length; i++) {
         pointsGeometry.vertices.push(new THREE.Vector3(
@@ -48,5 +48,12 @@ function renderParticles(scene, points, color = 'white', size = 2) {
         ));
     }
 
-    scene.add(new THREE.Points(pointsGeometry, particleMaterial));
+
+    const particles = new THREE.Points(pointsGeometry, particleMaterial);
+    console.log(name);
+    particles.name = name;
+
+    scene.add(particles);
+
+    return scene.getObjectByName(particles.name);
 }

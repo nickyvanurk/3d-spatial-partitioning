@@ -7,6 +7,8 @@ const regionCapacity = 4;
 
 const particlesNum = 300;
 
+const speed = 10;
+
 const region = new BoundingBox(
     -regionWidth / 2,
     -regionHeight / 2,
@@ -17,7 +19,14 @@ const region = new BoundingBox(
 );
 const octree = new Octree(region, regionCapacity);
 
-let camera, scene, renderer, controls;
+let camera,
+scene,
+renderer,
+controls,
+queryPoints,
+queryRegion,
+queryRegionWireframe,
+queryRegionparticles;
 
 function init() {
     // create the camera
@@ -30,13 +39,24 @@ function init() {
     generateParticles(particlesNum);
 
     // region to query particles in
-    const queryRegion = new BoundingBox(0, 0, 0, 156, 133, 165);
-    renderCubeWireframe(scene, queryRegion, 'skyblue', 0.8);
-    
+    queryRegion = new BoundingBox(0, 0, 0, 156, 133, 165);
+    queryRegionWireframe = renderCubeWireframe(
+        scene,
+        queryRegion,
+        'skyblue',
+        0.8
+    );
+
     // query region for intersecintg particles
-    let queryPoints = [];
+    queryPoints = [];
     octree.query(queryRegion, queryPoints);
-    renderParticles(scene, queryPoints, 'yellow', 3);
+    queryRegionparticles = renderParticles(
+        scene,
+        queryPoints,
+        'yellow',
+        4,
+        'queryRegionParticles'
+    );
 
     // init the WebGL renderer and append it to the Dom
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -46,9 +66,10 @@ function init() {
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
 
-    window.addEventListener('resize', onWindowResize, false);
-
     octree.show(scene);
+
+    window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener("keydown", onWindowKeyDown, false);
 }
 
 
@@ -57,6 +78,43 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
+
+function onWindowKeyDown(event) {
+    const keyCode = event.which;
+
+    if (keyCode == 87) {
+        queryRegion.position.y += speed;
+    } else if (keyCode == 83) {
+        queryRegion.position.y -= speed;
+    } else if (keyCode == 65) {
+        queryRegion.position.x -= speed;
+    } else if (keyCode == 68) {
+        queryRegion.position.x += speed;
+    } else if (keyCode == 32) {
+        queryRegion.position.set(0, 0, 0);
+    } else if (keyCode == 81) {
+        queryRegion.position.z += speed;
+    } else if (keyCode == 69) {
+        queryRegion.position.z -= speed;
+    }
+
+    queryPoints = [];
+    octree.query(queryRegion, queryPoints);
+
+    queryRegionWireframe.position.x = queryRegion.position.x;
+    queryRegionWireframe.position.y = queryRegion.position.y;
+    queryRegionWireframe.position.z = queryRegion.position.z;
+
+    scene.remove(queryRegionparticles);
+
+    queryRegionparticles = renderParticles(
+        scene,
+        queryPoints,
+        'yellow',
+        4,
+        'queryRegionParticles'
+    );
+};
 
 function update() {
     controls.update();
