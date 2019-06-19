@@ -1,11 +1,12 @@
 const fpsLimit = 30;
 
-const regionWidth = 300;
-const regionHeight = 300;
-const regionDepth = 300;
-const regionCapacity = 4;
+const regionWidth = 400;
+const regionHeight = 400;
+const regionDepth = 400;
+const regionCapacity = 8;
 
-const boidsNum = 200;
+const boidsNum = 500;
+const boidBoundBoxRange = 20;
 
 const speed = 10;
 
@@ -17,7 +18,7 @@ const region = new BoundingBox(
     regionHeight,
     regionDepth
 );
-const octree = new Octree(region, regionCapacity);
+let octree = new Octree(region, regionCapacity);
 
 let camera,
 scene,
@@ -29,6 +30,7 @@ queryRegion,
 queryRegionWireframe,
 queryRegionBoids;
 
+
 let uiObj = {
     perceptionRadius: 300,
     alignment: 1,
@@ -37,14 +39,15 @@ let uiObj = {
     maxSpeed: 4,
     maxForce: 0.2,
     octreeWireframe: true,
-    regionWireframe: true
+    regionWireframe: true,
 };
 let gui = new dat.GUI({ height : 5 * 32 - 1, width: 310 });
 
 function init() {
     // create the camera
     camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000 );
-    camera.position.z = 400;
+    camera.position.y = 300;
+    camera.position.z = 600;
 
     // create the Scene
     scene = new THREE.Scene();
@@ -63,7 +66,6 @@ function init() {
 
     // query region for intersecting boids
     queryPoints = octree.query(queryRegion);
-    console.log(queryPoints);
     queryRegionBoids = renderBoids(
         scene,
         queryPoints,
@@ -120,6 +122,10 @@ function onWindowKeyDown(event) {
     } else if (keyCode == 69) {
         queryRegion.position.z -= speed;
     }
+};
+
+function update() {
+    controls.update();
 
     queryPoints = [];
     queryPoints = octree.query(queryRegion, queryPoints);
@@ -127,10 +133,12 @@ function onWindowKeyDown(event) {
     queryRegionWireframe.position.x = queryRegion.position.x;
     queryRegionWireframe.position.y = queryRegion.position.y;
     queryRegionWireframe.position.z = queryRegion.position.z;
-};
 
-function update() {
-    controls.update();
+    octree = new Octree(region, regionCapacity);
+
+    for (const boid of boids) {
+        octree.insert(boid);
+    }
 
     for (const boid of boids) {
         boid.alignmentMultiplier = uiObj.alignment;
@@ -139,18 +147,21 @@ function update() {
         boid.maxSpeed = uiObj.maxSpeed;
         boid.maxForce = uiObj.maxForce;
 
+        const boidBoundBox = new BoundingBox(
+            boid.position.x - boidBoundBoxRange / 2,
+            boid.position.y - boidBoundBoxRange / 2,
+            boid.position.z - boidBoundBoxRange / 2,
+            boidBoundBoxRange,
+            boidBoundBoxRange,
+            boidBoundBoxRange
+        );
+
+        nearbyBoids = octree.query(boidBoundBox);
+
         boid.wrapOnEdges(region);
-        boid.flock(boids);
+        boid.flock(nearbyBoids);
         boid.update();
     }
-
-    scene.traverse ((child) => {
-        if (child instanceof THREE.Line) {
-            child.visible = uiObj.octreeWireframe;
-        }
-    });
-
-    scene.getObjectByName('regionWireframe').visible = uiObj.regionWireframe;
 }
 
 function render() {
@@ -165,6 +176,29 @@ function render() {
         4,
         'queryRegionBoids'
     );
+
+    const octreeWireframes = [];
+    scene.traverse ((child) => {
+        if (child instanceof THREE.Line) {
+            if (child.name === 'octreeWireframe') {
+                octreeWireframes.push(child);
+            }
+        }
+    });
+
+    for (const octreeWireframe of octreeWireframes) {
+        scene.remove(octreeWireframe);
+    }
+
+    octree.show(scene);
+
+    scene.traverse ((child) => {
+        if (child instanceof THREE.Line) {
+            child.visible = uiObj.octreeWireframe;
+        }
+    });
+
+    scene.getObjectByName('regionWireframe').visible = uiObj.regionWireframe;
 
     renderer.render(scene, camera);
 }
