@@ -16,17 +16,23 @@ class Boid {
     update() {
         this.position.add(this.velocity);
         this.velocity.add(this.acceleration);
+
+        if (this.velocity.length() > this.maxSpeed)
+            this.velocity.setLength(this.maxSpeed);
     }
 
     flock(boids) {
-        const alignment = this.align(boids);
+        this.acceleration.set(0, 0, 0);
 
-        // this.acceleration.add(alignment);
-        this.acceleration.copy(alignment);
+        const alignment = this.align(boids);
+        const cohesion = this.cohesion(boids);
+
+        this.acceleration.add(alignment);
+        this.acceleration.add(cohesion);
     }
 
     align(boids) {
-        const perceptionRadius = 200;
+        const perceptionRadius = 300;
 
         let steering = new THREE.Vector3(0, 0, 0);
         let nearbyBoids = 0;
@@ -46,6 +52,38 @@ class Boid {
 
         if (nearbyBoids > 0) {
             steering.divideScalar(nearbyBoids);
+            steering.setLength(this.maxSpeed);
+            steering.sub(this.velocity);
+
+            if (steering.length() > this.maxForce)
+                steering.setLength(this.maxForce);
+        };
+
+        return steering;
+    }
+
+    cohesion(boids) {
+        const perceptionRadius = 300;
+
+        let steering = new THREE.Vector3(0, 0, 0);
+        let nearbyBoids = 0;
+
+        for (const boid of boids) {
+            const distance = (
+                Math.pow(this.position.x - boid.position.x, 2) +
+                Math.pow(this.position.y - boid.position.y, 2) +
+                Math.pow(this.position.z - boid.position.z, 2)
+            ) * 0.5;
+
+            if (boid != this && distance < perceptionRadius) {
+                steering.add(boid.position);
+                nearbyBoids++;
+            }
+        }
+
+        if (nearbyBoids > 0) {
+            steering.divideScalar(nearbyBoids);
+            steering.sub(this.position);
             steering.setLength(this.maxSpeed);
             steering.sub(this.velocity);
 
