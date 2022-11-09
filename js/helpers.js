@@ -41,16 +41,16 @@ function renderCubeWireframe(scene, region, color, name, opacity = 0.1) {
         vertices[i*3 + 2] = points[i].z;
     }
 
-    const geometry = new THREE.BufferGeometry();
-    var material = new THREE.LineBasicMaterial({
-        color: color,
+    const wireframeGeometry = new THREE.BufferGeometry();
+    const wireframeMaterial = new THREE.LineBasicMaterial({
+        color,
         transparent: true,
         opacity
     });
 
-    geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    wireframeGeometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
-    const wireframe = new THREE.Line(geometry, material);
+    const wireframe = new THREE.Line(wireframeGeometry, wireframeMaterial);
     wireframe.name = name;
 
     scene.add(wireframe);
@@ -69,11 +69,11 @@ function renderBoids(scene, points, color = 'white', size = 2, name = 'boids') {
     }
 
     const boidsGeometry = new THREE.BufferGeometry();
-    const boidMaterial = new THREE.PointsMaterial({ color, size });
+    const boidsMaterial = new THREE.PointsMaterial({ color, size });
 
     boidsGeometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
-    const boids = new THREE.Points(boidsGeometry, boidMaterial);
+    const boids = new THREE.Points(boidsGeometry, boidsMaterial);
     boids.name = name;
 
     scene.add(boids);

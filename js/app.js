@@ -5,6 +5,8 @@ const regionHeight = 400;
 const regionDepth = 400;
 const regionCapacity = 8;
 
+// Array somewhere with the different line segments for rendering?? then flag for on or of?
+
 const boidsNum = 400;
 const boidBoundBoxRange = 20;
 
@@ -183,7 +185,7 @@ function render() {
         octree.show(scene);
     }
 
-    scene.traverse ((child) => {
+    scene.traverse((child) => {
         if (child instanceof THREE.Line) {
             if (child.name === 'octreeWireframe') {
                 child.visible = uiObj.octreeWireframe;
@@ -216,13 +218,15 @@ function generateBoids(boidsNum) {
 
 function removeObjects(name) {
     const objects = [];
-    scene.traverse ((child) => {
+    scene.traverse((child) => {
         if (child.name === name) {
             objects.push(child);
         }
     });
 
     for (const object of objects) {
+        object.geometry.dispose();
+        object.material.dispose();
         scene.remove(object);
     }
 }
