@@ -5,8 +5,6 @@ const regionHeight = 400;
 const regionDepth = 400;
 const regionCapacity = 8;
 
-// Array somewhere with the different line segments for rendering?? then flag for on or of?
-
 const boidsNum = 400;
 const boidBoundBoxRange = 20;
 
@@ -126,7 +124,6 @@ function onWindowKeyDown(event) {
 };
 
 function update() {
-
     controls.update();
 
     queryPoints = [];
