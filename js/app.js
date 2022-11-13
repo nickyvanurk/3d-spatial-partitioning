@@ -42,9 +42,12 @@ let uiObj = {
 };
 let gui = new dat.GUI({ height : 5 * 32 - 1, width: 310 });
 
+const keys = {};
+let input = new THREE.Vector3();
+
 function init() {
     // create the camera
-    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000 );
+    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000);
     camera.position.y = 300;
     camera.position.z = 600;
 
@@ -84,7 +87,8 @@ function init() {
     octree.show(scene);
 
     window.addEventListener('resize', onWindowResize, false);
-    window.addEventListener("keydown", onWindowKeyDown, false);
+    window.addEventListener("keydown", onKeyEvent, false);
+    window.addEventListener("keyup", onKeyEvent, false);
 
     gui.add(uiObj, 'perceptionRadius', 0, 1000, 10);
     gui.add(uiObj, 'alignment', 0, 5, 0.1);
@@ -96,34 +100,25 @@ function init() {
     gui.add(uiObj, 'regionWireframe');
 }
 
-
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onWindowKeyDown(event) {
-    const keyCode = event.which;
-
-    if (keyCode == 87) {
-        queryRegion.position.y += speed;
-    } else if (keyCode == 83) {
-        queryRegion.position.y -= speed;
-    } else if (keyCode == 65) {
-        queryRegion.position.x -= speed;
-    } else if (keyCode == 68) {
-        queryRegion.position.x += speed;
-    } else if (keyCode == 32) {
-        queryRegion.position.set(0, 0, 0);
-    } else if (keyCode == 81) {
-        queryRegion.position.z -= speed;
-    } else if (keyCode == 69) {
-        queryRegion.position.z += speed;
-    }
+function onKeyEvent(event) {
+    keys[event.code] = event.type === 'keydown';
+    input.x = keys.KeyA ? -1 : keys.KeyD ?  1 : 0;
+    input.y = keys.KeyQ ?  1 : keys.KeyE ? -1 : 0;
+    input.z = keys.KeyW ? -1 : keys.KeyS ?  1 : 0;
+    input = input.normalize();
 };
 
 function update() {
+    queryRegion.position.x += speed * input.x;
+    queryRegion.position.y += speed * input.y;
+    queryRegion.position.z += speed * input.z;
+
     controls.update();
 
     queryPoints = [];
