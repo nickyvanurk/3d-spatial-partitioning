@@ -1,6 +1,7 @@
 //@ts-nocheck
 
 import * as THREE from 'three';
+import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 import { renderCubeWireframe } from './helpers';
 
 export class BoundingBox {
@@ -10,6 +11,7 @@ export class BoundingBox {
         this.height = height;
         this.depth = depth;
         this.geometry = new THREE.BoxGeometry(width, height, depth);
+        this.geometry.translate(x + width / 2, y + height / 2, z + depth / 2);
     }
 
     contains(point) {
@@ -139,18 +141,29 @@ export class Octree {
         return found;
     }
 
+    getGeometries(geometries = []) {
+        geometries.push(this.region.geometry);
+
+        if (this.divided) {
+            for (const child of this.children) {
+                child.getGeometries(geometries);
+            }
+        }
+
+        return geometries
+    }
+
     buildGeometry() {
-        const buffer = new THREE.BufferGeometry();
-        let geometry = this.region.geometry;
+        const geometries = this.getGeometries();
+        return mergeBufferGeometries(geometries);
+    }
 
-        // if (this.divided) {
-        //     for (const child of this.children) {
-        //         vertices.push(...child.region.getVertices());
-        //     }
-        // }
-
-
-        return vertices;
+    buildWireframe() {
+        const geometries = this.getGeometries();
+        const wireframe = new THREE.EdgesGeometry(mergeBufferGeometries(geometries));
+        const line = new THREE.LineSegments(wireframe, new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true }));
+        line.name = 'octreeWireframe';
+        return line;
     }
 
     // Used for octree visualisation; not essential

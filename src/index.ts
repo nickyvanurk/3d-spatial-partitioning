@@ -55,6 +55,8 @@ let gui = new dat.GUI({ height : 5 * 32 - 1, width: 310 });
 const keys = {};
 let input = new THREE.Vector3();
 
+let wireframe;
+
 function init() {
     // create the camera
     camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000);
@@ -94,7 +96,7 @@ function init() {
 
     controls = new OrbitControls(camera, renderer.domElement);
 
-    octree.show(scene);
+    // octree.show(scene);
 
     window.addEventListener('resize', onWindowResize, false);
     window.addEventListener("keydown", onKeyEvent, false);
@@ -109,31 +111,8 @@ function init() {
     gui.add(uiObj, 'octreeWireframe');
     gui.add(uiObj, 'regionWireframe');
 
-
-    // const points = octree.getVertices();
-
-    // const verticesNum = points.length * 3;
-    // let vertices = new Float32Array(verticesNum);
-
-    // for (let i = 0; i < points.length; i++) {
-    //     vertices[i*3] = points[i].x;
-    //     vertices[i*3 + 1] = points[i].y;
-    //     vertices[i*3 + 2] = points[i].z;
-    // }
-
-    // const wireframeGeometry = new THREE.BufferGeometry();
-
-
-    // wireframeGeometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
-
-
-    console.log(octree.geometry)
-
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const wireframe = new THREE.EdgesGeometry(octree.region.geometry);
-    const line = new THREE.LineSegments(wireframe);
-    scene.add(line);
-
+    wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(octree.buildGeometry()), new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.3 }));
+    scene.add(wireframe);
 }
 
 function onWindowResize() {
@@ -199,7 +178,7 @@ function update() {
 function render() {
     removeObjects('boids');
     removeObjects('queryRegionBoids');
-    removeObjects('octreeWireframe');
+    // removeObjects('octreeWireframe');
 
     renderBoids(scene, boids);
 
@@ -207,19 +186,13 @@ function render() {
         renderBoids(scene, queryPoints, 'yellow', 4, 'queryRegionBoids');
     }
 
-    queryRegionWireframe.visible = uiObj.regionWireframe;
-
     if (uiObj.octreeWireframe) {
-        octree.show(scene);
+        wireframe.geometry = new THREE.EdgesGeometry(octree.buildGeometry());
     }
 
-    scene.traverse((child) => {
-        if (child instanceof THREE.Line) {
-            if (child.name === 'octreeWireframe') {
-                child.visible = uiObj.octreeWireframe;
-            }
-        }
-    });
+    wireframe.visible = uiObj.octreeWireframe;
+
+    queryRegionWireframe.visible = uiObj.regionWireframe;
 
     renderer.render(scene, camera);
 }
