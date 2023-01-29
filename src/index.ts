@@ -1,3 +1,13 @@
+//@ts-nocheck
+
+import * as THREE from 'three';
+import * as dat from 'dat.gui';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
+import { BoundingBox, Octree } from './octree';
+import { Boid } from './boid';
+import { renderBoids, renderCubeWireframe } from './helpers';
+
 const fpsLimit = 30;
 
 const regionWidth = 400;
@@ -82,7 +92,7 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls = new OrbitControls(camera, renderer.domElement);
 
     octree.show(scene);
 
@@ -178,7 +188,7 @@ function update() {
             boidBoundBoxRange
         );
         
-        nearbyBoids = octree.query(boidBoundBox);
+        const nearbyBoids = octree.query(boidBoundBox);
 
         boid.wrapOnEdges(region);
         boid.flock(nearbyBoids);

@@ -1,4 +1,8 @@
-class Vector3 {
+//@ts-nocheck
+
+import * as THREE from 'three';
+
+export class Vector3 {
     constructor(x, y, z) {
         this.x = x;
         this.y = y;
@@ -6,7 +10,7 @@ class Vector3 {
     }
 }
 
-function getVertices(region) {
+export function getVertices(region) {
     let vertices = [];
 
     const r = region;
@@ -20,7 +24,7 @@ function getVertices(region) {
     return vertices;
 }
 
-function renderCubeWireframe(scene, region, color, name, opacity = 0.1) {
+export function renderCubeWireframe(scene, region, color, name, opacity = 0.1) {
     let points = [];
 
     const r = region;
@@ -62,7 +66,7 @@ function renderCubeWireframe(scene, region, color, name, opacity = 0.1) {
         opacity
     });
 
-    wireframeGeometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    wireframeGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
     const wireframe = new THREE.Line(wireframeGeometry, wireframeMaterial);
     wireframe.name = name;
@@ -72,7 +76,7 @@ function renderCubeWireframe(scene, region, color, name, opacity = 0.1) {
     return wireframe;
 }
 
-function renderBoids(scene, points, color = 'white', size = 2, name = 'boids') {
+export function renderBoids(scene, points, color = 'white', size = 2, name = 'boids') {
     const verticesNum = points.length * 3;
     let vertices = new Float32Array(verticesNum);
 
@@ -85,7 +89,7 @@ function renderBoids(scene, points, color = 'white', size = 2, name = 'boids') {
     const boidsGeometry = new THREE.BufferGeometry();
     const boidsMaterial = new THREE.PointsMaterial({ color, size });
 
-    boidsGeometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    boidsGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
     const boids = new THREE.Points(boidsGeometry, boidsMaterial);
     boids.name = name;

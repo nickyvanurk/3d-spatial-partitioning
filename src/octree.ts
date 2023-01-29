@@ -1,4 +1,9 @@
-class BoundingBox {
+//@ts-nocheck
+
+import * as THREE from 'three';
+import { renderCubeWireframe } from './helpers';
+
+export class BoundingBox {
     constructor(x, y, z, width, height, depth) {
         this.position = new THREE.Vector3(x, y, z);
         this.width = width;
@@ -58,7 +63,7 @@ class BoundingBox {
     }
 }
 
-class Octree {
+export class Octree {
     constructor(region, capacity) {
         this.region = region;
         this.capacity = capacity;

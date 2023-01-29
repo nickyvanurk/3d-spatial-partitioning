@@ -1,0 +1,32 @@
+{
+  "name": "3d-spatial-partitioning",
+  "version": "1.0.0",
+  "description": "A 3D Boids implementation to demonstrate Spatial Partitioning implemented with an Octree.",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nickyvanurk/3d-spatial-partitioning.git"
+  },
+  "author": "N. van Urk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nickyvanurk/3d-spatial-partitioning/issues"
+  },
+  "homepage": "https://github.com/nickyvanurk/3d-spatial-partitioning#readme",
+  "devDependencies": {
+    "@types/dat.gui": "^0.7.7",
+    "@types/three": "^0.148.1",
+    "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "dependencies": {
+    "dat.gui": "^0.7.9",
+    "three": "^0.149.0"
+  }
+}
