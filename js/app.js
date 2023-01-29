@@ -98,6 +98,32 @@ function init() {
     gui.add(uiObj, 'maxForce', 0, 1, 0.02);
     gui.add(uiObj, 'octreeWireframe');
     gui.add(uiObj, 'regionWireframe');
+
+
+    // const points = octree.getVertices();
+
+    // const verticesNum = points.length * 3;
+    // let vertices = new Float32Array(verticesNum);
+
+    // for (let i = 0; i < points.length; i++) {
+    //     vertices[i*3] = points[i].x;
+    //     vertices[i*3 + 1] = points[i].y;
+    //     vertices[i*3 + 2] = points[i].z;
+    // }
+
+    // const wireframeGeometry = new THREE.BufferGeometry();
+
+
+    // wireframeGeometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+
+
+    console.log(octree.geometry)
+
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const wireframe = new THREE.EdgesGeometry(octree.region.geometry);
+    const line = new THREE.LineSegments(wireframe);
+    scene.add(line);
+
 }
 
 function onWindowResize() {

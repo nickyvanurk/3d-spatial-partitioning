@@ -6,6 +6,20 @@ class Vector3 {
     }
 }
 
+function getVertices(region) {
+    let vertices = [];
+
+    const r = region;
+    const p = region.position;
+
+    vertices.push(new THREE.Vector3(p.x,           p.y,            p.z));
+    vertices.push(new THREE.Vector3(p.x + r.width, p.y,            p.z));
+    vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z));
+    vertices.push(new THREE.Vector3(p.x,           p.y + r.height, p.z));
+   
+    return vertices;
+}
+
 function renderCubeWireframe(scene, region, color, name, opacity = 0.1) {
     let points = [];
 

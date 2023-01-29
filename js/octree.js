@@ -4,6 +4,7 @@ class BoundingBox {
         this.width = width;
         this.height = height;
         this.depth = depth;
+        this.geometry = new THREE.BoxGeometry(width, height, depth);
     }
 
     contains(point) {
@@ -23,6 +24,37 @@ class BoundingBox {
                r.y + r.height < this.position.y - this.height ||
                r.z - r.depth > this.position.z + this.depth ||
                r.z + r.depth < this.position.z - this.depth);
+    }
+
+    getVertices() {
+        let vertices = [];
+        const p = this.position;
+
+        const r = this;
+    
+        vertices.push(new THREE.Vector3(p.x,              p.y,               p.z));
+        vertices.push(new THREE.Vector3(p.x + this.width, p.y,               p.z));
+        vertices.push(new THREE.Vector3(p.x + this.width, p.y + this.height, p.z));
+        vertices.push(new THREE.Vector3(p.x,              p.y + this.height, p.z));
+
+        vertices.push(new THREE.Vector3(p.x, p.y, p.z));
+        vertices.push(new THREE.Vector3(p.x, p.y, p.z + r.depth));
+        vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z + r.depth));
+        vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z));
+    
+        vertices.push(new THREE.Vector3(p.x, p.y + r.height, p.z + r.depth));
+        vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z + r.depth));
+        vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z + r.depth));
+        vertices.push(new THREE.Vector3(p.x, p.y, p.z + r.depth));
+    
+        vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z + r.depth));
+        vertices.push(new THREE.Vector3(p.x + r.width, p.y, p.z));
+        vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z));
+        vertices.push(new THREE.Vector3(p.x + r.width, p.y + r.height, p.z + r.depth));
+
+        return this.geometry.vertices;
+       
+        return vertices;
     }
 }
 
@@ -100,6 +132,20 @@ class Octree {
         }
         
         return found;
+    }
+
+    buildGeometry() {
+        const buffer = new THREE.BufferGeometry();
+        let geometry = this.region.geometry;
+
+        // if (this.divided) {
+        //     for (const child of this.children) {
+        //         vertices.push(...child.region.getVertices());
+        //     }
+        // }
+
+
+        return vertices;
     }
 
     // Used for octree visualisation; not essential
