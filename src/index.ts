@@ -96,8 +96,6 @@ function init() {
 
     controls = new OrbitControls(camera, renderer.domElement);
 
-    // octree.show(scene);
-
     window.addEventListener('resize', onWindowResize, false);
     window.addEventListener("keydown", onKeyEvent, false);
     window.addEventListener("keyup", onKeyEvent, false);
@@ -178,7 +176,6 @@ function update() {
 function render() {
     removeObjects('boids');
     removeObjects('queryRegionBoids');
-    // removeObjects('octreeWireframe');
 
     renderBoids(scene, boids);
 
