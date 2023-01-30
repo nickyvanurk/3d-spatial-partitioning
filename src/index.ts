@@ -95,6 +95,8 @@ function init() {
     document.body.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.1;
 
     window.addEventListener('resize', onWindowResize, false);
     window.addEventListener("keydown", onKeyEvent, false);
