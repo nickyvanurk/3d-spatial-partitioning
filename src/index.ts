@@ -109,7 +109,7 @@ function init() {
     gui.add(uiObj, 'octreeWireframe');
     gui.add(uiObj, 'regionWireframe');
 
-    wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(octree.buildGeometry()), new THREE.LineBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.3 }));
+    wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(octree.buildGeometry()), new THREE.LineBasicMaterial({ color: 0xd1cfc8, transparent: true, opacity: 0.1 }));
     scene.add(wireframe);
 }
 
