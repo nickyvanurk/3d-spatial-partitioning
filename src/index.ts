@@ -63,8 +63,9 @@ function init() {
 
     boids = generateBoids(boidsNum);
 
-    // init the WebGL renderer and append it to the Dom
+    // init the WebGL renderer
     renderer = new THREE.WebGLRenderer({ canvas, anantialias: true });
+    renderer.setClearColor(0x131A29);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
