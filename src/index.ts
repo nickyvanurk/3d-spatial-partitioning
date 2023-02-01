@@ -57,6 +57,8 @@ let input = new THREE.Vector3();
 
 let wireframe;
 
+const canvas = document.querySelector('canvas.webgl');
+
 function init() {
     // create the camera
     camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000);
@@ -89,16 +91,16 @@ function init() {
     );
 
     // init the WebGL renderer and append it to the Dom
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({ canvas, anantialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    document.body.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
 
     window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('dblclick', onDoubleClickEvent, false);
     window.addEventListener("keydown", onKeyEvent, false);
     window.addEventListener("keyup", onKeyEvent, false);
 
@@ -120,6 +122,14 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+
+function onDoubleClickEvent() {
+    if (!document.fullscreenElement) {
+        document.querySelector('body').requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
 }
 
 function onKeyEvent(event) {

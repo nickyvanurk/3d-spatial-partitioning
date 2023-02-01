@@ -6,21 +6,30 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Boids Octree Simulation</title>
     <style>
-        body {
+        html, body {
             margin: 0 auto;
             overflow: hidden;
+        }
+
+        .webgl {
+            position: fixed;
+            top: 0;
+            left: 0;
+            outline: none;
         }
 
         .github-corner svg {
             -webkit-transform: scaleX(-1) !important;
             transform: scaleX(-1) !important;
             left: 0 !important;
+            z-index: 99;
         }
 
         .bttn-wrapper {
             position: absolute;
             left: 10px;
             bottom: 5px;
+            z-index: 99;
         }
 
         .controls {
@@ -67,6 +76,8 @@
         <p><span>Camera</span> click + drag mouse</p>
         <p><span>Cube</span><br>W S: forward and backward<br>A D: left and right<br>Q E: up and down </p>
     </div>
+
+    <canvas class="webgl"></canvas>
 
     <script src="./main.js" type="application/javascript"></script>
 </body>
