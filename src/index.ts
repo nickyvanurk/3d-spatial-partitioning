@@ -98,6 +98,7 @@ function init() {
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
+    controls.maxDistance = 650;
 
     window.addEventListener('resize', onWindowResize, false);
     window.addEventListener('dblclick', onDoubleClickEvent, false);
