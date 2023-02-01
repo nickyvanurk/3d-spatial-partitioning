@@ -156,6 +156,7 @@ function render() {
     renderBoids(scene, boids);
 
     if (uiObj.octreeWireframe) {
+        wireframe.geometry.dispose();
         wireframe.geometry = new THREE.EdgesGeometry(octree.buildGeometry());
     }
 
