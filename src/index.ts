@@ -79,16 +79,16 @@ function init() {
     window.addEventListener("keydown", onKeyEvent, false);
     window.addEventListener("keyup", onKeyEvent, false);
 
+    wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(octree.buildGeometry()), new THREE.LineBasicMaterial({ color: 0xd1cfc8, transparent: true, opacity: 0.1 }));
+    scene.add(wireframe);
+
     gui.add(uiObj, 'perceptionRadius', 0, 400, 10);
     gui.add(uiObj, 'alignment', 0, 5, 0.1);
     gui.add(uiObj, 'separation', 0, 5, 0.1);
     gui.add(uiObj, 'cohesion', 0, 5, 0.1);
     gui.add(uiObj, 'maxSpeed', 0, 10, 0.1);
     gui.add(uiObj, 'maxForce', 0, 1, 0.02);
-    gui.add(uiObj, 'octreeWireframe');
-
-    wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(octree.buildGeometry()), new THREE.LineBasicMaterial({ color: 0xd1cfc8, transparent: true, opacity: 0.1 }));
-    scene.add(wireframe);
+    gui.add(uiObj, 'octreeWireframe').onChange(() => wireframe.visible = uiObj.octreeWireframe);
 }
 
 function onWindowResize() {
@@ -158,8 +158,6 @@ function render() {
     if (uiObj.octreeWireframe) {
         wireframe.geometry = new THREE.EdgesGeometry(octree.buildGeometry());
     }
-
-    wireframe.visible = uiObj.octreeWireframe;
 
     renderer.render(scene, camera);
 }
