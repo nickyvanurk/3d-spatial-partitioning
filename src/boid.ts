@@ -16,35 +16,60 @@ export class Boid {
         this.maxForce = 0.2;
         this.maxSpeed = 4;
 
+        this.separationMultiplier = 1.5;
         this.alignmentMultiplier = 1;
-        this.separationMultiplier = 1;
         this.cohesionMultiplier = 1;
 
-        this.perceptionRadius = 300;
+        this.perceptionRadius = 30;
     }
 
     update() {
         this.velocity.add(this.acceleration);
         this.position.add(this.velocity);
-
-        if (this.velocity.length() > this.maxSpeed)
-            this.velocity.setLength(this.maxSpeed);
+        this.velocity.clampLength(0, this.maxSpeed);
     }
 
     flock(boids) {
         this.acceleration.set(0, 0, 0);
 
-        const alignment = this.align(boids);
         const separation = this.separation(boids);
+        const alignment = this.align(boids);
         const cohesion = this.cohesion(boids);
 
-        alignment.multiplyScalar(this.alignmentMultiplier);
         separation.multiplyScalar(this.separationMultiplier);
+        alignment.multiplyScalar(this.alignmentMultiplier);
         cohesion.multiplyScalar(this.cohesionMultiplier);
 
-        this.acceleration.add(alignment);
         this.acceleration.add(separation);
+        this.acceleration.add(alignment);
         this.acceleration.add(cohesion);
+    }
+
+    separation(boids) {
+        let steering = new THREE.Vector3(0, 0, 0);
+        let nearbyBoids = 0;
+
+        for (const boid of boids) {
+            const distance = this.position.distanceTo(boid.position);
+            if (boid != this && distance < 3) {
+                let difference = new THREE.Vector3()
+                    .copy(this.position)
+                    .sub(boid.position);
+                difference.normalize();
+                difference.divideScalar(distance);
+                steering.add(difference);
+                nearbyBoids++;
+            }
+        }
+
+        if (nearbyBoids > 0) {
+            steering.divideScalar(nearbyBoids);
+            steering.setLength(this.maxSpeed);
+            steering.sub(this.velocity);
+            steering.clampLength(0, this.maxForce);
+        };
+
+        return steering;
     }
 
     align(boids) {
@@ -52,12 +77,7 @@ export class Boid {
         let nearbyBoids = 0;
 
         for (const boid of boids) {
-            const distance = (
-                Math.pow(this.position.x - boid.position.x, 2) +
-                Math.pow(this.position.y - boid.position.y, 2) +
-                Math.pow(this.position.z - boid.position.z, 2)
-            ) * 0.5;
-
+            const distance = this.position.distanceTo(boid.position);
             if (boid != this && distance < this.perceptionRadius) {
                 steering.add(boid.velocity);
                 nearbyBoids++;
@@ -68,45 +88,7 @@ export class Boid {
             steering.divideScalar(nearbyBoids);
             steering.setLength(this.maxSpeed);
             steering.sub(this.velocity);
-
-            if (steering.length() > this.maxForce)
-                steering.setLength(this.maxForce);
-        };
-
-        return steering;
-    }
-
-    separation(boids) {
-        let steering = new THREE.Vector3(0, 0, 0);
-        let nearbyBoids = 0;
-
-        for (const boid of boids) {
-            const distance = (
-                Math.pow(this.position.x - boid.position.x, 2) +
-                Math.pow(this.position.y - boid.position.y, 2) +
-                Math.pow(this.position.z - boid.position.z, 2)
-            ) * 0.5;
-
-            if (boid != this && distance < this.perceptionRadius) {
-                let difference = new THREE.Vector3()
-                    .copy(this.position)
-                    .sub(boid.position);
-
-                difference.divideScalar(distance);
-
-                steering.add(difference);
-
-                nearbyBoids++;
-            }
-        }
-
-        if (nearbyBoids > 0) {
-            steering.divideScalar(nearbyBoids);
-            steering.setLength(this.maxSpeed);
-            steering.sub(this.velocity);
-
-            if (steering.length() > this.maxForce)
-                steering.setLength(this.maxForce);
+            steering.clampLength(0, this.maxForce);
         };
 
         return steering;
@@ -117,12 +99,7 @@ export class Boid {
         let nearbyBoids = 0;
 
         for (const boid of boids) {
-            const distance = (
-                Math.pow(this.position.x - boid.position.x, 2) +
-                Math.pow(this.position.y - boid.position.y, 2) +
-                Math.pow(this.position.z - boid.position.z, 2)
-            ) * 0.5;
-
+            const distance = this.position.distanceTo(boid.position);
             if (boid != this && distance < this.perceptionRadius) {
                 steering.add(boid.position);
                 nearbyBoids++;
@@ -134,9 +111,7 @@ export class Boid {
             steering.sub(this.position);
             steering.setLength(this.maxSpeed);
             steering.sub(this.velocity);
-
-            if (steering.length() > this.maxForce)
-                steering.setLength(this.maxForce);
+            steering.clampLength(0, this.maxForce);
         };
 
         return steering;

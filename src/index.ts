@@ -6,7 +6,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { BoundingBox, Octree } from './octree';
 import { Boid } from './boid';
-import { renderBoids, renderCubeWireframe } from './helpers';
+import { renderBoids } from './helpers';
 
 const fpsLimit = 30;
 
@@ -16,7 +16,6 @@ const regionDepth = 400;
 const regionCapacity = 8;
 
 const boidsNum = 400;
-const boidBoundBoxRange = 20;
 
 const region = new BoundingBox(
     -regionWidth / 2,
@@ -35,12 +34,12 @@ controls,
 boids;
 
 let uiObj = {
-    perceptionRadius: 30,
-    alignment: 1,
-    separation: 1,
-    cohesion: 1,
-    maxSpeed: 2,
-    maxForce: 0.2,
+    perceptionRadius: 50,
+    separation: 4.5,
+    alignment: 0.1,
+    cohesion: 0.1,
+    maxSpeed: 2.2,
+    maxForce: 0.25,
     octreeWireframe: true,
 };
 
@@ -126,6 +125,7 @@ function update() {
     for (let i = 0; i < boids.length; i++) {
         let boid = boids[i];
 
+        boid.perceptionRadius = uiObj.perceptionRadius;
         boid.alignmentMultiplier = uiObj.alignment;
         boid.separationMultiplier = uiObj.separation;
         boid.cohesionMultiplier = uiObj.cohesion;
@@ -133,12 +133,12 @@ function update() {
         boid.maxForce = uiObj.maxForce;
 
         const boidBoundBox = new BoundingBox(
-            boid.position.x - boidBoundBoxRange / 2,
-            boid.position.y - boidBoundBoxRange / 2,
-            boid.position.z - boidBoundBoxRange / 2,
-            boidBoundBoxRange,
-            boidBoundBoxRange,
-            boidBoundBoxRange
+            boid.position.x - uiObj.perceptionRadius / 2,
+            boid.position.y - uiObj.perceptionRadius / 2,
+            boid.position.z - uiObj.perceptionRadius / 2,
+            uiObj.perceptionRadius,
+            uiObj.perceptionRadius,
+            uiObj.perceptionRadius
         );
         
         const nearbyBoids = octree.query(boidBoundBox);
