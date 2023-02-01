@@ -79,7 +79,7 @@ function init() {
     window.addEventListener("keydown", onKeyEvent, false);
     window.addEventListener("keyup", onKeyEvent, false);
 
-    gui.add(uiObj, 'perceptionRadius', 0, 1000, 10);
+    gui.add(uiObj, 'perceptionRadius', 0, 400, 10);
     gui.add(uiObj, 'alignment', 0, 5, 0.1);
     gui.add(uiObj, 'separation', 0, 5, 0.1);
     gui.add(uiObj, 'cohesion', 0, 5, 0.1);
