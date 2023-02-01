@@ -141,11 +141,40 @@ export class Boid {
 
         return steering;
     }
-    
+
+    repulseFromEdges(region) {
+        let desired = new THREE.Vector3();
+
+        if (this.position.x > (region.position.x + region.width) - 10) {
+            desired = new THREE.Vector3(-this.maxSpeed, this.velocity.y, this.velocity.z);
+        } else if (this.position.x < region.position.x + 10) {
+            desired = new THREE.Vector3(this.maxSpeed, this.velocity.y, this.velocity.z);
+        }
+
+        if (this.position.y > (region.position.y + region.height) - 10) {
+            desired = new THREE.Vector3(this.velocity.x, -this.maxSpeed, this.velocity.z);
+        } else if (this.position.y < region.position.y + 10) {
+            desired = new THREE.Vector3(this.velocity.x, this.maxSpeed, this.velocity.z);
+        }
+
+        if (this.position.z > (region.position.z + region.depth) - 10) {
+            desired = new THREE.Vector3(this.velocity.x, this.velocity.y, -this.maxSpeed);
+        } else if (this.position.z < region.position.z + 10) {
+            desired = new THREE.Vector3(this.velocity.x, this.velocity.y, this.maxSpeed);
+        }
+
+        if (desired.length() > 0) {
+            let steer = desired.sub(this.velocity);
+            steer.clampLength(0, this.maxForce);
+            this.acceleration.add(steer);
+        }
+    }
+
     wrapOnEdges(region) {
         if (this.position.x > region.position.x + region.width) {
             this.position.x = region.position.x;
-        } else if (this.position.x < region.position.x) {
+        } else 
+        if (this.position.x < region.position.x) {
             this.position.x = region.position.x + region.width;
         }
 

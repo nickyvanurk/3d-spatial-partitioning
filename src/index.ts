@@ -143,8 +143,8 @@ function update() {
         
         const nearbyBoids = octree.query(boidBoundBox);
 
-        boid.wrapOnEdges(region);
         boid.flock(nearbyBoids);
+        boid.repulseFromEdges(region);
         boid.update();
     }
 }
