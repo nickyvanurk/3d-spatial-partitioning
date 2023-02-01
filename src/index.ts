@@ -61,7 +61,7 @@ const canvas = document.querySelector('canvas.webgl');
 
 function init() {
     // create the camera
-    camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 2000);
+    camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 900);
     camera.position.y = 300;
     camera.position.z = 600;
 
