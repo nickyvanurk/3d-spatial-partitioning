@@ -24,8 +24,8 @@ export class Boid {
     }
 
     update() {
-        this.position.add(this.velocity);
         this.velocity.add(this.acceleration);
+        this.position.add(this.velocity);
 
         if (this.velocity.length() > this.maxSpeed)
             this.velocity.setLength(this.maxSpeed);
