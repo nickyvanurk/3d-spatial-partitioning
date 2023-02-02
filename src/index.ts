@@ -6,7 +6,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { BoundingBox, Octree } from './octree';
 import { Boid } from './boid';
-import { renderBoids } from './helpers';
 
 const fpsLimit = 30;
 
@@ -49,6 +48,7 @@ const keys = {};
 let input = new THREE.Vector3();
 
 let wireframe;
+let particles;
 
 const canvas = document.querySelector('canvas.webgl');
 
@@ -62,6 +62,8 @@ function init() {
     scene = new THREE.Scene();
 
     boids = generateBoids(boidsNum);
+    particles = generateParticles(boids);
+    scene.add(particles);
 
     // init the WebGL renderer
     renderer = new THREE.WebGLRenderer({ canvas, anantialias: true });
@@ -151,9 +153,13 @@ function update() {
 }
 
 function render() {
-    removeObjects('boids');
+    for (let i = 0; i < boids.length; i++) {
+        particles.geometry.attributes.position.array[i*3] = boids[i].position.x;
+        particles.geometry.attributes.position.array[i*3 + 1] = boids[i].position.y;
+        particles.geometry.attributes.position.array[i*3 + 2] = boids[i].position.z;
+    }
 
-    renderBoids(scene, boids);
+    particles.geometry.attributes.position.needsUpdate = true;
 
     if (uiObj.octreeWireframe) {
         wireframe.geometry.dispose();
@@ -177,24 +183,23 @@ function generateBoids(boidsNum) {
         octree.insert(boid);
     }
 
-    renderBoids(scene, boids);
-
     return boids;
 }
 
-function removeObjects(name) {
-    const objects = [];
-    scene.traverse((child) => {
-        if (child.name === name) {
-            objects.push(child);
-        }
-    });
+function generateParticles(points, color = 'white', size = 2) {
+    let vertices = new Float32Array(points.length * 3);
 
-    for (const object of objects) {
-        object.geometry.dispose();
-        object.material.dispose();
-        scene.remove(object);
+    for (let i = 0; i < points.length; i++) {
+        vertices[i*3] = points[i].position.x;
+        vertices[i*3 + 1] = points[i].position.y;
+        vertices[i*3 + 2] = points[i].position.z;
     }
+
+    const boidsGeometry = new THREE.BufferGeometry();
+    const boidsMaterial = new THREE.PointsMaterial({ color, size });
+    boidsGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+
+    return new THREE.Points(boidsGeometry, boidsMaterial);
 }
 
 function animate() {
