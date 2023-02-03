@@ -131,8 +131,6 @@ function onKeyEvent(event) {
 };
 
 function update() {
-    controls.update();
-
     octree = new Octree(region, regionCapacity);
 
     for (const boid of boids) {
@@ -216,6 +214,8 @@ function generateParticles(points, color = 'white', size = 2) {
     return new THREE.Points(boidsGeometry, boidsMaterial);
 }
 
+let paused = false;
+
 function animate() {
     requestAnimationFrame(animate);
 
@@ -223,7 +223,12 @@ function animate() {
         stats.begin();
     }
 
-    update();
+    controls.update();
+
+    if (!paused) {
+        update();
+    }
+
     render();
 
     if (debug) {
@@ -233,3 +238,18 @@ function animate() {
 
 init();
 animate();
+
+document.querySelector('#pauseBtn').addEventListener('click', (event) => {
+    if (!paused) {
+        paused = true;
+        event.target.innerText = 'Resume';
+
+    } else {
+        paused = false;
+        event.target.innerText = 'Pause';
+    }
+});
+
+document.querySelector('#resetBtn').addEventListener('click', () => {
+        boids = generateBoids(boidsNum);
+});
