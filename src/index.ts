@@ -86,8 +86,6 @@ function init() {
     controls.dampingFactor = 0.1;
     controls.maxDistance = 650;
 
-    window.addEventListener('resize', onWindowResize, false);
-    window.addEventListener('dblclick', onDoubleClickEvent, false);
     window.addEventListener("keydown", onKeyEvent, false);
     window.addEventListener("keyup", onKeyEvent, false);
 
@@ -105,21 +103,6 @@ function init() {
 
     if (!debug) {
         gui.hide();
-    }
-}
-
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-}
-
-function onDoubleClickEvent() {
-    if (!document.fullscreenElement) {
-        document.querySelector('body').requestFullscreen();
-    } else {
-        document.exitFullscreen();
     }
 }
 

@@ -1,10 +1,29 @@
+import * as THREE from "three";
+
 export class App {
     keys: { [key: string]: boolean; };
     running: boolean;
+    renderer: THREE.WebGLRenderer;
+    camera: THREE.PerspectiveCamera;
+    scene: THREE.Scene;
 
     constructor() {
         window.addEventListener('keydown', this.processEvents.bind(this));
         window.addEventListener('keyup', this.processEvents.bind(this));
+        window.addEventListener('resize', this.resize.bind(this));
+        window.addEventListener('dblclick', this.toggleFullscreen.bind(this));
+
+        const canvas = document.querySelector('canvas.webgl');
+        this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        this.renderer.setClearColor(0x131A29);
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        this.camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 900);
+        this.camera.position.y = 300;
+        this.camera.position.z = 600;
+
+        this.scene = new THREE.Scene();
 
         this.reset();
     }
@@ -33,6 +52,21 @@ export class App {
     }
 
     render(alpha: number) {
-        // console.log(alpha);
+        this.renderer.render(this.scene, this.camera);
+    }
+
+    resize() {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    }
+
+    toggleFullscreen() {
+        if (!document.fullscreenElement) {
+            document.querySelector('body').requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
     }
 }
