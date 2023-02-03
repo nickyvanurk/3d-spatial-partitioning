@@ -1,13 +1,16 @@
 //@ts-nocheck
 
 import * as THREE from 'three';
-import * as dat from 'dat.gui';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import * as dat from 'dat.gui';
+import Stats from 'three/examples/jsm/libs/stats.module.js';
 
 import { BoundingBox, Octree } from './octree';
 import { Boid } from './boid';
 
-const fpsLimit = 30;
+const stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
 
 const regionWidth = 400;
 const regionHeight = 400;
@@ -91,6 +94,9 @@ function init() {
     gui.add(uiObj, 'maxSpeed', 0, 10, 0.1);
     gui.add(uiObj, 'maxForce', 0, 1, 0.02);
     gui.add(uiObj, 'octreeWireframe').onChange(() => wireframe.visible = uiObj.octreeWireframe);
+    gui.close();
+
+
 }
 
 function onWindowResize() {
@@ -203,12 +209,12 @@ function generateParticles(points, color = 'white', size = 2) {
 }
 
 function animate() {
-    setTimeout( function() {
-        requestAnimationFrame(animate);
-    }, 1000 / fpsLimit);
+    requestAnimationFrame(animate);
 
+    stats.begin();
     update();
     render();
+    stats.end();
 }
 
 init();
