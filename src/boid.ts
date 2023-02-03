@@ -6,12 +6,11 @@ export class Boid {
     constructor(x, y, z) {
         this.position = new THREE.Vector3(x, y, z);
         this.velocity = new THREE.Vector3(
-            Math.random() - 0.5,
-            Math.random() - 0.5,
-            Math.random() - 0.5
-        ).normalize();
-        this.velocity.setLength(Math.random() * (+5 - +2) + +2);
-        this.acceleration = new THREE.Vector3(0, 0, 0);
+            (Math.random() - 0.5) * 3,
+            (Math.random() - 0.5) * 3,
+            (Math.random() - 0.5) * 3,
+        );
+        this.acceleration = new THREE.Vector3();
 
         this.maxForce = 0.2;
         this.maxSpeed = 4;
@@ -46,7 +45,7 @@ export class Boid {
     }
 
     separation(boids) {
-        let steering = new THREE.Vector3(0, 0, 0);
+        let steering = new THREE.Vector3();
         let nearbyBoids = 0;
 
         for (const boid of boids) {
@@ -73,7 +72,7 @@ export class Boid {
     }
 
     align(boids) {
-        let steering = new THREE.Vector3(0, 0, 0);
+        let steering = new THREE.Vector3();
         let nearbyBoids = 0;
 
         for (const boid of boids) {
@@ -95,7 +94,7 @@ export class Boid {
     }
 
     cohesion(boids) {
-        let steering = new THREE.Vector3(0, 0, 0);
+        let steering = new THREE.Vector3();
         let nearbyBoids = 0;
 
         for (const boid of boids) {
@@ -142,27 +141,6 @@ export class Boid {
             let steer = desired.sub(this.velocity);
             steer.clampLength(0, this.maxForce);
             this.acceleration.add(steer);
-        }
-    }
-
-    wrapOnEdges(region) {
-        if (this.position.x > region.position.x + region.width) {
-            this.position.x = region.position.x;
-        } else 
-        if (this.position.x < region.position.x) {
-            this.position.x = region.position.x + region.width;
-        }
-
-        if (this.position.y > region.position.y + region.height) {
-            this.position.y = region.position.y;
-        } else if (this.position.y < region.position.y) {
-            this.position.y = region.position.y + region.height;
-        }
-
-        if (this.position.z > region.position.z + region.depth) {
-            this.position.z = region.position.z;
-        } else if (this.position.z < region.position.z) {
-            this.position.z = region.position.z + region.depth;
         }
     }
 }
