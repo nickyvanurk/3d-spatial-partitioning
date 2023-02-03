@@ -8,9 +8,15 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { BoundingBox, Octree } from './octree';
 import { Boid } from './boid';
 
-const stats = new Stats();
-stats.showPanel(0);
-document.body.appendChild(stats.dom);
+const debug = window.location.hash === '#debug';
+
+let stats;
+
+if (debug) {
+    stats = new Stats();
+    stats.showPanel(0);
+    document.body.appendChild(stats.dom);
+}
 
 const regionWidth = 400;
 const regionHeight = 400;
@@ -96,7 +102,9 @@ function init() {
     gui.add(uiObj, 'octreeWireframe').onChange(() => wireframe.visible = uiObj.octreeWireframe);
     gui.close();
 
-
+    if (!debug) {
+        gui.hide();
+    }
 }
 
 function onWindowResize() {
@@ -211,10 +219,16 @@ function generateParticles(points, color = 'white', size = 2) {
 function animate() {
     requestAnimationFrame(animate);
 
-    stats.begin();
+    if (debug) {
+        stats.begin();
+    }
+
     update();
     render();
-    stats.end();
+
+    if (debug) {
+        stats.end();
+    }
 }
 
 init();
