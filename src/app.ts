@@ -45,6 +45,7 @@ export class App {
     reset() {
         this.keys = {};
         this.running = true;
+        this.flock.reset();
     }
 
     processEvents(event: KeyboardEvent) {

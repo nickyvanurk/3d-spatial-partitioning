@@ -4,22 +4,16 @@ import { Boid } from './boid';
 import { BoundingBox } from './octree';
 
 export class Flock {
+    size: number;
     region: BoundingBox;
     boids: Array<Boid> = [];
     particles: THREE.Points;
 
     constructor(size: number, region: BoundingBox) {
+        this.size = size;
         this.region = region;
 
-        for (let i = 0; i < size; i++) {
-            let boid = new Boid(
-                Math.random() * region.width  + region.position.x,
-                Math.random() * region.height + region.position.y,
-                Math.random() * region.depth  + region.position.z
-            );
-    
-            this.boids.push(boid);
-        }
+        this.generate();
 
         let vertices = new Float32Array(size * 3);
         for (let i = 0; i < size; i++) {
@@ -33,6 +27,11 @@ export class Flock {
         const boidsMaterial = new THREE.PointsMaterial({ color: 'white', size: 2 });
         boidsGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
         this.particles = new THREE.Points(boidsGeometry, boidsMaterial);
+    }
+
+    reset() {
+        this.boids = [];
+        this.generate();
     }
 
     update(dt: number) {
@@ -52,5 +51,16 @@ export class Flock {
         }
 
         this.particles.geometry.attributes.position.needsUpdate = true;
+    }
+
+    generate() {        
+        for (let i = 0; i < this.size; i++) {
+            let boid = new Boid(
+                Math.random() * this.region.width  + this.region.position.x,
+                Math.random() * this.region.height + this.region.position.y,
+                Math.random() * this.region.depth  + this.region.position.z
+            );
+            this.boids.push(boid);
+        }
     }
 }
