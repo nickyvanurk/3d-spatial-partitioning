@@ -3,34 +3,39 @@
 import * as THREE from 'three';
 
 export class Boid {
-    constructor(x, y, z) {
-        this.position = new THREE.Vector3(x, y, z);
+    prevPosition: THREE.Vector3;
+    position: THREE.Vector3;
+    velocity: THREE.Vector3;
+
+    constructor(x: number, y: number, z: number) {
+        this.prevPosition = new THREE.Vector3(x, y, z);
+        this.position = this.prevPosition;
         this.velocity = new THREE.Vector3(
-            (Math.random() - 0.5) * 3,
-            (Math.random() - 0.5) * 3,
-            (Math.random() - 0.5) * 3,
+            (Math.random() - 0.5) * 120,
+            (Math.random() - 0.5) * 120,
+            (Math.random() - 0.5) * 120,
         );
         this.acceleration = new THREE.Vector3();
 
-        this.maxForce = 0.2;
-        this.maxSpeed = 4;
+        this.maxForce = 30;
+        this.maxSpeed = 120;
 
-        this.separationMultiplier = 1.5;
-        this.alignmentMultiplier = 1;
-        this.cohesionMultiplier = 1;
+        this.separationMultiplier = 4.5;
+        this.alignmentMultiplier = 0.1;
+        this.cohesionMultiplier = 0.1;
 
         this.perceptionRadius = 30;
     }
 
-    update() {
-        this.velocity.add(this.acceleration);
-        this.position.add(this.velocity);
+    update(dt: number) {
+        this.prevPosition = this.position.clone();
+        this.velocity.add(this.acceleration.clone().multiplyScalar(dt));
+        this.position.add(this.velocity.clone().multiplyScalar(dt));
         this.velocity.clampLength(0, this.maxSpeed);
+        this.acceleration.set(0, 0, 0);
     }
 
     flock(boids) {
-        this.acceleration.set(0, 0, 0);
-
         const separation = this.separation(boids);
         const alignment = this.align(boids);
         const cohesion = this.cohesion(boids);
@@ -139,7 +144,6 @@ export class Boid {
 
         if (desired.length() > 0) {
             let steer = desired.sub(this.velocity);
-            steer.clampLength(0, this.maxForce);
             this.acceleration.add(steer);
         }
     }

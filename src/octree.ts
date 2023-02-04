@@ -4,6 +4,11 @@ import * as THREE from 'three';
 import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 export class BoundingBox {
+    position: THREE.Vector3;
+    width: number;
+    height: number;
+    depth: number;
+
     constructor(x, y, z, width, height, depth) {
         this.position = new THREE.Vector3(x, y, z);
         this.width = width;
