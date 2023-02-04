@@ -63,10 +63,10 @@ let particles;
 const canvas = document.querySelector('canvas.webgl');
 
 function init() {
-    // create the camera
-    camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 900);
-    camera.position.y = 300;
-    camera.position.z = 600;
+    // // create the camera
+    // camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 900);
+    // camera.position.y = 300;
+    // camera.position.z = 600;
 
     // create the Scene
     scene = new THREE.Scene();
@@ -76,15 +76,15 @@ function init() {
     scene.add(particles);
 
     // init the WebGL renderer
-    renderer = new THREE.WebGLRenderer({ canvas, anantialias: true });
-    renderer.setClearColor(0x131A29);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // renderer = new THREE.WebGLRenderer({ canvas, anantialias: true });
+    // renderer.setClearColor(0x131A29);
+    // renderer.setSize(window.innerWidth, window.innerHeight);
+    // renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.1;
-    controls.maxDistance = 650;
+    // controls = new OrbitControls(camera, renderer.domElement);
+    // controls.enableDamping = true;
+    // controls.dampingFactor = 0.1;
+    // controls.maxDistance = 650;
 
     window.addEventListener("keydown", onKeyEvent, false);
     window.addEventListener("keyup", onKeyEvent, false);
@@ -162,7 +162,7 @@ function render() {
         wireframe.geometry = new THREE.EdgesGeometry(octree.buildGeometry());
     }
 
-    renderer.render(scene, camera);
+    // renderer.render(scene, camera);
 }
 
 function generateBoids(boidsNum) {
@@ -207,7 +207,7 @@ function animate() {
         stats.begin();
     }
 
-    controls.update();
+    // controls.update();
 
     if (!paused) {
         update();

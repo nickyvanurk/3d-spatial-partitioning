@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export class App {
     keys: { [key: string]: boolean; };
@@ -6,6 +7,7 @@ export class App {
     renderer: THREE.WebGLRenderer;
     camera: THREE.PerspectiveCamera;
     scene: THREE.Scene;
+    controls: OrbitControls;
 
     constructor() {
         window.addEventListener('keydown', this.processEvents.bind(this));
@@ -22,6 +24,11 @@ export class App {
         this.camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 900);
         this.camera.position.y = 300;
         this.camera.position.z = 600;
+
+        this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        this.controls.enableDamping = true;
+        this.controls.dampingFactor = 0.1;
+        this.controls.maxDistance = 650;
 
         this.scene = new THREE.Scene();
 
@@ -52,6 +59,7 @@ export class App {
     }
 
     render(alpha: number) {
+        this.controls.update();
         this.renderer.render(this.scene, this.camera);
     }
 
