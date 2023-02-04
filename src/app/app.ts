@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Flock } from "./flock";
 import { Fleet } from "./fleet";
 
@@ -44,10 +43,6 @@ export class App {
         this.flock = new Flock(50, 200);
         this.scene.add(this.flock.particles);
 
-        this.fleet = new Fleet(50, 200);
-
-        this.reset();
-
         const loadingManager = new THREE.LoadingManager();
         loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
             console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
@@ -58,9 +53,10 @@ export class App {
         loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
             console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
         };
-        new GLTFLoader(loadingManager).load('assets/models/fighter.glb', (gltf) => {
-            this.scene.add(gltf.scene);
-        });
+
+        this.fleet = new Fleet(loadingManager);
+
+        this.reset();
     }
 
     reset() {

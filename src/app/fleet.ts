@@ -1,12 +1,14 @@
 import * as THREE from "three";
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 export class Fleet {
-    size: number;
-    radius: number;
+    geometry = new THREE.BufferGeometry();
 
-    constructor(size: number, radius: number) {
-        this.size = size;
-        this.radius = radius;
+    constructor(loadingManager: THREE.LoadingManager) {
+        new GLTFLoader(loadingManager).load('assets/models/fighter.glb', (gltf) => {
+            const geo = (gltf.scene.children[0] as THREE.Mesh).geometry;
+            console.log(geo);
+        });
     }
 
     reset() {
@@ -14,10 +16,10 @@ export class Fleet {
     }
 
     update(dt: number) {
-        // empty
+        dt;
     }
 
     render(alpha: number) {
-        // empty
+        alpha;
     }
 }
