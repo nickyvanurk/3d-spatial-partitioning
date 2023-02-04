@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Flock } from "./flock";
+import { Fleet } from "./fleet";
 
 export class App {
     keys: { [key: string]: boolean; };
@@ -11,6 +12,7 @@ export class App {
     scene: THREE.Scene;
     controls: OrbitControls;
     flock: Flock;
+    fleet: Fleet;
 
     constructor() {
         window.addEventListener('keydown', this.processEvents.bind(this));
@@ -42,6 +44,8 @@ export class App {
         this.flock = new Flock(50, 200);
         this.scene.add(this.flock.particles);
 
+        this.fleet = new Fleet(50, 200);
+
         this.reset();
 
         const loadingManager = new THREE.LoadingManager();
@@ -63,6 +67,7 @@ export class App {
         this.keys = {};
         this.running = true;
         this.flock.reset();
+        this.fleet.reset();
     }
 
     processEvents(event: KeyboardEvent) {
@@ -81,10 +86,12 @@ export class App {
 
     update(dt: number) {
         this.flock.update(dt);
+        this.fleet.update(dt);
     }
 
     render(alpha: number) {
         this.flock.render(alpha);
+        this.fleet.render(alpha);
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
     }

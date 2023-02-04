@@ -26,6 +26,8 @@ export class Flock {
         const boidsMaterial = new THREE.PointsMaterial({ color: 'white', size: 2 });
         boidsGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
         this.particles = new THREE.Points(boidsGeometry, boidsMaterial);
+
+
     }
 
     reset() {
