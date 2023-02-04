@@ -1,8 +1,9 @@
 //@ts-nocheck
+import './style.css';
 
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 
-import { App } from './app';
+import { App } from './app/app';
 
 const debug = window.location.hash === '#debug';
 let stats;
