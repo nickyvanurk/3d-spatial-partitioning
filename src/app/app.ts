@@ -35,6 +35,10 @@ export class App {
 
         this.scene = new THREE.Scene();
 
+        const ambiLight = new THREE.AmbientLight(0x222222);
+        ambiLight.intensity = 10;
+        this.scene.add(ambiLight);
+
         this.flock = new Flock(50, 200);
         this.scene.add(this.flock.particles);
 
