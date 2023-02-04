@@ -1,18 +1,5 @@
-//@ts-nocheck
 import './style.css';
-
-import Stats from 'three/examples/jsm/libs/stats.module.js';
-
 import { App } from './app/app';
-
-const debug = window.location.hash === '#debug';
-let stats;
-
-if (debug) {
-    stats = new Stats();
-    stats.showPanel(0);
-    document.body.appendChild(stats.dom);
-}
 
 const MS_PER_UPDATE = 1 / 60;
 const app = new App();
@@ -21,7 +8,6 @@ let last = performance.now();
 let lag = 0;
 
 function loop() {
-    if (debug) stats.begin();
     if (app.running) {
         const now = performance.now();
         let delta = (now - last) / 1000;
@@ -36,7 +22,6 @@ function loop() {
     }
 
     app.render(lag / MS_PER_UPDATE);
-    if (debug) stats.end();
     requestAnimationFrame(loop);
 }
 
@@ -44,7 +29,7 @@ requestAnimationFrame(loop);
 
 document.querySelector('#pauseBtn').addEventListener('click', (event) => {
     app.running = !app.running;
-    event.target.innerText = app.running ? 'Pause' : 'Resume';
+    (event.target as HTMLElement).innerText = app.running ? 'Pause' : 'Resume';
 });
 
 document.querySelector('#resetBtn').addEventListener('click', () => {

@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Flock } from "./flock";
-import { BoundingBox } from "./octree";
 
 export class App {
     keys: { [key: string]: boolean; };
@@ -36,7 +35,7 @@ export class App {
 
         this.scene = new THREE.Scene();
 
-        this.flock = new Flock(50, new BoundingBox(-200, -200, -200, 400, 400, 400));
+        this.flock = new Flock(50, 200);
         this.scene.add(this.flock.particles);
 
         this.reset();

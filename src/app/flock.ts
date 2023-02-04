@@ -1,21 +1,20 @@
 import * as THREE from "three";
 
 import { Boid } from './boid';
-import { BoundingBox } from './octree';
 
 export class Flock {
     size: number;
-    region: BoundingBox;
     boids: Array<Boid> = [];
     particles: THREE.Points;
+    radius: number;
 
-    constructor(size: number, region: BoundingBox) {
+    constructor(size: number, radius: number) {
         this.size = size;
-        this.region = region;
+        this.radius = radius;
 
         this.generate();
 
-        let vertices = new Float32Array(size * 3);
+        const vertices = new Float32Array(size * 3);
         for (let i = 0; i < size; i++) {
             const boid = this.boids[i];
             vertices[i*3 + 0] = boid.position.x;
@@ -37,7 +36,7 @@ export class Flock {
     update(dt: number) {
         for (const boid of this.boids) {
             boid.flock(this.boids);
-            boid.repulseFromEdges(this.region);
+            boid.repulseFromEdges(this.radius);
             boid.update(dt);
         }
     }
@@ -55,11 +54,13 @@ export class Flock {
 
     generate() {        
         for (let i = 0; i < this.size; i++) {
-            let boid = new Boid(
-                Math.random() * this.region.width  + this.region.position.x,
-                Math.random() * this.region.height + this.region.position.y,
-                Math.random() * this.region.depth  + this.region.position.z
+            const boid = new Boid(
+                Math.random() * 2 - 1,
+                Math.random() * 2 - 1,
+                Math.random() * 2 - 1,
             );
+            boid.position.normalize();
+            boid.position.multiplyScalar(this.radius);
             this.boids.push(boid);
         }
     }
