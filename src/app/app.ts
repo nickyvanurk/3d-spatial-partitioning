@@ -44,7 +44,17 @@ export class App {
 
         this.reset();
 
-        new GLTFLoader().load('assets/models/fighter.glb', (gltf) => {
+        const loadingManager = new THREE.LoadingManager();
+        loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
+            console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+        };
+        loadingManager.onLoad = () => {
+            console.log('Loading complete!');
+        };
+        loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+            console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
+        };
+        new GLTFLoader(loadingManager).load('assets/models/fighter.glb', (gltf) => {
             this.scene.add(gltf.scene);
         });
     }
