@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Flock } from "./flock";
 
 export class App {
@@ -9,7 +10,6 @@ export class App {
     camera: THREE.PerspectiveCamera;
     scene: THREE.Scene;
     controls: OrbitControls;
-
     flock: Flock;
 
     constructor() {
@@ -39,6 +39,10 @@ export class App {
         this.scene.add(this.flock.particles);
 
         this.reset();
+
+        new GLTFLoader().load('assets/models/fighter.glb', (gltf) => {
+            this.scene.add(gltf.scene);
+        });
     }
 
     reset() {
