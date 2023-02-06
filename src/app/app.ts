@@ -54,7 +54,7 @@ export class App {
             console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
         };
 
-        this.fleet = new Fleet(loadingManager);
+        this.fleet = new Fleet(loadingManager, 50);
 
         this.reset();
     }
