@@ -25,7 +25,7 @@ export class App {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        this.camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 900);
+        this.camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 3000);
         this.camera.position.y = 300;
         this.camera.position.z = 600;
 
@@ -54,7 +54,7 @@ export class App {
             console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
         };
 
-        this.fleet = new Fleet(loadingManager, 50);
+        this.fleet = new Fleet(this.scene, this.renderer, loadingManager, 50, 400);
 
         this.reset();
     }
