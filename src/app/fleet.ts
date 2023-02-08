@@ -25,17 +25,26 @@ export class Fleet {
         console.log(this.capacity)
         this.geometry = new THREE.BufferGeometry();
 
-        new GLTFLoader(loadingManager).load('assets/models/fighter.glb', (gltf) => {
+        new GLTFLoader(loadingManager).load('assets/models/spaceship.glb', (gltf) => {
             const geo = (gltf.scene.children[0] as THREE.Mesh).geometry;
             const totalPositions = geo.getAttribute('position').count;
             const indicesPerShip = geo.index.count;
             
-            const vertices = [], /*color = [],*/ reference = [], seeds = [], indices = [];
+            const vertices = [], color = [], reference = [], seeds = [], indices = [];
             const totalVertices = totalPositions * 3 * this.capacity;
+
+            // Filter alpha values from color array (Blender adds alpha channel after baking vertex colors).
+            const colors = geo.getAttribute( 'color').array; 
+            const newColors = [];
+            for (let i = 0; i < colors.length; i++) {
+                if (i % 4 === 0) continue;
+                newColors.push(colors[i-1]);
+            }
+
             for (let i = 0; i < totalVertices; i++) {
                 const bIndex = i % (totalPositions * 3);
                 vertices.push(geo.getAttribute('position').array[bIndex]);
-                // color.push(geo.getAttribute('color').array[bIndex]);
+                color.push(newColors[bIndex]);
             }
 
             let r = Math.random();
@@ -56,7 +65,7 @@ export class Fleet {
             }
 
             geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
-            // geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(color), 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(color), 3));
             geo.setAttribute('reference', new THREE.BufferAttribute(new Float32Array(reference), 2));
             geo.setAttribute('seeds', new THREE.BufferAttribute(new Float32Array(seeds), 2));
 
@@ -123,6 +132,7 @@ export class Fleet {
 
     initShips() {
         const material = new THREE.MeshStandardMaterial({
+            vertexColors: true,
             flatShading: true,
             roughness: 1,
             metalness: 0,
