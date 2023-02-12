@@ -189,7 +189,7 @@ export class Fleet {
                 // pos = (pos + velocity * 0.5) * alpha + pos * (1.0 - alpha);
 
                 newPosition = mat3(modelMatrix) * newPosition;
-                newPosition *= size + seeds.y * size * 0.2;
+                newPosition *= size;
 
                 velocity.z *= -1.0;
                 float xz = length(velocity.xz);
