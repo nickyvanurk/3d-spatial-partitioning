@@ -14,6 +14,10 @@ export class Fleet {
     gpuCompute: GPUComputationRenderer;
     positionVariable: Variable;
     materialShader: THREE.Shader;
+    velocityVariable: Variable;
+    positionUniforms: {
+        [uniform: string]: THREE.IUniform<number>;
+    };
 
     constructor(scene: THREE.Scene, renderer: THREE.WebGLRenderer, loadingManager: THREE.LoadingManager, size: number, bounds: number) {
         this.scene = scene; // TODO: Rework so this class doesn't require the scene?
@@ -91,22 +95,38 @@ export class Fleet {
         }
 
         const dtPosition = this.gpuCompute.createTexture();
+        const dtVelocity = this.gpuCompute.createTexture();
         this.fillPositionTexture(dtPosition);
+        this.fillVelocityTexture(dtVelocity);
 
-        const positionVariable = this.gpuCompute.addVariable('texturePosition', /* glsl */`
+        this.positionVariable = this.gpuCompute.addVariable('texturePosition', /* glsl */`
+            uniform float delta;
+
             void main() {
                 vec2 uv = gl_FragCoord.xy / resolution.xy;
-				vec4 tmpPos = texture2D(texturePosition, uv);
-				vec3 position = tmpPos.xyz;
-				gl_FragColor = vec4(position , 1.0);
+                vec3 position = texture2D(texturePosition, uv).xyz;
+                vec3 velocity = texture2D(textureVelocity, uv).xyz;
+                gl_FragColor = vec4(position + velocity * delta, 1.0);
             }
         `, dtPosition);
-        this.gpuCompute.setVariableDependencies(positionVariable, [positionVariable]);
-    
-        positionVariable.wrapS = THREE.RepeatWrapping;
-        positionVariable.wrapT = THREE.RepeatWrapping;
+        this.velocityVariable = this.gpuCompute.addVariable('textureVelocity', /* glsl */`
+            void main() {
+                vec2 uv = gl_FragCoord.xy / resolution.xy;
+                vec3 velocity = texture2D(textureVelocity, uv).xyz;
+				gl_FragColor = vec4(velocity , 1.0);
+            }
+        `, dtVelocity);
 
-        this.positionVariable = positionVariable;
+        this.gpuCompute.setVariableDependencies(this.positionVariable, [this.positionVariable, this.velocityVariable]);
+        this.gpuCompute.setVariableDependencies(this.velocityVariable, [this.positionVariable, this.velocityVariable]);
+    
+        this.positionUniforms = this.positionVariable.material.uniforms;
+        this.positionUniforms['delta'] = {value: 0.0};
+
+        this.positionVariable.wrapS = THREE.RepeatWrapping;
+        this.positionVariable.wrapT = THREE.RepeatWrapping;
+        this.velocityVariable.wrapS = THREE.RepeatWrapping;
+        this.velocityVariable.wrapT = THREE.RepeatWrapping;
 
         const error = this.gpuCompute.init();
         if (error !== null) {
@@ -117,16 +137,21 @@ export class Fleet {
     fillPositionTexture(texture: THREE.DataTexture) {
         const theArray = texture.image.data;
         const boundsHalf = this.bounds / 2;
+        for (let i = 0, l = theArray.length; i < l; i += 4) {
+            theArray[i + 0] = Math.random() * this.bounds - boundsHalf;
+            theArray[i + 1] = Math.random() * this.bounds - boundsHalf;
+            theArray[i + 2] = Math.random() * this.bounds - boundsHalf;
+            theArray[i + 3] = 1;
+        }
+    }
 
-        for (let k = 0, kl = theArray.length; k < kl; k += 4) {
-            const x = Math.random() * this.bounds - boundsHalf;
-            const y = Math.random() * this.bounds - boundsHalf;
-            const z = Math.random() * this.bounds - boundsHalf;
-
-            theArray[ k + 0 ] = x;
-            theArray[ k + 1 ] = y;
-            theArray[ k + 2 ] = z;
-            theArray[ k + 3 ] = 1;
+    fillVelocityTexture(texture: THREE.DataTexture) {
+        const theArray = texture.image.data;
+        for (let i = 0, l = theArray.length; i < l; i += 4) {
+            theArray[i + 0] = (Math.random() - 0.5) * 10;
+            theArray[i + 1] = (Math.random() - 0.5) * 10;
+            theArray[i + 2] = (Math.random() - 0.5) * 10;
+            theArray[i + 3] = 1;
         }
     }
 
@@ -140,26 +165,47 @@ export class Fleet {
 
         material.onBeforeCompile = (shader) => {
             shader.uniforms.texturePosition = {value: null};
+            shader.uniforms.textureVelocity = {value: null};
             shader.uniforms.size = {value: 0.01};
+            shader.uniforms.alpha = {value: 0.0};
 
             let token = '#define STANDARD';
             let insert = /* glsl */`
                 attribute vec4 reference;
                 attribute vec4 seeds;
                 uniform sampler2D texturePosition;
+                uniform sampler2D textureVelocity;
                 uniform float size;
+                uniform float alpha;
             `;
             shader.vertexShader = shader.vertexShader.replace(token, token + insert);
 
             token = '#include <begin_vertex>';
             insert = /* glsl */`
-                vec4 tmpPos = texture2D(texturePosition, reference.xy);
-            
-                vec3 pos = tmpPos.xyz;
+                vec3 pos = texture2D(texturePosition, reference.xy).xyz;
+                vec3 velocity = normalize(texture2D(textureVelocity, reference.xy).xyz);
                 vec3 newPosition = position;
+
+                // pos = (pos + velocity * 0.5) * alpha + pos * (1.0 - alpha);
+
                 newPosition = mat3(modelMatrix) * newPosition;
                 newPosition *= size + seeds.y * size * 0.2;
 
+                velocity.z *= -1.0;
+                float xz = length(velocity.xz);
+                float xyz = 1.0;
+                float x = sqrt(1.0 - velocity.y * velocity.y);
+
+                float cosry = velocity.x / xz;
+                float sinry = velocity.z / xz;
+
+                float cosrz = x / xyz;
+                float sinrz = velocity.y / xyz;
+
+                mat3 maty = mat3(cosry, 0, -sinry, 0, 1, 0, sinry, 0, cosry);
+                mat3 matz = mat3(cosrz, sinrz, 0, -sinrz, cosrz, 0, 0, 0, 1);
+                
+                newPosition = maty * matz * newPosition;
                 newPosition += pos;
 
                 vec3 transformed = vec3(newPosition);
@@ -177,16 +223,22 @@ export class Fleet {
     }
 
     update(dt: number) {
-        dt;
-    }
-
-    render(alpha: number) {
-        alpha;
         if (this.gpuCompute) {
+            this.positionUniforms['delta'].value = dt;
+
             this.gpuCompute.compute();
 
             if (this.materialShader) {
                 this.materialShader.uniforms['texturePosition'].value = this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
+                this.materialShader.uniforms['textureVelocity'].value = this.gpuCompute.getCurrentRenderTarget(this.velocityVariable).texture;
+            }
+        }
+    }
+
+    render(alpha: number) {
+        if (this.gpuCompute) {
+            if (this.materialShader) {
+                this.materialShader.uniforms['alpha'].value = alpha;
             }
         }
     }
