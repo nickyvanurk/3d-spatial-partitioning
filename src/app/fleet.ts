@@ -26,7 +26,6 @@ export class Fleet {
         this.bounds = bounds;
         this.width = nextPowerOf2(Math.sqrt(size));
         this.capacity = this.width * this.width;
-        console.log(this.capacity)
         this.geometry = new THREE.BufferGeometry();
 
         new GLTFLoader(loadingManager).load('assets/models/spaceship.glb', (gltf) => {
