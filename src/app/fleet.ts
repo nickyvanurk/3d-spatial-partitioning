@@ -147,9 +147,9 @@ export class Fleet {
     fillVelocityTexture(texture: THREE.DataTexture) {
         const theArray = texture.image.data;
         for (let i = 0, l = theArray.length; i < l; i += 4) {
-            theArray[i + 0] = (Math.random() - 0.5) * 10;
-            theArray[i + 1] = (Math.random() - 0.5) * 10;
-            theArray[i + 2] = (Math.random() - 0.5) * 10;
+            theArray[i + 0] = (Math.random() - 0.5) * 20;
+            theArray[i + 1] = (Math.random() - 0.5) * 20;
+            theArray[i + 2] = (Math.random() - 0.5) * 20;
             theArray[i + 3] = 1;
         }
     }
@@ -165,7 +165,7 @@ export class Fleet {
         material.onBeforeCompile = (shader) => {
             shader.uniforms.texturePosition = {value: null};
             shader.uniforms.textureVelocity = {value: null};
-            shader.uniforms.size = {value: 0.01};
+            shader.uniforms.size = {value: 0.005};
             shader.uniforms.alpha = {value: 0.0};
 
             let token = '#define STANDARD';
@@ -220,7 +220,7 @@ export class Fleet {
         };
 
         const mesh = new THREE.Mesh(this.geometry, material);
-        mesh.rotation.y = Math.PI / 2;
+        mesh.rotation.z -= Math.PI / 2;
         mesh.castShadow = true;
         mesh.receiveShadow = true;
         this.scene.add(mesh);
