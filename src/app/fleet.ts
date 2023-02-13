@@ -105,7 +105,7 @@ export class Fleet {
                 vec2 uv = gl_FragCoord.xy / resolution.xy;
                 vec3 position = texture2D(texturePosition, uv).xyz;
                 vec3 velocity = texture2D(textureVelocity, uv).xyz;
-                gl_FragColor = vec4(position + velocity * delta, 1.0);
+                gl_FragColor = vec4(position + velocity * delta, delta);
             }
         `, dtPosition);
         this.velocityVariable = this.gpuCompute.addVariable('textureVelocity', /* glsl */`
@@ -181,11 +181,16 @@ export class Fleet {
 
             token = '#include <begin_vertex>';
             insert = /* glsl */`
-                vec3 pos = texture2D(texturePosition, reference.xy).xyz;
-                vec3 velocity = normalize(texture2D(textureVelocity, reference.xy).xyz);
+                vec4 tmpPos = texture2D(texturePosition, reference.xy);
+                vec3 pos = tmpPos.xyz;
+                float delta = tmpPos.w;
+                vec3 tempVel = texture2D(textureVelocity, reference.xy).xyz;
+                vec3 velocity = normalize(tempVel);
                 vec3 newPosition = position;
 
-                // pos = (pos + velocity * 0.5) * alpha + pos * (1.0 - alpha);
+                // tempVel * delta is the velocity added to the position in the positionVariable.
+                // We can use it to get the old position and calculate the correct render position.
+                pos = (pos) * alpha + (pos - tempVel * delta) * (1.0 - alpha);
 
                 newPosition = mat3(modelMatrix) * newPosition;
                 newPosition *= size;
