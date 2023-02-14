@@ -18,6 +18,9 @@ export class Fleet {
     positionUniforms: {
         [uniform: string]: THREE.IUniform<number>;
     };
+    velocityUniforms: {
+        [uniform: string]: THREE.IUniform<number>;
+    };
 
     constructor(scene: THREE.Scene, renderer: THREE.WebGLRenderer, loadingManager: THREE.LoadingManager, size: number, bounds: number) {
         this.scene = scene; // TODO: Rework so this class doesn't require the scene?
@@ -109,9 +112,19 @@ export class Fleet {
             }
         `, dtPosition);
         this.velocityVariable = this.gpuCompute.addVariable('textureVelocity', /* glsl */`
+            uniform float delta;
+
             void main() {
                 vec2 uv = gl_FragCoord.xy / resolution.xy;
+                vec3 position = texture2D(texturePosition, uv).xyz;
                 vec3 velocity = texture2D(textureVelocity, uv).xyz;
+
+                // Attract fleet to center
+                vec3 central = vec3(0.0, 0.0, 0.0);
+                vec3 direction = position - central;
+                direction.y *= 2.5;
+                velocity -= normalize(direction) * delta * 5.0;
+
 				gl_FragColor = vec4(velocity , 1.0);
             }
         `, dtVelocity);
@@ -120,7 +133,9 @@ export class Fleet {
         this.gpuCompute.setVariableDependencies(this.velocityVariable, [this.positionVariable, this.velocityVariable]);
     
         this.positionUniforms = this.positionVariable.material.uniforms;
+        this.velocityUniforms = this.velocityVariable.material.uniforms;
         this.positionUniforms['delta'] = {value: 0.0};
+        this.velocityUniforms['delta'] = {value: 0.0};
 
         this.positionVariable.wrapS = THREE.RepeatWrapping;
         this.positionVariable.wrapT = THREE.RepeatWrapping;
@@ -165,7 +180,7 @@ export class Fleet {
         material.onBeforeCompile = (shader) => {
             shader.uniforms.texturePosition = {value: null};
             shader.uniforms.textureVelocity = {value: null};
-            shader.uniforms.size = {value: 0.005};
+            shader.uniforms.size = {value: 0.01};
             shader.uniforms.alpha = {value: 0.0};
 
             let token = '#define STANDARD';
@@ -229,6 +244,7 @@ export class Fleet {
     update(dt: number) {
         if (this.gpuCompute) {
             this.positionUniforms['delta'].value = dt;
+            this.velocityUniforms['delta'].value = dt;
 
             this.gpuCompute.compute();
 
