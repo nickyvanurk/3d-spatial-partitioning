@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { Flock } from "./flock";
 import { Fleet } from "./fleet";
 
 export class App {
@@ -10,7 +9,6 @@ export class App {
     camera: THREE.PerspectiveCamera;
     scene: THREE.Scene;
     controls: OrbitControls;
-    flock: Flock;
     fleet: Fleet;
 
     constructor() {
@@ -40,9 +38,6 @@ export class App {
         ambiLight.intensity = 10;
         this.scene.add(ambiLight);
 
-        this.flock = new Flock(50, 200);
-        this.scene.add(this.flock.particles);
-
         const loadingManager = new THREE.LoadingManager();
         loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
             console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
@@ -62,7 +57,6 @@ export class App {
     reset() {
         this.keys = {};
         this.running = true;
-        this.flock.reset();
         this.fleet.reset();
     }
 
@@ -81,12 +75,10 @@ export class App {
     }
 
     update(dt: number) {
-        this.flock.update(dt);
         this.fleet.update(dt);
     }
 
     render(alpha: number) {
-        this.flock.render(alpha);
         this.fleet.render(alpha);
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
