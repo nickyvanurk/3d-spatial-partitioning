@@ -1,3 +1,6 @@
+> **Note**
+> This project is being developed further into a simulation. Its purpose is no longer to visualize the octree data structure, but instead become an awesome portfolio project.
+
 # [3D Spatial Partitioning](http://nickyvanurk.com/boids-octree-simulation/)
 
 A 3D [Boids](https://en.wikipedia.org/wiki/Boids) implementation to demonstrate **Spatial Partitioning** implemented with an **Octree**.
