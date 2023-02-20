@@ -114,6 +114,13 @@ export class Fleet {
         this.velocityVariable = this.gpuCompute.addVariable('textureVelocity', /* glsl */`
             uniform float delta;
 
+            const float width = resolution.x;
+            const float height = resolution.y;
+
+            float zoneRadius = 40.0;
+            float zoneRadiusSquared = 1600.0;
+            float separationThresh = 0.45;
+
             void main() {
                 vec2 uv = gl_FragCoord.xy / resolution.xy;
                 vec3 position = texture2D(texturePosition, uv).xyz;
@@ -121,9 +128,36 @@ export class Fleet {
 
                 // Attract fleet to center
                 vec3 central = vec3(0.0, 0.0, 0.0);
-                vec3 direction = position - central;
-                direction.y *= 2.5;
-                velocity -= normalize(direction) * delta * 5.0;
+                vec3 dir = position - central;
+                dir.y *= 2.5;
+                velocity -= normalize(dir) * delta * 5.0;
+
+                vec3 birdPosition, birdVelocity;
+                float dist, distSquared, percent, f;
+
+				for (float y = 0.0; y < height; y++) {
+					for (float x = 0.0; x < width; x++) {
+
+						vec2 ref = vec2( x + 0.5, y + 0.5 ) / resolution.xy;
+						birdPosition = texture2D( texturePosition, ref ).xyz;
+
+                        dir = birdPosition - position;
+                        dist = length(dir);
+
+                        if (dist < 0.0001) continue;
+
+                        distSquared = dist * dist;
+
+                        if (distSquared > zoneRadiusSquared) continue;
+
+                        percent = distSquared / zoneRadiusSquared;
+
+                        if (percent < separationThresh) {
+                            f = (separationThresh / percent - 1.0) * delta;
+                            velocity -= normalize(dir) * f;
+                        }
+                    }
+                }
 
 				gl_FragColor = vec4(velocity , 1.0);
             }
