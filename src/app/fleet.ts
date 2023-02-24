@@ -117,9 +117,13 @@ export class Fleet {
             const float width = resolution.x;
             const float height = resolution.y;
 
+            const float PI = 3.141592653589793;
+            const float PI_2 = PI * 2.0;
+
             float zoneRadius = 40.0;
             float zoneRadiusSquared = 1600.0;
             float separationThresh = 0.45;
+            float alignmentThresh = 0.65;
 
             void main() {
                 vec2 uv = gl_FragCoord.xy / resolution.xy;
@@ -132,16 +136,16 @@ export class Fleet {
                 dir.y *= 2.5;
                 velocity -= normalize(dir) * delta * 5.0;
 
-                vec3 birdPosition, birdVelocity;
+                vec3 shipPosition, shipVelocity;
                 float dist, distSquared, percent, f;
 
 				for (float y = 0.0; y < height; y++) {
 					for (float x = 0.0; x < width; x++) {
 
 						vec2 ref = vec2( x + 0.5, y + 0.5 ) / resolution.xy;
-						birdPosition = texture2D( texturePosition, ref ).xyz;
+						shipPosition = texture2D( texturePosition, ref ).xyz;
 
-                        dir = birdPosition - position;
+                        dir = shipPosition - position;
                         dist = length(dir);
 
                         if (dist < 0.0001) continue;
@@ -153,8 +157,16 @@ export class Fleet {
                         percent = distSquared / zoneRadiusSquared;
 
                         if (percent < separationThresh) {
+                            // Separation - Move apart for comfort
                             f = (separationThresh / percent - 1.0) * delta;
                             velocity -= normalize(dir) * f;
+                        } else if (percent < alignmentThresh) {
+                            // Alignment - fly the same direction
+                            float threshDelta = alignmentThresh - separationThresh;
+                            float adjustPercent = (percent - separationThresh) / threshDelta;
+                            shipVelocity = texture2D(textureVelocity, ref).xyz;
+                            f = (0.5 - cos(adjustPercent * PI_2) * 0.5 + 0.5) * delta;
+                            velocity += normalize(shipVelocity) * f;
                         }
                     }
                 }
