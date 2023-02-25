@@ -125,7 +125,16 @@ export class Fleet {
             float separationThresh = 0.45;
             float alignmentThresh = 0.65;
 
+            float separationDistance = 20.0;
+            float alignmentDistance = 20.0;
+            float cohesionDistance = 20.0;
+
             void main() {
+                zoneRadius = separationDistance + alignmentDistance + cohesionDistance;
+                separationThresh = separationDistance / zoneRadius;
+                alignmentThresh = (separationDistance + alignmentDistance) / zoneRadius;
+                zoneRadiusSquared = zoneRadius * zoneRadius;
+
                 vec2 uv = gl_FragCoord.xy / resolution.xy;
                 vec3 position = texture2D(texturePosition, uv).xyz;
                 vec3 velocity = texture2D(textureVelocity, uv).xyz;
