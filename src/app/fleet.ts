@@ -129,6 +129,8 @@ export class Fleet {
             float alignmentDistance = 20.0;
             float cohesionDistance = 20.0;
 
+            const float SPEED_LIMIT = 50.0;
+
             void main() {
                 zoneRadius = separationDistance + alignmentDistance + cohesionDistance;
                 separationThresh = separationDistance / zoneRadius;
@@ -185,6 +187,10 @@ export class Fleet {
                             velocity += normalize(dir) * f;
                         }
                     }
+                }
+
+                if (length(velocity) > SPEED_LIMIT) {
+                    velocity = normalize(velocity) * SPEED_LIMIT;
                 }
 
 				gl_FragColor = vec4(velocity , 1.0);
