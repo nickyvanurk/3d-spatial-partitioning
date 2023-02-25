@@ -150,9 +150,8 @@ export class Fleet {
 
 				for (float y = 0.0; y < height; y++) {
 					for (float x = 0.0; x < width; x++) {
-
-						vec2 ref = vec2( x + 0.5, y + 0.5 ) / resolution.xy;
-						shipPosition = texture2D( texturePosition, ref ).xyz;
+						vec2 ref = vec2(x + 0.5, y + 0.5) / resolution.xy;
+						shipPosition = texture2D(texturePosition, ref).xyz;
 
                         dir = shipPosition - position;
                         dist = length(dir);
@@ -166,7 +165,7 @@ export class Fleet {
                         percent = distSquared / zoneRadiusSquared;
 
                         if (percent < separationThresh) {
-                            // Separation - Move apart for comfort
+                            // Separation - move apart for comfort
                             f = (separationThresh / percent - 1.0) * delta;
                             velocity -= normalize(dir) * f;
                         } else if (percent < alignmentThresh) {
@@ -176,6 +175,14 @@ export class Fleet {
                             shipVelocity = texture2D(textureVelocity, ref).xyz;
                             f = (0.5 - cos(adjustPercent * PI_2) * 0.5 + 0.5) * delta;
                             velocity += normalize(shipVelocity) * f;
+                        } else {
+                            // Cohesion - move closer
+                            float threshDelta = 1.0 - alignmentThresh;
+                            float adjustPercent;
+                            if (threshDelta == 0.0) adjustPercent = 1.0;
+                            else adjustPercent = (percent - alignmentThresh) / threshDelta;
+                            f = (0.5 - (cos(adjustPercent * PI_2) * -0.5 + 0.5)) * delta;
+                            velocity += normalize(dir) * f;
                         }
                     }
                 }
