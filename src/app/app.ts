@@ -40,11 +40,16 @@ export class App {
 
         const loadingManager = new THREE.LoadingManager();
         loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+            const loadingBar: HTMLElement = document.querySelector('.bar');
             const percent = Math.floor((itemsLoaded / itemsTotal * 100));
-            (document.querySelector('.bar') as HTMLElement).style.width =  `${percent}%`;
+            loadingBar.style.width =  `${percent}%`;
 
             if (percent == 100) {
-                (document.querySelector('.loadingScreen') as HTMLElement).style.opacity = '0';
+                const loadingScreen: HTMLElement = document.querySelector('.loadingScreen');
+                loadingScreen.style.opacity = '0';
+                loadingScreen.addEventListener('transitionend', () => {
+                    loadingScreen.style.zIndex = '-1';
+                });
             }
         };
         loadingManager.onLoad = this.reset.bind(this);

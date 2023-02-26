@@ -159,12 +159,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: 0.5s opacity;
-    transition-delay: 0.25s;
-}
-
-.loadingScreen.fade-out {
-    opacity: 0;
+    transition: opacity 0.5s ease-in 0.25s, z-index 0s 0.75s;
 }
 
 .loadingScreen .counter {
