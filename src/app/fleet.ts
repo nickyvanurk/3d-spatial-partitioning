@@ -3,6 +3,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GPUComputationRenderer, Variable } from 'three/examples/jsm/misc/GPUComputationRenderer';
 import { nextPowerOf2 } from "./helpers";
 
+import positionFs from './position.fs.glsl';
+
 export class Fleet {
     scene: THREE.Scene;
     renderer: THREE.WebGLRenderer;
@@ -101,16 +103,7 @@ export class Fleet {
         this.fillPositionTexture(dtPosition);
         this.fillVelocityTexture(dtVelocity);
 
-        this.positionVariable = this.gpuCompute.addVariable('texturePosition', /* glsl */`
-            uniform float delta;
-
-            void main() {
-                vec2 uv = gl_FragCoord.xy / resolution.xy;
-                vec3 position = texture2D(texturePosition, uv).xyz;
-                vec3 velocity = texture2D(textureVelocity, uv).xyz;
-                gl_FragColor = vec4(position + velocity * delta, delta);
-            }
-        `, dtPosition);
+        this.positionVariable = this.gpuCompute.addVariable('texturePosition', positionFs, dtPosition);
         this.velocityVariable = this.gpuCompute.addVariable('textureVelocity', /* glsl */`
             uniform float delta;
 

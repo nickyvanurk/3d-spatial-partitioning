@@ -9,5 +9,11 @@ module.exports = merge(common, {
     static: 'dist',
     open: true,
     hot: true,
+  },
+  module: {
+    rules: [{
+      test: /\.(glsl|vs|fs)$/,
+      loader: 'ts-shader-loader'
+    }]
   }
 });
