@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GPUComputationRenderer, Variable } from 'three/examples/jsm/misc/GPUComputationRenderer';
 import { nextPowerOf2 } from "./helpers";
 
@@ -25,7 +25,7 @@ export class Fleet {
         [uniform: string]: THREE.IUniform<number>;
     };
 
-    constructor(scene: THREE.Scene, renderer: THREE.WebGLRenderer, loadingManager: THREE.LoadingManager, size: number, bounds: number) {
+    constructor(scene: THREE.Scene, renderer: THREE.WebGLRenderer, model: GLTF, size: number, bounds: number) {
         this.scene = scene; // TODO: Rework so this class doesn't require the scene?
         this.renderer = renderer; // TODO: Rework so this class doesn't require the renderer?
         this.size = size;
@@ -34,58 +34,56 @@ export class Fleet {
         this.capacity = this.width * this.width;
         this.geometry = new THREE.BufferGeometry();
 
-        new GLTFLoader(loadingManager).load('assets/models/spaceship.glb', (gltf) => {
-            const geo = (gltf.scene.children[0] as THREE.Mesh).geometry;
-            const totalPositions = geo.getAttribute('position').count;
-            const indicesPerShip = geo.index.count;
-            
-            const vertices = [], color = [], reference = [], seeds = [], indices = [];
-            const totalVertices = totalPositions * 3 * this.capacity;
+        const geo = (model.scene.children[0] as THREE.Mesh).geometry;
+        const totalPositions = geo.getAttribute('position').count;
+        const indicesPerShip = geo.index.count;
+        
+        const vertices = [], color = [], reference = [], seeds = [], indices = [];
+        const totalVertices = totalPositions * 3 * this.capacity;
 
-            // Filter alpha values from color array (Blender adds alpha channel after baking vertex colors).
-            const colors = geo.getAttribute( 'color').array; 
-            const newColors = [];
-            for (let i = 0; i < colors.length; i++) {
-                if (i % 4 === 0) continue;
-                newColors.push(colors[i-1]);
-            }
+        // Filter alpha values from color array (Blender adds alpha channel after baking vertex colors).
+        const colors = geo.getAttribute( 'color').array; 
+        const newColors = [];
+        for (let i = 0; i < colors.length; i++) {
+            if (i % 4 === 0) continue;
+            newColors.push(colors[i-1]);
+        }
 
-            for (let i = 0; i < totalVertices; i++) {
-                const bIndex = i % (totalPositions * 3);
-                vertices.push(geo.getAttribute('position').array[bIndex]);
-                color.push(newColors[bIndex]);
-            }
+        for (let i = 0; i < totalVertices; i++) {
+            const bIndex = i % (totalPositions * 3);
+            vertices.push(geo.getAttribute('position').array[bIndex]);
+            color.push(newColors[bIndex]);
+        }
 
-            let r = Math.random();
-            for (let i = 0; i < totalPositions * this.capacity; i++) {
-                const bIndex = i % totalPositions;
-                const ship = Math.floor(i / totalPositions);
-                if (bIndex == 0) r = Math.random();
-                const j = ~~ship;
-                const x = (j % this.width) / this.width;
-                const y = ~~(j / this.width) / this.width;
-                reference.push(x, y);
-                seeds.push(ship, r);
-            }
+        let r = Math.random();
+        for (let i = 0; i < totalPositions * this.capacity; i++) {
+            const bIndex = i % totalPositions;
+            const ship = Math.floor(i / totalPositions);
+            if (bIndex == 0) r = Math.random();
+            const j = ~~ship;
+            const x = (j % this.width) / this.width;
+            const y = ~~(j / this.width) / this.width;
+            reference.push(x, y);
+            seeds.push(ship, r);
+        }
 
-            for (let i = 0; i < geo.index.array.length * this.capacity; i++) {
-                const offset = Math.floor(i / geo.index.array.length) * totalPositions;
-                indices.push(geo.index.array[i % geo.index.array.length] + offset);
-            }
+        for (let i = 0; i < geo.index.array.length * this.capacity; i++) {
+            const offset = Math.floor(i / geo.index.array.length) * totalPositions;
+            indices.push(geo.index.array[i % geo.index.array.length] + offset);
+        }
 
-            geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
-            geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(color), 3));
-            geo.setAttribute('reference', new THREE.BufferAttribute(new Float32Array(reference), 2));
-            geo.setAttribute('seeds', new THREE.BufferAttribute(new Float32Array(seeds), 2));
+        geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
+        geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(color), 3));
+        geo.setAttribute('reference', new THREE.BufferAttribute(new Float32Array(reference), 2));
+        geo.setAttribute('seeds', new THREE.BufferAttribute(new Float32Array(seeds), 2));
 
-            geo.setIndex(indices);
-            geo.setDrawRange(0, indicesPerShip * this.size);
+        geo.setIndex(indices);
+        geo.setDrawRange(0, indicesPerShip * this.size);
 
-            this.geometry = geo;
+        this.geometry = geo;
 
-            this.initComputeRenderer();
-            this.initShips();
-        });
+        this.initComputeRenderer();
+        this.initShips();
     }
 
     reset() {

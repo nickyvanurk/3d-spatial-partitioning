@@ -58,14 +58,12 @@ export class App {
 
         this.assetManager = new AssetManager(loadingManager);
         this.assetManager.loadModel('spaceship', 'assets/models/spaceship.glb');
-
-        this.fleet = new Fleet(this.scene, this.renderer, loadingManager, 50, 400);
     }
 
     reset() {
         this.keys = {};
         this.running = true;
-        this.fleet.reset();
+        this.fleet = new Fleet(this.scene, this.renderer, this.assetManager.getModel('spaceship'), 50, 400);
     }
 
     processEvents(event: KeyboardEvent) {
