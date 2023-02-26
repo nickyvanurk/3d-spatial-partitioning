@@ -156,9 +156,24 @@ footer {
     background: #131A29;
     z-index: 99;
     opacity: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transition: 0.5s opacity;
+    transition-delay: 0.25s;
 }
 
 .loadingScreen.fade-out {
     opacity: 0;
+}
+
+.loadingScreen .counter {
+    width: 200px;
+}
+
+.loadingScreen .bar {
+    background: #64ffda;
+    height: 1px;
+    width: 0%;
+    transition: 0.2s width;
 }

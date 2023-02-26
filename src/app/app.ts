@@ -47,7 +47,13 @@ export class App {
         };
         loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
             console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
-            // (document.querySelector('.loadingScreen') as HTMLElement).style.opacity = '0';
+            
+            const loadingPercent = Math.floor((itemsLoaded / itemsTotal * 100));
+            (document.querySelector('.bar') as HTMLElement).style.width = loadingPercent + '%';
+
+            if (loadingPercent == 100) {
+                (document.querySelector('.loadingScreen') as HTMLElement).style.opacity = '0';
+            }
         };
 
         this.fleet = new Fleet(this.scene, this.renderer, loadingManager, 50, 400);
