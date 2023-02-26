@@ -40,8 +40,12 @@ export class App {
         this.scene = new THREE.Scene();
 
         const ambiLight = new THREE.AmbientLight(0x222222);
-        ambiLight.intensity = 10;
+        ambiLight.intensity = 8;
         this.scene.add(ambiLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff);
+        dirLight.position.setScalar(1);
+        this.scene.add(dirLight);
 
         const loadingManager = new THREE.LoadingManager();
         loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
