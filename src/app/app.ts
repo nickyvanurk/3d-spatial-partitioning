@@ -12,6 +12,7 @@ export class App {
     controls: OrbitControls;
     fleet: Fleet;
     assetManager: AssetManager;
+    station: THREE.Group;
 
     constructor() {
         window.addEventListener('keydown', this.processEvents.bind(this));
@@ -28,13 +29,13 @@ export class App {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
         this.camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 3000);
-        this.camera.position.y = 300;
-        this.camera.position.z = 600;
+        this.camera.position.y = 400;
+        this.camera.position.z = 800;
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.1;
-        this.controls.maxDistance = 650;
+        this.controls.maxDistance = 1500;
 
         this.scene = new THREE.Scene();
 
@@ -60,10 +61,18 @@ export class App {
 
         this.assetManager = new AssetManager(loadingManager);
         this.assetManager.loadModel('spaceship', 'assets/models/spaceship.glb');
+        this.assetManager.loadModel('station', 'assets/models/station.glb');
     }
 
     init() {
-        this.fleet = new Fleet(this.scene, this.renderer, this.assetManager.getModel('spaceship'), 50, 400);
+        this.station = this.assetManager.getModel('station').scene;
+        this.station.position.y = 100;
+        this.station.rotation.x = -0.05;
+        this.station.rotation.z = -0.05;
+        this.scene.add(this.station);
+
+        this.fleet = new Fleet(this.scene, this.renderer, this.assetManager.getModel('spaceship'), 50, 1000);
+
         this.running = true;
     }
 
@@ -93,7 +102,7 @@ export class App {
         if (this.running) {
             this.fleet.render(alpha);
         }
-  
+
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
     }
