@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { AssetManager } from "./asset_manager";
 import { Fleet } from "./fleet";
 
 export class App {
@@ -10,6 +11,7 @@ export class App {
     scene: THREE.Scene;
     controls: OrbitControls;
     fleet: Fleet;
+    assetManager: AssetManager;
 
     constructor() {
         window.addEventListener('keydown', this.processEvents.bind(this));
@@ -53,6 +55,9 @@ export class App {
             }
         };
         loadingManager.onLoad = this.reset.bind(this);
+
+        this.assetManager = new AssetManager(loadingManager);
+        this.assetManager.loadModel('spaceship', 'assets/models/spaceship.glb');
 
         this.fleet = new Fleet(this.scene, this.renderer, loadingManager, 50, 400);
     }
