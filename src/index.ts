@@ -19,9 +19,9 @@ function loop() {
             app.update(MS_PER_UPDATE);
             lag -= MS_PER_UPDATE;
         }
-
-        app.render(lag / MS_PER_UPDATE);
     }
+
+    app.render(lag / MS_PER_UPDATE);
     requestAnimationFrame(loop);
 }
 

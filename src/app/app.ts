@@ -19,6 +19,8 @@ export class App {
         window.addEventListener('resize', this.resize.bind(this));
         window.addEventListener('dblclick', this.toggleFullscreen.bind(this));
 
+        this.keys = {};
+
         const canvas = document.querySelector('canvas.webgl');
         this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         this.renderer.setClearColor(0x131A29);
@@ -54,16 +56,19 @@ export class App {
                 });
             }
         };
-        loadingManager.onLoad = this.reset.bind(this);
+        loadingManager.onLoad = this.init.bind(this);
 
         this.assetManager = new AssetManager(loadingManager);
         this.assetManager.loadModel('spaceship', 'assets/models/spaceship.glb');
     }
 
-    reset() {
-        this.keys = {};
-        this.running = true;
+    init() {
         this.fleet = new Fleet(this.scene, this.renderer, this.assetManager.getModel('spaceship'), 50, 400);
+        this.running = true;
+    }
+
+    reset() {
+        // empty
     }
 
     processEvents(event: KeyboardEvent) {
@@ -85,7 +90,10 @@ export class App {
     }
 
     render(alpha: number) {
-        this.fleet.render(alpha);
+        if (this.running) {
+            this.fleet.render(alpha);
+        }
+  
         this.controls.update();
         this.renderer.render(this.scene, this.camera);
     }
