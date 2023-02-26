@@ -10,10 +10,4 @@ module.exports = merge(common, {
     open: true,
     hot: true,
   },
-  module: {
-    rules: [{
-      test: /\.(glsl|vs|fs)$/,
-      loader: 'ts-shader-loader'
-    }]
-  }
 });
