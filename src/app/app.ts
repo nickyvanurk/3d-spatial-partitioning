@@ -39,23 +39,17 @@ export class App {
         this.scene.add(ambiLight);
 
         const loadingManager = new THREE.LoadingManager();
-        loadingManager.onLoad = () => {
-            console.log('Loading complete!');
-        };
         loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            console.log('Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
-            
-            const loadingPercent = Math.floor((itemsLoaded / itemsTotal * 100));
-            (document.querySelector('.bar') as HTMLElement).style.width = loadingPercent + '%';
+            const percent = Math.floor((itemsLoaded / itemsTotal * 100));
+            (document.querySelector('.bar') as HTMLElement).style.width =  `${percent}%`;
 
-            if (loadingPercent == 100) {
+            if (percent == 100) {
                 (document.querySelector('.loadingScreen') as HTMLElement).style.opacity = '0';
             }
         };
+        loadingManager.onLoad = this.reset.bind(this);
 
         this.fleet = new Fleet(this.scene, this.renderer, loadingManager, 50, 400);
-
-        this.reset();
     }
 
     reset() {
