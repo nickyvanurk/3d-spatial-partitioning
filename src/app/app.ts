@@ -39,9 +39,6 @@ export class App {
         this.scene.add(ambiLight);
 
         const loadingManager = new THREE.LoadingManager();
-        loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
-            console.log('Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.');
-        };
         loadingManager.onLoad = () => {
             console.log('Loading complete!');
         };
