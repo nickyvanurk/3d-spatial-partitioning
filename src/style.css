@@ -213,7 +213,7 @@ footer {
     transition: opacity 0.5s ease-in 0.25s, z-index 0s 0.75s;
 }
 
-.loadingScreen .counter {
+.loadingScreen .container {
     width: 200px;
 }
 

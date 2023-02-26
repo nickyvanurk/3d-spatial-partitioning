@@ -65,9 +65,9 @@ export class App {
 
             if (percent == 100) {
                 const loadingScreen: HTMLElement = document.querySelector('.loadingScreen');
-                loadingScreen.style.opacity = '0';
+                // loadingScreen.style.opacity = '0';
                 loadingScreen.addEventListener('transitionend', () => {
-                    loadingScreen.style.zIndex = '-1';
+                    // loadingScreen.style.zIndex = '-1';
                 });
             }
         };
