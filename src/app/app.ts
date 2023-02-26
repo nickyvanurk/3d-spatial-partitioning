@@ -1,5 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+
 import { AssetManager } from "./asset_manager";
 import { Fleet } from "./fleet";
 
@@ -13,6 +16,7 @@ export class App {
     fleet: Fleet;
     assetManager: AssetManager;
     station: THREE.Group;
+    composer: EffectComposer;
 
     constructor() {
         window.addEventListener('keydown', this.processEvents.bind(this));
@@ -27,6 +31,7 @@ export class App {
         this.renderer.setClearColor(0x131A29);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
 
         this.camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 3000);
         this.camera.position.y = 400;
@@ -39,13 +44,18 @@ export class App {
 
         this.scene = new THREE.Scene();
 
-        const ambiLight = new THREE.AmbientLight(0x222222);
-        ambiLight.intensity = 8;
+        const ambiLight = new THREE.AmbientLight(0xffffff);
+        ambiLight.intensity = 0.5;
         this.scene.add(ambiLight);
 
         const dirLight = new THREE.DirectionalLight(0xffffff);
+        dirLight.intensity = 0.8;
         dirLight.position.setScalar(1);
         this.scene.add(dirLight);
+
+        const renderScene = new RenderPass(this.scene, this.camera);
+        this.composer = new EffectComposer(this.renderer);
+        this.composer.addPass(renderScene);
 
         const loadingManager = new THREE.LoadingManager();
         loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
@@ -111,14 +121,15 @@ export class App {
         }
 
         this.controls.update();
-        this.renderer.render(this.scene, this.camera);
+        this.composer.render();
     }
 
     resize() {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.composer.setSize(window.innerWidth, window.innerHeight);
     }
 
     toggleFullscreen() {
