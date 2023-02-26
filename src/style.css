@@ -215,10 +215,23 @@ footer {
 
 .loadingScreen .container {
     width: 200px;
+    height: 200px;
+    text-align: center;
+}
+
+.loadingScreen h1 {
+    font-family: 'Zen Dots', sans-serif;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.loadingScreen .barContainer {
+    background: #1f2a42;
 }
 
 .loadingScreen .bar {
-    background: #64ffda;
+    background: #66799e;
     height: 1px;
     width: 0%;
     transition: 0.2s width;
