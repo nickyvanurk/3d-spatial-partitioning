@@ -111,6 +111,7 @@ export class App {
     update(dt: number) {
         this.station.children[0].rotation.z += 0.01 * dt;
         this.station.children[1].rotation.z -= 0.01 * dt;
+        this.station.children[2].rotation.z -= 0.01 * dt;
 
         this.fleet.update(dt);
     }
