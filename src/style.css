@@ -146,3 +146,19 @@ footer {
     color: white;
     text-shadow: 1px 1px black;
 }
+
+/* Loading Screen */
+
+.loadingScreen {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background: #131A29;
+    z-index: 99;
+    opacity: 1;
+    transition: 0.5s opacity;
+}
+
+.loadingScreen.fade-out {
+    opacity: 0;
+}
