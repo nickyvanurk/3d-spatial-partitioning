@@ -57,8 +57,8 @@ export class App {
         loadingManager.onLoad = this.init.bind(this);
 
         const gltfLoader = new GLTFLoader(loadingManager);
-        gltfLoader.load('assets/models/spaceship.glb', (gltf) => this.models.set('spaceship', gltf));
-        gltfLoader.load('assets/models/station.glb', (gltf) => this.models.set('station', gltf));
+        gltfLoader.load('assets/models/spaceship.glb', gltf => this.models.set('spaceship', gltf));
+        gltfLoader.load('assets/models/station.glb', gltf => this.models.set('station', gltf));
     }
 
     init() {

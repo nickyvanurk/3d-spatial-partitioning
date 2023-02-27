@@ -43,7 +43,11 @@ export class World {
         const points = Utils.createPointCloudSphere(1000, 6000, 2000);
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points), 3));
-        const material = new THREE.PointsMaterial({ color: 0xffffff, size: 12.5, fog: false });
+        const material = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 12.5,
+            fog: false,
+        });
         this.ctx.scene.add(new THREE.Points(geometry, material));
     }
 }

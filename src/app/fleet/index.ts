@@ -155,7 +155,7 @@ export class Fleet {
             metalness: 0,
         });
 
-        material.onBeforeCompile = (shader) => {
+        material.onBeforeCompile = shader => {
             shader.uniforms.texturePosition = { value: null };
             shader.uniforms.textureVelocity = { value: null };
             shader.uniforms.size = { value: 0.01 };
@@ -224,10 +224,10 @@ export class Fleet {
 
             if (this.materialShader) {
                 this.materialShader.uniforms['texturePosition'].value = this.gpuCompute.getCurrentRenderTarget(
-                    this.positionVariable
+                    this.positionVariable,
                 ).texture;
                 this.materialShader.uniforms['textureVelocity'].value = this.gpuCompute.getCurrentRenderTarget(
-                    this.velocityVariable
+                    this.velocityVariable,
                 ).texture;
             }
         }
