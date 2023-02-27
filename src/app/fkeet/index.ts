@@ -172,36 +172,32 @@ export class Fleet {
 
             token = '#include <begin_vertex>';
             insert = /* glsl */`
-                vec4 tmpPos = texture2D(texturePosition, reference.xy);
-                vec3 pos = tmpPos.xyz;
-                float delta = tmpPos.w;
-                vec3 tempVel = texture2D(textureVelocity, reference.xy).xyz;
-                vec3 velocity = normalize(tempVel);
+                vec4 pos = texture2D(texturePosition, reference.xy);
+                float delta = pos.w;
+                vec3 velocity = texture2D(textureVelocity, reference.xy).xyz;
+                vec3 dir = normalize(velocity);
+                vec3 view_pos = pos.xyz + (velocity * delta * alpha);
+
                 vec3 newPosition = position;
-
-                // tempVel * delta is the velocity added to the position in the positionVariable.
-                // We can use it to get the old position and calculate the correct render position.
-                pos = (pos) * alpha + (pos - tempVel * delta) * (1.0 - alpha);
-
                 newPosition = mat3(modelMatrix) * newPosition;
                 newPosition *= size;
 
-                velocity.z *= -1.0;
-                float xz = length(velocity.xz);
+                dir.z *= -1.0;
+                float xz = length(dir.xz);
                 float xyz = 1.0;
-                float x = sqrt(1.0 - velocity.y * velocity.y);
+                float x = sqrt(1.0 - dir.y * dir.y);
 
-                float cosry = velocity.x / xz;
-                float sinry = velocity.z / xz;
+                float cosry = dir.x / xz;
+                float sinry = dir.z / xz;
 
                 float cosrz = x / xyz;
-                float sinrz = velocity.y / xyz;
+                float sinrz = dir.y / xyz;
 
                 mat3 maty = mat3(cosry, 0, -sinry, 0, 1, 0, sinry, 0, cosry);
                 mat3 matz = mat3(cosrz, sinrz, 0, -sinrz, cosrz, 0, 0, 0, 1);
                 
                 newPosition = maty * matz * newPosition;
-                newPosition += pos;
+                newPosition += view_pos;
 
                 vec3 transformed = vec3(newPosition);
             `;
