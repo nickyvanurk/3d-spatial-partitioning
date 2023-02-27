@@ -1,5 +1,5 @@
 > **Note**
-> This project is being developed further into a simulation. Its purpose is no longer to visualize the octree data structure, but instead become an awesome portfolio project.
+> This project is being developed further into a simulation. Its purpose is no longer to visualize the octree data structure, instead it's a playground where I practice graphics programming. [WIP](https://nickvanurk.com/avalon/).
 
 # [3D Spatial Partitioning](http://nickyvanurk.com/boids-octree-simulation/)
 
