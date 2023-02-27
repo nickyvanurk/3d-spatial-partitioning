@@ -5,6 +5,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
 import { AssetManager } from "./asset_manager";
 import { Fleet } from "./fkeet";
+import Station from "./station";
 
 export class App {
     keys: { [key: string]: boolean; };
@@ -15,7 +16,7 @@ export class App {
     controls: OrbitControls;
     fleet: Fleet;
     assetManager: AssetManager;
-    station: THREE.Group;
+    station: Station;
     composer: EffectComposer;
 
     constructor() {
@@ -72,11 +73,8 @@ export class App {
     }
 
     init() {
-        this.station = this.assetManager.getModel('station').scene;
-        this.station.position.y = 100;
-        this.station.rotation.x = -0.05;
-        this.station.rotation.z = -0.05;
-        this.scene.add(this.station);
+        this.station = new Station(this.assetManager.getModel('station'));
+        this.scene.add(this.station.model);
 
         this.fleet = new Fleet(this.scene, this.renderer, this.assetManager.getModel('spaceship'), 50, 1000);
 
@@ -93,15 +91,13 @@ export class App {
     }
 
     update(dt: number) {
-        this.station.children[0].rotation.z += 0.01 * dt;
-        this.station.children[1].rotation.z -= 0.01 * dt;
-        this.station.children[2].rotation.z -= 0.01 * dt;
-
+        this.station.update(dt);
         this.fleet.update(dt);
     }
 
-    render(alpha: number) {
+    render(alpha: number, dt: number) {
         if (this.running) {
+            this.station.render(alpha, dt);
             this.fleet.render(alpha);
         }
 

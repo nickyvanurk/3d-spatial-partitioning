@@ -23,7 +23,7 @@ function loop() {
         }
     }
 
-    app.render(lag / MS_PER_UPDATE);
+    app.render(lag / MS_PER_UPDATE, MS_PER_UPDATE);
     requestAnimationFrame(loop);
 }
 
