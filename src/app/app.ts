@@ -5,7 +5,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
 import { createPointCloudSphere } from "./helpers";
 import { AssetManager } from "./asset_manager";
-import { Fleet } from "./fkeet";
+import { Fleet } from "./fleet";
 import Station from "./station";
 
 export class App {
