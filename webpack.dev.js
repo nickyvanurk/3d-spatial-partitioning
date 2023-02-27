@@ -10,4 +10,8 @@ module.exports = merge(common, {
     open: true,
     hot: true,
   },
+  cache: {
+    type: 'filesystem',
+    maxMemoryGenerations: 1,
+  }
 });
