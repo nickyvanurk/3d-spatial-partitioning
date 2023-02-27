@@ -1,4 +1,4 @@
-import { type AssetManager } from './asset_manager';
+import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
 declare type Keys = {
     keydown: boolean;
@@ -9,5 +9,5 @@ declare type Keys = {
 declare type Context = {
     renderer: THREE.WebGLRenderer;
     scene: THREE.Scene;
-    assets: AssetManager;
+    models: Map<string, GLTF>;
 };

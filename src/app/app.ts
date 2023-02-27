@@ -4,7 +4,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
 import { type Keys } from './types';
-import { AssetManager } from './asset_manager';
+import { type GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { World } from './world';
 
 export class App {
@@ -13,8 +13,8 @@ export class App {
     camera: THREE.PerspectiveCamera;
     scene: THREE.Scene;
     controls: OrbitControls;
-    assetManager: AssetManager;
     composer: EffectComposer;
+    models = new Map<string, GLTF>();
     world: World;
 
     constructor() {
@@ -56,19 +56,17 @@ export class App {
         };
         loadingManager.onLoad = this.init.bind(this);
 
-        this.assetManager = new AssetManager(loadingManager);
-        this.assetManager.loadModel('spaceship', 'assets/models/spaceship.glb');
-        this.assetManager.loadModel('station', 'assets/models/station.glb');
+        const gltfLoader = new GLTFLoader(loadingManager);
+        gltfLoader.load('assets/models/spaceship.glb', (gltf) => this.models.set('spaceship', gltf));
+        gltfLoader.load('assets/models/station.glb', (gltf) => this.models.set('station', gltf));
     }
 
     init() {
-        const ctx = {
+        this.world = new World({
             renderer: this.renderer,
             scene: this.scene,
-            assets: this.assetManager,
-        };
-
-        this.world = new World(ctx);
+            models: this.models,
+        });
         this.running = true;
     }
 

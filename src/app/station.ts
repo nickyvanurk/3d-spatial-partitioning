@@ -7,7 +7,7 @@ export class Station {
     rotation = new THREE.Vector3();
 
     constructor(ctx: Context) {
-        this.model = ctx.assets.getModel('station').scene;
+        this.model = ctx.models.get('station').scene;
         ctx.scene.add(this.model);
 
         this.model.position.y = 100;

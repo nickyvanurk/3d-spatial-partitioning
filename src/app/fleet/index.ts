@@ -32,7 +32,7 @@ export class Fleet {
         this.capacity = this.width * this.width;
         this.geometry = new THREE.BufferGeometry();
 
-        const geo = (ctx.assets.getModel('spaceship').scene.children[0] as THREE.Mesh).geometry;
+        const geo = (ctx.models.get('spaceship').scene.children[0] as THREE.Mesh).geometry;
         const totalPositions = geo.getAttribute('position').count;
         const indicesPerShip = geo.index.count;
 
