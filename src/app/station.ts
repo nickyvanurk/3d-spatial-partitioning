@@ -1,13 +1,15 @@
 import * as THREE from 'three';
-import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Context } from './types';
 
 export class Station {
     model: THREE.Group;
     rotationSpeed = 0.01;
     rotation = new THREE.Vector3();
 
-    constructor(model: GLTF) {
-        this.model = model.scene;
+    constructor(ctx: Context) {
+        this.model = ctx.assets.getModel('station').scene;
+        ctx.scene.add(this.model);
+
         this.model.position.y = 100;
         this.model.rotation.x = -0.05;
         this.model.rotation.z = -0.05;
