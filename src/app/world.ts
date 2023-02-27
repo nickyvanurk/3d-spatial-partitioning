@@ -14,9 +14,8 @@ export class World {
         this.addLights();
         this.addStars();
 
-        // TODO: Get models inside the classes via the new context
         this.station = new Station(this.ctx);
-        this.fleet = new Fleet(this.ctx.scene, this.ctx.renderer, this.ctx.assets.getModel('spaceship'), 50, 1000);
+        this.fleet = new Fleet(this.ctx, 50, 1000);
     }
 
     update(dt: number) {

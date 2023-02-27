@@ -1,14 +1,13 @@
 import * as THREE from 'three';
-import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GPUComputationRenderer, Variable } from 'three/examples/jsm/misc/GPUComputationRenderer';
 import { nextPowerOf2 } from '../helpers';
+import { Context } from '../types';
 
 import positionFs from './position.fs.glsl';
 import velocityFs from './velocity.fs.glsl';
 
 export class Fleet {
-    scene: THREE.Scene;
-    renderer: THREE.WebGLRenderer;
+    ctx: Context;
     size: number;
     bounds: number;
     width: number;
@@ -25,16 +24,15 @@ export class Fleet {
         [uniform: string]: THREE.IUniform<number>;
     };
 
-    constructor(scene: THREE.Scene, renderer: THREE.WebGLRenderer, model: GLTF, size: number, bounds: number) {
-        this.scene = scene; // TODO: Rework so this class doesn't require the scene?
-        this.renderer = renderer; // TODO: Rework so this class doesn't require the renderer?
+    constructor(ctx: Context, size: number, bounds: number) {
+        this.ctx = ctx;
         this.size = size;
         this.bounds = bounds;
         this.width = nextPowerOf2(Math.sqrt(size));
         this.capacity = this.width * this.width;
         this.geometry = new THREE.BufferGeometry();
 
-        const geo = (model.scene.children[0] as THREE.Mesh).geometry;
+        const geo = (ctx.assets.getModel('spaceship').scene.children[0] as THREE.Mesh).geometry;
         const totalPositions = geo.getAttribute('position').count;
         const indicesPerShip = geo.index.count;
 
@@ -95,9 +93,9 @@ export class Fleet {
     }
 
     initComputeRenderer() {
-        this.gpuCompute = new GPUComputationRenderer(this.width, this.width, this.renderer);
+        this.gpuCompute = new GPUComputationRenderer(this.width, this.width, this.ctx.renderer);
 
-        if (this.renderer.capabilities.isWebGL2 === false) {
+        if (this.ctx.renderer.capabilities.isWebGL2 === false) {
             this.gpuCompute.setDataType(THREE.HalfFloatType);
         }
 
@@ -214,7 +212,7 @@ export class Fleet {
         mesh.rotation.z -= Math.PI / 2;
         mesh.castShadow = true;
         mesh.receiveShadow = true;
-        this.scene.add(mesh);
+        this.ctx.scene.add(mesh);
     }
 
     update(dt: number) {
