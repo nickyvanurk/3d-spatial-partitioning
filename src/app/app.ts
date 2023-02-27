@@ -1,12 +1,12 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
-import { createPointCloudSphere } from "./helpers";
-import { AssetManager } from "./asset_manager";
-import { Fleet } from "./fleet";
-import Station from "./station";
+import { createPointCloudSphere } from './helpers';
+import { AssetManager } from './asset_manager';
+import { Fleet } from './fleet';
+import Station from './station';
 
 export class App {
     running: boolean;
@@ -22,7 +22,7 @@ export class App {
     constructor() {
         const canvas = document.querySelector('canvas.webgl');
         this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-        this.renderer.setClearColor(0x131A29);
+        this.renderer.setClearColor(0x131a29);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.outputEncoding = THREE.sRGBEncoding;
@@ -54,10 +54,10 @@ export class App {
         const loadingManager = new THREE.LoadingManager();
         loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
             const loadingBar: HTMLElement = document.querySelector('.bar');
-            const percent = Math.floor((itemsLoaded / itemsTotal * 100));
-            loadingBar.style.width =  `${percent}%`;
+            const percent = Math.floor((itemsLoaded / itemsTotal) * 100);
+            loadingBar.style.width = `${percent}%`;
 
-            if (percent == 100) {
+            if (percent === 100) {
                 const loadingScreen: HTMLElement = document.querySelector('.loadingScreen');
                 loadingScreen.style.opacity = '0';
                 loadingScreen.addEventListener('transitionend', () => {
@@ -87,7 +87,7 @@ export class App {
         // empty
     }
 
-    processEvents(keys: { [key: string]: boolean; }) {
+    processEvents(keys: { [key: string]: boolean }) {
         // empty
         console.log(keys);
     }
@@ -119,7 +119,7 @@ export class App {
         const points = createPointCloudSphere(1000, 6000, 2000);
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points), 3));
-        const material = new THREE.PointsMaterial({color: 0xffffff, size: 12.5, fog: false});
+        const material = new THREE.PointsMaterial({ color: 0xffffff, size: 12.5, fog: false });
         this.scene.add(new THREE.Points(geometry, material));
     }
 }

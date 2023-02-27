@@ -8,7 +8,7 @@ export function createPointCloudSphere(count: number, maxRadius: number, minRadi
     for (let i = 0; i < count; i++) {
         const theta = 2 * Math.PI * Math.random();
         const phi = Math.acos(2 * Math.random() - 1);
-        const ratio = minRadiusNormalized + Math.pow(Math.random(), 1/3) * (1.0 - minRadiusNormalized);
+        const ratio = minRadiusNormalized + Math.pow(Math.random(), 1 / 3) * (1.0 - minRadiusNormalized);
         const distance = ratio * maxRadius;
         points.push(Math.sin(phi) * Math.cos(theta) * distance);
         points.push(Math.sin(phi) * Math.sin(theta) * distance);

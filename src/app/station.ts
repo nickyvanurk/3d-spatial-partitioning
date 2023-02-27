@@ -18,8 +18,8 @@ export default class Station {
     }
 
     render(alpha: number, dt: number) {
-        this.model.children[0].rotation.z = this.rotation.z + (this.rotationSpeed * dt * alpha);
-        this.model.children[1].rotation.z = -this.rotation.z - (this.rotationSpeed * dt * alpha);
-        this.model.children[2].rotation.z = -this.rotation.z - (this.rotationSpeed * dt * alpha);
+        this.model.children[0].rotation.z = this.rotation.z + this.rotationSpeed * dt * alpha;
+        this.model.children[1].rotation.z = -this.rotation.z - this.rotationSpeed * dt * alpha;
+        this.model.children[2].rotation.z = -this.rotation.z - this.rotationSpeed * dt * alpha;
     }
 }

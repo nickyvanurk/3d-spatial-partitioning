@@ -1,7 +1,7 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GPUComputationRenderer, Variable } from 'three/examples/jsm/misc/GPUComputationRenderer';
-import { nextPowerOf2 } from "../helpers";
+import { nextPowerOf2 } from '../helpers';
 
 import positionFs from './position.fs.glsl';
 import velocityFs from './velocity.fs.glsl';
@@ -37,16 +37,20 @@ export class Fleet {
         const geo = (model.scene.children[0] as THREE.Mesh).geometry;
         const totalPositions = geo.getAttribute('position').count;
         const indicesPerShip = geo.index.count;
-        
-        const vertices = [], color = [], reference = [], seeds = [], indices = [];
+
+        const vertices = [],
+            color = [],
+            reference = [],
+            seeds = [],
+            indices = [];
         const totalVertices = totalPositions * 3 * this.capacity;
 
         // Filter alpha values from color array (Blender adds alpha channel after baking vertex colors).
-        const colors = geo.getAttribute( 'color').array; 
+        const colors = geo.getAttribute('color').array;
         const newColors = [];
         for (let i = 0; i < colors.length; i++) {
             if (i % 4 === 0) continue;
-            newColors.push(colors[i-1]);
+            newColors.push(colors[i - 1]);
         }
 
         for (let i = 0; i < totalVertices; i++) {
@@ -59,7 +63,7 @@ export class Fleet {
         for (let i = 0; i < totalPositions * this.capacity; i++) {
             const bIndex = i % totalPositions;
             const ship = Math.floor(i / totalPositions);
-            if (bIndex == 0) r = Math.random();
+            if (bIndex === 0) r = Math.random();
             const j = ~~ship;
             const x = (j % this.width) / this.width;
             const y = ~~(j / this.width) / this.width;
@@ -94,7 +98,7 @@ export class Fleet {
         this.gpuCompute = new GPUComputationRenderer(this.width, this.width, this.renderer);
 
         if (this.renderer.capabilities.isWebGL2 === false) {
-            this.gpuCompute.setDataType( THREE.HalfFloatType );
+            this.gpuCompute.setDataType(THREE.HalfFloatType);
         }
 
         const dtPosition = this.gpuCompute.createTexture();
@@ -107,11 +111,11 @@ export class Fleet {
 
         this.gpuCompute.setVariableDependencies(this.positionVariable, [this.positionVariable, this.velocityVariable]);
         this.gpuCompute.setVariableDependencies(this.velocityVariable, [this.positionVariable, this.velocityVariable]);
-    
+
         this.positionUniforms = this.positionVariable.material.uniforms;
         this.velocityUniforms = this.velocityVariable.material.uniforms;
-        this.positionUniforms['delta'] = {value: 0.0};
-        this.velocityUniforms['delta'] = {value: 0.0};
+        this.positionUniforms['delta'] = { value: 0.0 };
+        this.velocityUniforms['delta'] = { value: 0.0 };
 
         this.positionVariable.wrapS = THREE.RepeatWrapping;
         this.positionVariable.wrapT = THREE.RepeatWrapping;
@@ -154,13 +158,13 @@ export class Fleet {
         });
 
         material.onBeforeCompile = (shader) => {
-            shader.uniforms.texturePosition = {value: null};
-            shader.uniforms.textureVelocity = {value: null};
-            shader.uniforms.size = {value: 0.01};
-            shader.uniforms.alpha = {value: 0.0};
+            shader.uniforms.texturePosition = { value: null };
+            shader.uniforms.textureVelocity = { value: null };
+            shader.uniforms.size = { value: 0.01 };
+            shader.uniforms.alpha = { value: 0.0 };
 
             let token = '#define STANDARD';
-            let insert = /* glsl */`
+            let insert = /* glsl */ `
                 attribute vec4 reference;
                 attribute vec4 seeds;
                 uniform sampler2D texturePosition;
@@ -171,7 +175,7 @@ export class Fleet {
             shader.vertexShader = shader.vertexShader.replace(token, token + insert);
 
             token = '#include <begin_vertex>';
-            insert = /* glsl */`
+            insert = /* glsl */ `
                 vec4 pos = texture2D(texturePosition, reference.xy);
                 float delta = pos.w;
                 vec3 velocity = texture2D(textureVelocity, reference.xy).xyz;
@@ -221,8 +225,12 @@ export class Fleet {
             this.gpuCompute.compute();
 
             if (this.materialShader) {
-                this.materialShader.uniforms['texturePosition'].value = this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
-                this.materialShader.uniforms['textureVelocity'].value = this.gpuCompute.getCurrentRenderTarget(this.velocityVariable).texture;
+                this.materialShader.uniforms['texturePosition'].value = this.gpuCompute.getCurrentRenderTarget(
+                    this.positionVariable
+                ).texture;
+                this.materialShader.uniforms['textureVelocity'].value = this.gpuCompute.getCurrentRenderTarget(
+                    this.velocityVariable
+                ).texture;
             }
         }
     }
