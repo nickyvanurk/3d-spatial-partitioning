@@ -27,7 +27,7 @@ export class App {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.outputEncoding = THREE.sRGBEncoding;
 
-        this.camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 3000);
+        this.camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 10000);
         this.camera.position.y = 400;
         this.camera.position.z = 800;
 
@@ -70,6 +70,8 @@ export class App {
         this.assetManager = new AssetManager(loadingManager);
         this.assetManager.loadModel('spaceship', 'assets/models/spaceship.glb');
         this.assetManager.loadModel('station', 'assets/models/station.glb');
+
+        this.scene.add(this.createStars(1000, 4000, 0.3));
     }
 
     init() {
@@ -111,5 +113,23 @@ export class App {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.composer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    createStars(count: number, maxDistance: number, minDistanceNormalized: number) {
+        const positions = [];
+        for (let i = 0; i < count; i++) {
+          const theta = 2 * Math.PI * Math.random();
+          const phi = Math.acos(2 * Math.random() - 1);
+          const ratio = minDistanceNormalized + Math.random() * (1.0 - minDistanceNormalized);
+          const distance = ratio * maxDistance * 2;
+          positions.push(Math.sin(phi) * Math.cos(theta) * distance);
+          positions.push(Math.sin(phi) * Math.sin(theta) * distance);
+          positions.push(Math.cos(phi) * distance);
+        }
+    
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+        const material = new THREE.PointsMaterial({color: 0xffffff, size: 12.5, fog: false});
+        return new THREE.Points(geometry, material);
     }
 }
