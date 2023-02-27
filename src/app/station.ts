@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 
-export default class Station {
+export class Station {
     model: THREE.Group;
     rotationSpeed = 0.01;
     rotation = new THREE.Vector3();

@@ -3,10 +3,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
-import { createPointCloudSphere } from './helpers';
 import { AssetManager } from './asset_manager';
-import { Fleet } from './fleet';
-import Station from './station';
+import { World } from './world';
 
 export class App {
     running: boolean;
@@ -14,10 +12,9 @@ export class App {
     camera: THREE.PerspectiveCamera;
     scene: THREE.Scene;
     controls: OrbitControls;
-    fleet: Fleet;
     assetManager: AssetManager;
-    station: Station;
     composer: EffectComposer;
+    world: World;
 
     constructor() {
         const canvas = document.querySelector('canvas.webgl');
@@ -37,15 +34,6 @@ export class App {
         this.controls.maxDistance = 1500;
 
         this.scene = new THREE.Scene();
-
-        const ambiLight = new THREE.AmbientLight(0xffffff);
-        ambiLight.intensity = 0.5;
-        this.scene.add(ambiLight);
-
-        const dirLight = new THREE.DirectionalLight(0xffffff);
-        dirLight.intensity = 0.8;
-        dirLight.position.setScalar(1);
-        this.scene.add(dirLight);
 
         const renderScene = new RenderPass(this.scene, this.camera);
         this.composer = new EffectComposer(this.renderer);
@@ -70,16 +58,16 @@ export class App {
         this.assetManager = new AssetManager(loadingManager);
         this.assetManager.loadModel('spaceship', 'assets/models/spaceship.glb');
         this.assetManager.loadModel('station', 'assets/models/station.glb');
-
-        this.addStars();
     }
 
     init() {
-        this.station = new Station(this.assetManager.getModel('station'));
-        this.scene.add(this.station.model);
+        const ctx = {
+            renderer: this.renderer,
+            scene: this.scene,
+            assets: this.assetManager,
+        };
 
-        this.fleet = new Fleet(this.scene, this.renderer, this.assetManager.getModel('spaceship'), 50, 1000);
-
+        this.world = new World(ctx);
         this.running = true;
     }
 
@@ -87,20 +75,17 @@ export class App {
         // empty
     }
 
-    processEvents(keys: { [key: string]: boolean }) {
+    processEvents(_keys: { [key: string]: boolean }) {
         // empty
-        console.log(keys);
     }
 
     update(dt: number) {
-        this.station.update(dt);
-        this.fleet.update(dt);
+        this.world.update(dt);
     }
 
     render(alpha: number, dt: number) {
         if (this.running) {
-            this.station.render(alpha, dt);
-            this.fleet.render(alpha);
+            this.world.render(alpha, dt);
         }
 
         this.controls.update();
@@ -113,13 +98,5 @@ export class App {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.composer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-    addStars() {
-        const points = createPointCloudSphere(1000, 6000, 2000);
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points), 3));
-        const material = new THREE.PointsMaterial({ color: 0xffffff, size: 12.5, fog: false });
-        this.scene.add(new THREE.Points(geometry, material));
     }
 }
