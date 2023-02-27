@@ -19,13 +19,6 @@ export class App {
     composer: EffectComposer;
 
     constructor() {
-        window.addEventListener('keydown', this.processEvents.bind(this));
-        window.addEventListener('keyup', this.processEvents.bind(this));
-        window.addEventListener('resize', this.resize.bind(this));
-        window.addEventListener('dblclick', this.toggleFullscreen.bind(this));
-
-        this.keys = {};
-
         const canvas = document.querySelector('canvas.webgl');
         this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         this.renderer.setClearColor(0x131A29);
@@ -94,18 +87,9 @@ export class App {
         // empty
     }
 
-    processEvents(event: KeyboardEvent) {
-        this.keys[event.code] = event.type === 'keydown';
-
-        if (event.type === 'keydown') {
-            if (this.keys['KeyP']) {
-                this.running = !this.running;
-            }
-
-            if (this.keys['KeyR']) {
-                this.reset();
-            }
-        }
+    processEvents(keys: { [key: string]: boolean; }) {
+        // empty
+        console.log(keys);
     }
 
     update(dt: number) {
@@ -131,13 +115,5 @@ export class App {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.composer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-    toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            document.querySelector('body').requestFullscreen();
-        } else {
-            document.exitFullscreen();
-        }
     }
 }

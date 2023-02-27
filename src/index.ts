@@ -1,6 +1,8 @@
 import './style.css';
 import { App } from './app/app';
 
+const keys: { [key: string]: boolean; } = {};
+
 const MS_PER_UPDATE = 1 / 60;
 const app = new App();
 
@@ -35,3 +37,33 @@ document.querySelector('#pauseBtn').addEventListener('click', (event) => {
 document.querySelector('#resetBtn').addEventListener('click', () => {
     app.reset();
 });
+
+window.addEventListener('keydown', processEvents);
+window.addEventListener('keyup', processEvents);
+window.addEventListener('resize', resize);
+window.addEventListener('dblclick', toggleFullscreen);
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.querySelector('body').requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+}
+
+function processEvents(event: KeyboardEvent) {
+    keys['keydown'] = event.type === 'keydown';
+    keys['keyup'] = event.type === 'keyup';
+    keys[event.code] = event.type === 'keydown';
+
+    if (keys.keydown) {
+        if (keys.KeyP) app.running = !app.running;
+        if (keys.KeyR) app.reset();
+    }
+
+    app.processEvents(keys);
+}
+
+function resize() {
+    app.resize();
+}
