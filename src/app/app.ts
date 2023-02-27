@@ -9,7 +9,6 @@ import { Fleet } from "./fkeet";
 import Station from "./station";
 
 export class App {
-    keys: { [key: string]: boolean; };
     running: boolean;
     renderer: THREE.WebGLRenderer;
     camera: THREE.PerspectiveCamera;
