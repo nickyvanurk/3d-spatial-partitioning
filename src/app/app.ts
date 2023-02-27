@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
+import { createPointCloudSphere } from "./helpers";
 import { AssetManager } from "./asset_manager";
 import { Fleet } from "./fkeet";
 import Station from "./station";
@@ -71,7 +72,7 @@ export class App {
         this.assetManager.loadModel('spaceship', 'assets/models/spaceship.glb');
         this.assetManager.loadModel('station', 'assets/models/station.glb');
 
-        this.scene.add(this.createStars(1000, 6000, 1/3));
+        this.addStars();
     }
 
     init() {
@@ -115,21 +116,11 @@ export class App {
         this.composer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    createStars(count: number, maxRadius: number, minRadiusNormalized: number) {
-        const positions = [];
-        for (let i = 0; i < count; i++) {
-          const theta = 2 * Math.PI * Math.random();
-          const phi = Math.acos(2 * Math.random() - 1);
-          const ratio = minRadiusNormalized + Math.pow(Math.random(), 1/3) * (1.0 - minRadiusNormalized);
-          const distance = ratio * maxRadius;
-          positions.push(Math.sin(phi) * Math.cos(theta) * distance);
-          positions.push(Math.sin(phi) * Math.sin(theta) * distance);
-          positions.push(Math.cos(phi) * distance);
-        }
-    
+    addStars() {
+        const points = createPointCloudSphere(1000, 6000, 2000);
         const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points), 3));
         const material = new THREE.PointsMaterial({color: 0xffffff, size: 12.5, fog: false});
-        return new THREE.Points(geometry, material);
+        this.scene.add(new THREE.Points(geometry, material));
     }
 }
