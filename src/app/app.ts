@@ -71,7 +71,7 @@ export class App {
         this.assetManager.loadModel('spaceship', 'assets/models/spaceship.glb');
         this.assetManager.loadModel('station', 'assets/models/station.glb');
 
-        this.scene.add(this.createStars(1000, 4000, 0.3));
+        this.scene.add(this.createStars(1000, 6000, 1/3));
     }
 
     init() {
@@ -115,13 +115,13 @@ export class App {
         this.composer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    createStars(count: number, maxDistance: number, minDistanceNormalized: number) {
+    createStars(count: number, maxRadius: number, minRadiusNormalized: number) {
         const positions = [];
         for (let i = 0; i < count; i++) {
           const theta = 2 * Math.PI * Math.random();
           const phi = Math.acos(2 * Math.random() - 1);
-          const ratio = minDistanceNormalized + Math.random() * (1.0 - minDistanceNormalized);
-          const distance = ratio * maxDistance * 2;
+          const ratio = minRadiusNormalized + Math.pow(Math.random(), 1/3) * (1.0 - minRadiusNormalized);
+          const distance = ratio * maxRadius;
           positions.push(Math.sin(phi) * Math.cos(theta) * distance);
           positions.push(Math.sin(phi) * Math.sin(theta) * distance);
           positions.push(Math.cos(phi) * distance);
