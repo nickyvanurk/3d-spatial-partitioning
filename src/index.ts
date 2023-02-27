@@ -3,7 +3,7 @@ import { App } from './app/app';
 
 const keys: { [key: string]: boolean; } = {};
 
-const MS_PER_UPDATE = 1 / 60;
+const MS_PER_UPDATE = 1 / 25;
 const app = new App();
 
 let last = performance.now();
