@@ -4,7 +4,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
 import { AssetManager } from "./asset_manager";
-import { Fleet } from "./fleet";
+import { Fleet } from "./fkeet";
 
 export class App {
     keys: { [key: string]: boolean; };

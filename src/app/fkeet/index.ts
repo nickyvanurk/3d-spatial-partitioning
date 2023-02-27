@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { type GLTF } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GPUComputationRenderer, Variable } from 'three/examples/jsm/misc/GPUComputationRenderer';
-import { nextPowerOf2 } from "./helpers";
+import { nextPowerOf2 } from "../helpers";
 
 import positionFs from './position.fs.glsl';
 import velocityFs from './velocity.fs.glsl';
