@@ -30,22 +30,15 @@ function loop() {
 requestAnimationFrame(loop);
 
 document.querySelector('#pauseBtn').addEventListener('click', togglePause);
+document.querySelector('#resetBtn').addEventListener('click', app.reset);
 
-document.querySelector('#resetBtn').addEventListener('click', () => {
-    app.reset();
-});
-
+window.addEventListener('dblclick', toggleFullscreen);
 window.addEventListener('keydown', processEvents);
 window.addEventListener('keyup', processEvents);
 window.addEventListener('resize', resize);
-window.addEventListener('dblclick', toggleFullscreen);
 
 function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-        document.querySelector('body').requestFullscreen();
-    } else {
-        document.exitFullscreen();
-    }
+    !document.fullscreenElement ? document.querySelector('body').requestFullscreen() : document.exitFullscreen();
 }
 
 function processEvents(event: KeyboardEvent) {
