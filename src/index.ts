@@ -1,7 +1,11 @@
 import './style.css';
 import { App } from './app/app';
+import { type Keys } from './app/types';
 
-const keys: { [key: string]: boolean } = {};
+const keys: Keys = {
+    keydown: false,
+    keyup: false,
+};
 
 const MS_PER_UPDATE = 1 / 25;
 const app = new App();

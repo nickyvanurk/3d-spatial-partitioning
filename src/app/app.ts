@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 
+import { type Keys } from './types';
 import { AssetManager } from './asset_manager';
 import { World } from './world';
 
@@ -75,7 +76,7 @@ export class App {
         // empty
     }
 
-    processEvents(_keys: { [key: string]: boolean }) {
+    processEvents(_keys: Keys) {
         // empty
     }
 
