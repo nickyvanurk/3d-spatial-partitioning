@@ -29,10 +29,7 @@ function loop() {
 
 requestAnimationFrame(loop);
 
-document.querySelector('#pauseBtn').addEventListener('click', (event) => {
-    app.running = !app.running;
-    (event.target as HTMLElement).innerText = app.running ? 'Pause' : 'Resume';
-});
+document.querySelector('#pauseBtn').addEventListener('click', togglePause);
 
 document.querySelector('#resetBtn').addEventListener('click', () => {
     app.reset();
@@ -57,11 +54,16 @@ function processEvents(event: KeyboardEvent) {
     keys[event.code] = event.type === 'keydown';
 
     if (keys.keydown) {
-        if (keys.KeyP) app.running = !app.running;
+        if (keys.KeyP) togglePause();
         if (keys.KeyR) app.reset();
     }
 
     app.processEvents(keys);
+}
+
+function togglePause() {
+    app.running = !app.running;
+    (document.querySelector('#pauseBtn') as HTMLElement).innerText = app.running ? 'Pause' : 'Resume';
 }
 
 function resize() {
