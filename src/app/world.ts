@@ -29,12 +29,10 @@ export class World {
     }
 
     addLights() {
-        const ambiLight = new THREE.AmbientLight(0xffffff);
-        ambiLight.intensity = 0.5;
+        const ambiLight = new THREE.AmbientLight(0xffffff, 0.5);
         this.ctx.scene.add(ambiLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff);
-        dirLight.intensity = 0.8;
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
         dirLight.position.setScalar(1);
         this.ctx.scene.add(dirLight);
     }
