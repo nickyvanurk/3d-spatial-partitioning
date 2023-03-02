@@ -15,7 +15,7 @@ export class App {
         container: document.querySelector('body') as HTMLElement,
         canvas: document.querySelector('canvas.webgl') as HTMLCanvasElement,
         pauseBtn: document.querySelector('#pauseBtn') as HTMLElement,
-        resetBtn: document.querySelector('#pauseBtn') as HTMLElement,
+        resetBtn: document.querySelector('#resetBtn') as HTMLElement,
         loadingScreen: document.querySelector('.loadingScreen') as HTMLElement,
         loadingBar: document.querySelector('.bar') as HTMLElement,
     };
