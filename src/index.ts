@@ -26,6 +26,3 @@ function loop() {
 }
 
 requestAnimationFrame(loop);
-
-document.querySelector('#pauseBtn').addEventListener('click', () => app.togglePause());
-document.querySelector('#resetBtn').addEventListener('click', app.reset);

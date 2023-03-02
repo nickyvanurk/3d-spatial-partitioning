@@ -27,6 +27,9 @@ export class App {
         window.addEventListener('resize', this.resize.bind(this));
         window.addEventListener('dblclick', this.toggleFullscreen.bind(this));
 
+        document.querySelector('#pauseBtn').addEventListener('click', this.togglePause.bind(this));
+        document.querySelector('#resetBtn').addEventListener('click', this.reset.bind(this));
+
         const canvas = document.querySelector('canvas.webgl');
         this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         this.renderer.setClearColor(0x131a29);
