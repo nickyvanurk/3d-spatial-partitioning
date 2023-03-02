@@ -11,10 +11,15 @@ export class App {
     lastTime = performance.now();
     lag = 0;
     sPerUpdate: number;
-    keys: Keys = {
-        keydown: false,
-        keyup: false,
+    htmlElements = {
+        container: document.querySelector('body') as HTMLElement,
+        canvas: document.querySelector('canvas.webgl') as HTMLCanvasElement,
+        pauseBtn: document.querySelector('#pauseBtn') as HTMLElement,
+        resetBtn: document.querySelector('#pauseBtn') as HTMLElement,
+        loadingScreen: document.querySelector('.loadingScreen') as HTMLElement,
+        loadingBar: document.querySelector('.bar') as HTMLElement,
     };
+    keys: Keys = { keydown: false, keyup: false };
     running: boolean;
     renderer: THREE.WebGLRenderer;
     camera: THREE.PerspectiveCamera;
@@ -32,11 +37,10 @@ export class App {
         window.addEventListener('resize', this.resize.bind(this));
         window.addEventListener('dblclick', this.toggleFullscreen.bind(this));
 
-        document.querySelector('#pauseBtn').addEventListener('click', this.togglePause.bind(this));
-        document.querySelector('#resetBtn').addEventListener('click', this.reset.bind(this));
+        this.htmlElements.pauseBtn.addEventListener('click', this.togglePause.bind(this));
+        this.htmlElements.resetBtn.addEventListener('click', this.reset.bind(this));
 
-        const canvas = document.querySelector('canvas.webgl');
-        this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.htmlElements.canvas, antialias: true });
         this.renderer.setClearColor(0x131a29);
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -59,15 +63,13 @@ export class App {
 
         const loadingManager = new THREE.LoadingManager();
         loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-            const loadingBar: HTMLElement = document.querySelector('.bar');
             const percent = Math.floor((itemsLoaded / itemsTotal) * 100);
-            loadingBar.style.width = `${percent}%`;
+            this.htmlElements.loadingBar.style.width = `${percent}%`;
 
             if (percent === 100) {
-                const loadingScreen: HTMLElement = document.querySelector('.loadingScreen');
-                loadingScreen.style.opacity = '0';
-                loadingScreen.addEventListener('transitionend', () => {
-                    loadingScreen.style.zIndex = '-1';
+                this.htmlElements.loadingScreen.style.opacity = '0';
+                this.htmlElements.loadingScreen.addEventListener('transitionend', () => {
+                    this.htmlElements.loadingScreen.style.zIndex = '-1';
                 });
             }
         };
@@ -144,10 +146,10 @@ export class App {
 
     togglePause() {
         this.running = !this.running;
-        (document.querySelector('#pauseBtn') as HTMLElement).innerText = this.running ? 'Pause' : 'Resume';
+        this.htmlElements.pauseBtn.innerText = this.running ? 'Pause' : 'Resume';
     }
 
     toggleFullscreen() {
-        !document.fullscreenElement ? document.querySelector('body').requestFullscreen() : document.exitFullscreen();
+        !document.fullscreenElement ? this.htmlElements.container.requestFullscreen() : document.exitFullscreen();
     }
 }
