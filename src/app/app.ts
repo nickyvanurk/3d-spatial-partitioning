@@ -8,6 +8,9 @@ import { type GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { World } from './world';
 
 export class App {
+    lastTime = performance.now();
+    lag = 0;
+    msPerUpdate: number;
     keys: Keys = {
         keydown: false,
         keyup: false,
@@ -21,7 +24,9 @@ export class App {
     models = new Map<string, GLTF>();
     world: World;
 
-    constructor() {
+    constructor(msPerUpdate = 1 / 25) {
+        this.msPerUpdate = msPerUpdate;
+
         window.addEventListener('keydown', this.processEvents.bind(this));
         window.addEventListener('keyup', this.processEvents.bind(this));
         window.addEventListener('resize', this.resize.bind(this));
@@ -80,6 +85,24 @@ export class App {
             models: this.models,
         });
         this.running = true;
+    }
+
+    run() {
+        if (this.running) {
+            const now = performance.now();
+            let delta = (now - this.lastTime) / 1000;
+            if (delta > 0.25) delta = 0.25;
+            this.lastTime = now;
+            this.lag += delta;
+
+            while (this.lag >= this.msPerUpdate) {
+                this.update(this.msPerUpdate);
+                this.lag -= this.msPerUpdate;
+            }
+        }
+
+        this.render(this.lag / this.msPerUpdate, this.msPerUpdate);
+        requestAnimationFrame(this.run.bind(this));
     }
 
     reset() {
