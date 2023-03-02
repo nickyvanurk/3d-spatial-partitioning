@@ -1,27 +1,27 @@
 import * as THREE from 'three';
+import { Entity } from '../entity';
 import { Context } from './types';
 
-export class Station {
+export class Station extends Entity {
     model: THREE.Object3D;
-    rotationSpeed = 0.01;
-    rotation = new THREE.Vector3();
 
     constructor(ctx: Context) {
-        this.model = ctx.models.get('station').scene;
-        ctx.scene.add(this.model);
+        super(new THREE.Vector3(0, 100, 0), new THREE.Euler(-0.05, 0, -0.05));
+        this.angularVelocity.y = 0.01;
 
-        this.model.position.y = 100;
-        this.model.rotation.x = -0.05;
-        this.model.rotation.z = -0.05;
+        this.model = ctx.models.get('station').scene;
+        this.model.position.copy(this.position);
+        this.model.rotation.copy(this.rotation);
+        ctx.scene.add(this.model);
     }
 
     update(dt: number) {
-        this.rotation.z += this.rotationSpeed * dt;
+        super.update(dt);
     }
 
     render(alpha: number, dt: number) {
-        this.model.children[0].rotation.z = this.rotation.z + this.rotationSpeed * dt * alpha;
-        this.model.children[1].rotation.z = -this.rotation.z - this.rotationSpeed * dt * alpha;
-        this.model.children[2].rotation.z = -this.rotation.z - this.rotationSpeed * dt * alpha;
+        this.model.children[0].rotation.z = this.rotation.y + this.angularVelocity.y * dt * alpha;
+        this.model.children[1].rotation.z = -this.rotation.y - this.angularVelocity.y * dt * alpha;
+        this.model.children[2].rotation.z = -this.rotation.y - this.angularVelocity.y * dt * alpha;
     }
 }
