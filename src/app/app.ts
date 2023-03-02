@@ -10,7 +10,7 @@ import { World } from './world';
 export class App {
     lastTime = performance.now();
     lag = 0;
-    msPerUpdate: number;
+    sPerUpdate: number;
     keys: Keys = {
         keydown: false,
         keyup: false,
@@ -24,8 +24,8 @@ export class App {
     models = new Map<string, GLTF>();
     world: World;
 
-    constructor(msPerUpdate = 1 / 25) {
-        this.msPerUpdate = msPerUpdate;
+    constructor(sPerUpdate = 1 / 25) {
+        this.sPerUpdate = sPerUpdate;
 
         window.addEventListener('keydown', this.processEvents.bind(this));
         window.addEventListener('keyup', this.processEvents.bind(this));
@@ -95,13 +95,13 @@ export class App {
             this.lastTime = now;
             this.lag += delta;
 
-            while (this.lag >= this.msPerUpdate) {
-                this.update(this.msPerUpdate);
-                this.lag -= this.msPerUpdate;
+            while (this.lag >= this.sPerUpdate) {
+                this.update(this.sPerUpdate);
+                this.lag -= this.sPerUpdate;
             }
         }
 
-        this.render(this.lag / this.msPerUpdate, this.msPerUpdate);
+        this.render(this.lag / this.sPerUpdate, this.sPerUpdate);
         requestAnimationFrame(this.run.bind(this));
     }
 
