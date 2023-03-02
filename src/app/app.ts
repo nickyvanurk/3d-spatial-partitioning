@@ -24,6 +24,7 @@ export class App {
     constructor() {
         window.addEventListener('keydown', this.processEvents.bind(this));
         window.addEventListener('keyup', this.processEvents.bind(this));
+        window.addEventListener('resize', this.resize.bind(this));
 
         const canvas = document.querySelector('canvas.webgl');
         this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });

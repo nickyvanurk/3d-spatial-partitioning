@@ -32,12 +32,6 @@ document.querySelector('#resetBtn').addEventListener('click', app.reset);
 
 window.addEventListener('dblclick', toggleFullscreen);
 
-window.addEventListener('resize', resize);
-
 function toggleFullscreen() {
     !document.fullscreenElement ? document.querySelector('body').requestFullscreen() : document.exitFullscreen();
-}
-
-function resize() {
-    app.resize();
 }
