@@ -14,10 +14,11 @@ export class World {
         this.addLights();
         this.addStars();
 
-        this.station = new Station(this.ctx);
+        this.station = new Station(ctx.models.get('station').scene);
         this.station.position.y = 100;
         this.station.rotation.x = -0.05;
         this.station.rotation.z = -0.05;
+        ctx.scene.add(this.station.model);
 
         this.fleet = new Fleet(this.ctx, 50, 1000);
     }

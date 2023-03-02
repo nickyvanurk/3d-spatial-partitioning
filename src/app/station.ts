@@ -1,17 +1,15 @@
 import * as THREE from 'three';
 import { Entity } from '../entity';
-import { Context } from './types';
 
 export class Station extends Entity {
     model: THREE.Object3D;
 
-    constructor(ctx: Context) {
-        super(ctx.models.get('station').scene);
+    constructor(model: THREE.Object3D) {
+        super(model);
         this.angularVelocity.y = 0.01;
 
         this.model.position.copy(this.position);
         this.model.rotation.copy(this.rotation);
-        ctx.scene.add(this.model);
     }
 
     update(dt: number) {
