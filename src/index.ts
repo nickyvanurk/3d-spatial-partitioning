@@ -1,11 +1,5 @@
 import './style.css';
 import { App } from './app/app';
-import { type Keys } from './app/types';
-
-const keys: Keys = {
-    keydown: false,
-    keyup: false,
-};
 
 const MS_PER_UPDATE = 1 / 25;
 const app = new App();
@@ -33,34 +27,15 @@ function loop() {
 
 requestAnimationFrame(loop);
 
-document.querySelector('#pauseBtn').addEventListener('click', togglePause);
+document.querySelector('#pauseBtn').addEventListener('click', () => app.togglePause());
 document.querySelector('#resetBtn').addEventListener('click', app.reset);
 
 window.addEventListener('dblclick', toggleFullscreen);
-window.addEventListener('keydown', processEvents);
-window.addEventListener('keyup', processEvents);
+
 window.addEventListener('resize', resize);
 
 function toggleFullscreen() {
     !document.fullscreenElement ? document.querySelector('body').requestFullscreen() : document.exitFullscreen();
-}
-
-function processEvents(event: KeyboardEvent) {
-    keys['keydown'] = event.type === 'keydown';
-    keys['keyup'] = event.type === 'keyup';
-    keys[event.code] = event.type === 'keydown';
-
-    if (keys.keydown) {
-        if (keys.KeyP) togglePause();
-        if (keys.KeyR) app.reset();
-    }
-
-    app.processEvents(keys);
-}
-
-function togglePause() {
-    app.running = !app.running;
-    (document.querySelector('#pauseBtn') as HTMLElement).innerText = app.running ? 'Pause' : 'Resume';
 }
 
 function resize() {

@@ -8,6 +8,10 @@ import { type GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { World } from './world';
 
 export class App {
+    keys: Keys = {
+        keydown: false,
+        keyup: false,
+    };
     running: boolean;
     renderer: THREE.WebGLRenderer;
     camera: THREE.PerspectiveCamera;
@@ -18,6 +22,9 @@ export class App {
     world: World;
 
     constructor() {
+        window.addEventListener('keydown', this.processEvents.bind(this));
+        window.addEventListener('keyup', this.processEvents.bind(this));
+
         const canvas = document.querySelector('canvas.webgl');
         this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         this.renderer.setClearColor(0x131a29);
@@ -74,8 +81,15 @@ export class App {
         // empty
     }
 
-    processEvents(_keys: Keys) {
-        // empty
+    processEvents(event: KeyboardEvent) {
+        this.keys['keydown'] = event.type === 'keydown';
+        this.keys['keyup'] = event.type === 'keyup';
+        this.keys[event.code] = event.type === 'keydown';
+
+        if (this.keys.keydown) {
+            if (this.keys.KeyP) this.togglePause();
+            if (this.keys.KeyR) this.reset();
+        }
     }
 
     update(dt: number) {
@@ -97,5 +111,10 @@ export class App {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.composer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    togglePause() {
+        this.running = !this.running;
+        (document.querySelector('#pauseBtn') as HTMLElement).innerText = this.running ? 'Pause' : 'Resume';
     }
 }
