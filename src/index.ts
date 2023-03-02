@@ -29,9 +29,3 @@ requestAnimationFrame(loop);
 
 document.querySelector('#pauseBtn').addEventListener('click', () => app.togglePause());
 document.querySelector('#resetBtn').addEventListener('click', app.reset);
-
-window.addEventListener('dblclick', toggleFullscreen);
-
-function toggleFullscreen() {
-    !document.fullscreenElement ? document.querySelector('body').requestFullscreen() : document.exitFullscreen();
-}

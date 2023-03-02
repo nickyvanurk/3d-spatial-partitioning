@@ -25,6 +25,7 @@ export class App {
         window.addEventListener('keydown', this.processEvents.bind(this));
         window.addEventListener('keyup', this.processEvents.bind(this));
         window.addEventListener('resize', this.resize.bind(this));
+        window.addEventListener('dblclick', this.toggleFullscreen.bind(this));
 
         const canvas = document.querySelector('canvas.webgl');
         this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -117,5 +118,9 @@ export class App {
     togglePause() {
         this.running = !this.running;
         (document.querySelector('#pauseBtn') as HTMLElement).innerText = this.running ? 'Pause' : 'Resume';
+    }
+
+    toggleFullscreen() {
+        !document.fullscreenElement ? document.querySelector('body').requestFullscreen() : document.exitFullscreen();
     }
 }
