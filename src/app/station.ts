@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { Context } from './types';
 
 export class Station {
-    model: THREE.Group;
+    model: THREE.Object3D;
     rotationSpeed = 0.01;
     rotation = new THREE.Vector3();
 
