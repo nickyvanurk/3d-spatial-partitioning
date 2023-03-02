@@ -87,6 +87,11 @@ export class App {
         this.running = true;
     }
 
+    reset() {
+        this.camera.position.y = 400;
+        this.camera.position.z = 800;
+    }
+
     run() {
         if (this.running) {
             const now = performance.now();
@@ -103,10 +108,6 @@ export class App {
 
         this.render(this.lag / this.sPerUpdate, this.sPerUpdate);
         requestAnimationFrame(this.run.bind(this));
-    }
-
-    reset() {
-        // empty
     }
 
     processEvents(event: KeyboardEvent) {
