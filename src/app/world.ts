@@ -11,10 +11,16 @@ export class World {
 
     constructor(ctx: Context) {
         this.ctx = ctx;
-        this.addLights();
+
+        const ambiLight = new THREE.AmbientLight(0xffffff, 0.5);
+        ctx.scene.add(ambiLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.setScalar(1);
+        ctx.scene.add(dirLight);
 
         const stars = Utils.createPointCloudSphere(1000, 6000, 2000, 12.5, 0xffffff, false);
-        this.ctx.scene.add(stars);
+        ctx.scene.add(stars);
 
         this.station = new Station(ctx.models.get('station').scene);
         this.station.position.y = 100;
@@ -33,14 +39,5 @@ export class World {
     render(alpha: number, dt: number) {
         this.station.render(alpha, dt);
         this.fleet.render(alpha);
-    }
-
-    addLights() {
-        const ambiLight = new THREE.AmbientLight(0xffffff, 0.5);
-        this.ctx.scene.add(ambiLight);
-
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        dirLight.position.setScalar(1);
-        this.ctx.scene.add(dirLight);
     }
 }
