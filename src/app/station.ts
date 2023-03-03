@@ -9,7 +9,7 @@ export class Station extends Entity {
         this.angularVelocity.y = 0.01;
 
         this.mesh.position.copy(this.position);
-        this.mesh.rotation.copy(this.rotation);
+        this.mesh.rotation.setFromVector3(this.rotation);
     }
 
     update(dt: number) {

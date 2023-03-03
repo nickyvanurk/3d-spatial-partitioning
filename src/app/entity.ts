@@ -4,12 +4,12 @@ import { Object3D } from 'three';
 export class Entity {
     mesh: Object3D;
     position: THREE.Vector3;
-    rotation: THREE.Euler;
+    rotation: THREE.Vector3;
     velocity = new THREE.Vector3();
     acceleration = new THREE.Vector3();
     angularVelocity = new THREE.Vector3();
 
-    constructor(mesh: THREE.Object3D, position = new THREE.Vector3(), rotation = new THREE.Euler()) {
+    constructor(mesh: THREE.Object3D, position = new THREE.Vector3(), rotation = new THREE.Vector3()) {
         this.mesh = mesh;
         this.position = position;
         this.rotation = rotation;
