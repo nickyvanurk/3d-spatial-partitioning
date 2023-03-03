@@ -81,11 +81,7 @@ export class App {
     }
 
     init() {
-        this.world = new World({
-            renderer: this.renderer,
-            scene: this.scene,
-            models: this.models,
-        });
+        this.world = new World({ renderer: this.renderer, scene: this.scene, models: this.models });
         this.running = true;
     }
 
