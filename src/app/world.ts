@@ -12,7 +12,9 @@ export class World {
     constructor(ctx: Context) {
         this.ctx = ctx;
         this.addLights();
-        this.addStars();
+
+        const stars = Utils.createPointCloudSphere(1000, 6000, 2000, 12.5, 0xffffff, false);
+        this.ctx.scene.add(stars);
 
         this.station = new Station(ctx.models.get('station').scene);
         this.station.position.y = 100;
@@ -40,17 +42,5 @@ export class World {
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
         dirLight.position.setScalar(1);
         this.ctx.scene.add(dirLight);
-    }
-
-    addStars() {
-        const points = Utils.createPointCloudSphere(1000, 6000, 2000);
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points), 3));
-        const material = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 12.5,
-            fog: false,
-        });
-        this.ctx.scene.add(new THREE.Points(geometry, material));
     }
 }
