@@ -18,7 +18,7 @@ export class World {
         this.station.position.y = 100;
         this.station.rotation.x = -0.05;
         this.station.rotation.z = -0.05;
-        ctx.scene.add(this.station.model);
+        ctx.scene.add(this.station.mesh);
 
         this.fleet = new Fleet(this.ctx, 50, 1000);
     }

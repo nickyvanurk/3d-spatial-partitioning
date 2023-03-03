@@ -2,15 +2,15 @@ import * as THREE from 'three';
 import { Object3D } from 'three';
 
 export class Entity {
-    model: Object3D;
+    mesh: Object3D;
     position: THREE.Vector3;
     rotation: THREE.Euler;
     velocity = new THREE.Vector3();
     acceleration = new THREE.Vector3();
     angularVelocity = new THREE.Vector3();
 
-    constructor(model: THREE.Object3D, position = new THREE.Vector3(), rotation = new THREE.Euler()) {
-        this.model = model;
+    constructor(mesh: THREE.Object3D, position = new THREE.Vector3(), rotation = new THREE.Euler()) {
+        this.mesh = mesh;
         this.position = position;
         this.rotation = rotation;
     }
@@ -30,12 +30,12 @@ export class Entity {
     }
 
     render(alpha: number, dt: number) {
-        this.model.position.x = this.position.x + this.velocity.x * dt * alpha;
-        this.model.position.y = this.position.y + this.velocity.y * dt * alpha;
-        this.model.position.z = this.position.z + this.velocity.z * dt * alpha;
+        this.mesh.position.x = this.position.x + this.velocity.x * dt * alpha;
+        this.mesh.position.y = this.position.y + this.velocity.y * dt * alpha;
+        this.mesh.position.z = this.position.z + this.velocity.z * dt * alpha;
 
-        this.model.rotation.x = this.rotation.x + this.angularVelocity.x * dt * alpha;
-        this.model.rotation.y = this.rotation.y + this.angularVelocity.y * dt * alpha;
-        this.model.rotation.z = this.rotation.z + this.angularVelocity.z * dt * alpha;
+        this.mesh.rotation.x = this.rotation.x + this.angularVelocity.x * dt * alpha;
+        this.mesh.rotation.y = this.rotation.y + this.angularVelocity.y * dt * alpha;
+        this.mesh.rotation.z = this.rotation.z + this.angularVelocity.z * dt * alpha;
     }
 }
