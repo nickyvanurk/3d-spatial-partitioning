@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Entity } from '../entity';
+import { Entity } from './entity';
 
 export class Station extends Entity {
     model: THREE.Object3D;
