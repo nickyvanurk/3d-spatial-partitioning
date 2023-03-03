@@ -13,6 +13,8 @@ export class Entity {
         this.mesh = mesh;
         this.position = position;
         this.rotation = rotation;
+        this.mesh.position.copy(position);
+        this.mesh.rotation.setFromVector3(rotation);
     }
 
     update(dt: number) {
