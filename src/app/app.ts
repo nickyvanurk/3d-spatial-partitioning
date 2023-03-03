@@ -142,6 +142,7 @@ export class App {
 
     togglePause() {
         this.running = !this.running;
+        this.lastTime = performance.now();
         this.htmlElements.pauseBtn.innerText = this.running ? 'Pause' : 'Resume';
     }
 
