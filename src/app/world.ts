@@ -12,8 +12,7 @@ export class World {
     constructor(ctx: Context) {
         this.ctx = ctx;
 
-        const ambiLight = new THREE.AmbientLight(0xffffff, 0.5);
-        ctx.scene.add(ambiLight);
+        ctx.scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
         dirLight.position.setScalar(1);
@@ -22,13 +21,12 @@ export class World {
         const stars = Utils.createPointCloudSphere(1000, 6000, 2000, 12.5, 0xffffff, false);
         ctx.scene.add(stars);
 
-        this.station = new Station(ctx.models.get('station').scene);
+        this.station = new Station(ctx);
         this.station.position.y = 100;
         this.station.rotation.x = -0.05;
         this.station.rotation.z = -0.05;
-        ctx.scene.add(this.station.mesh);
 
-        this.fleet = new Fleet(this.ctx, 50, 1000);
+        this.fleet = new Fleet(ctx, 50, 1000);
     }
 
     update(dt: number) {
