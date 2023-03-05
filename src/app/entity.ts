@@ -1,17 +1,14 @@
-import * as THREE from 'three';
-import { Object3D } from 'three';
-
-import { Vector3 } from 'merlin';
+import { Vector3, Mesh } from 'merlin';
 
 export class Entity {
-    mesh: Object3D;
+    mesh: Mesh;
     position: Vector3;
     rotation: Vector3;
     velocity = new Vector3();
     acceleration = new Vector3();
     angularVelocity = new Vector3();
 
-    constructor(mesh: THREE.Object3D, position = new Vector3(), rotation = new Vector3()) {
+    constructor(mesh: Mesh, position = new Vector3(), rotation = new Vector3()) {
         this.mesh = mesh;
         this.position = position;
         this.rotation = rotation;
