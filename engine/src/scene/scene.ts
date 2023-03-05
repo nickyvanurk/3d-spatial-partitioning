@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { Mesh } from '../render';
 
 interface IScene {
     name: string;
@@ -13,11 +14,13 @@ interface IScene {
 
 export class Scene implements IScene {
     load = { gltf: this.loadGLTF.bind(this) };
-    add = { mesh: this.getGLTF.bind(this) };
+    add = { mesh: this.addMesh.bind(this) };
 
     private loadingManager = new THREE.LoadingManager();
     private loader = { gltf: new GLTFLoader(this.loadingManager) };
-    private meshes: { [key: string]: GLTF } = {};
+    private meshes: { [key: string]: Mesh } = {};
+
+    private scene = new THREE.Scene();
 
     constructor(readonly name = 'default') {
         this.loadingManager.onLoad = this.create.bind(this);
@@ -44,10 +47,10 @@ export class Scene implements IScene {
     }
 
     private loadGLTF(name: string, path: string) {
-        this.loader.gltf.load(path, gltf => (this.meshes[name] = gltf));
+        this.loader.gltf.load(path, gltf => (this.meshes[name] = new Mesh(gltf.scene)));
     }
 
-    private getGLTF(name: string) {
-        return this.meshes[name];
+    private addMesh(name: string) {
+        this.scene.add(this.meshes[name].value.clone());
     }
 }
