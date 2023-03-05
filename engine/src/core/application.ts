@@ -2,6 +2,7 @@ import * as THREE from 'three';
 
 import { Loop } from './loop';
 import { Scene } from '../scene/scene';
+import { SceneManager } from '../scene/scene_manager';
 
 type Config = {
     scene: Scene | Scene[];
@@ -13,6 +14,8 @@ export class Application {
     running = false;
     renderer: THREE.WebGLRenderer;
     scene: Scene | Scene[];
+
+    sceneManager = new SceneManager();
 
     private loop: Loop;
 
@@ -31,13 +34,21 @@ export class Application {
 
         this.loop = new Loop(1 / 50);
         this.loop.start(this.fixedStep.bind(this), this.step.bind(this));
+
+        if (config.scene instanceof Scene) {
+            this.sceneManager.create(config.scene);
+        } else {
+            for (const scene of config.scene) {
+                this.sceneManager.create(scene);
+            }
+        }
     }
 
     fixedStep() {
-        //
+        this.sceneManager.fixedUpdate();
     }
 
     step() {
-        //
+        this.sceneManager.update();
     }
 }

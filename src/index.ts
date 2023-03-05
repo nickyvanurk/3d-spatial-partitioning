@@ -14,5 +14,5 @@ class Main extends Merlin.Scene {
 
 new Merlin.Application({
     backgroundColor: 0x131a29,
-    scene: Main,
+    scene: new Main(),
 });
