@@ -12,8 +12,12 @@ interface IScene {
     update: () => void;
 }
 
+type loadErrorCallback = (url: string) => void;
+type loadProgressCallback = (percent: number, itemsLoaded: number, itemsTotal: number, url: string) => void;
+type loadDoneCallback = () => void;
+
 export class Scene implements IScene {
-    load = { gltf: this.loadGLTF.bind(this) };
+    load = { on: this.setLoadCallback.bind(this), gltf: this.loadGLTF.bind(this) };
     add = { mesh: this.addMesh.bind(this) };
 
     scene = new THREE.Scene();
@@ -55,5 +59,25 @@ export class Scene implements IScene {
 
     private addMesh(name: string) {
         this.scene.add(this.meshes[name].value.clone());
+    }
+
+    private setLoadCallback(key: string, callback: loadErrorCallback | loadProgressCallback | loadDoneCallback) {
+        switch (key) {
+            case 'error':
+                this.loadingManager.onError = callback as loadErrorCallback;
+                break;
+            case 'progress':
+                this.loadingManager.onProgress = (url: string, itemsLoaded: number, itemsTotal: number) => {
+                    const percent = Math.floor((itemsLoaded / itemsTotal) * 100);
+                    (callback as loadProgressCallback)(percent, itemsLoaded, itemsTotal, url);
+                };
+                break;
+            case 'done':
+                this.loadingManager.onLoad = () => {
+                    (callback as loadDoneCallback)();
+                    this.create();
+                };
+                break;
+        }
     }
 }
