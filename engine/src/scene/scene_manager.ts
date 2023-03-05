@@ -21,10 +21,8 @@ export class SceneManager {
         }
 
         if (scene.preload) {
-            scene.preload();
-        }
-
-        if (scene.create) {
+            scene.preload(); // Calls scene.create when done loading
+        } else if (scene.create) {
             scene.create();
         }
     }

@@ -1,3 +1,6 @@
+import * as THREE from 'three';
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+
 interface IScene {
     name: string;
 
@@ -9,7 +12,20 @@ interface IScene {
 }
 
 export class Scene implements IScene {
-    constructor(readonly name = 'default') {}
+    load = {
+        gltf: this.loadGLTF.bind(this),
+    };
+
+    add = {
+        mesh: this.getGLTF.bind(this),
+    };
+
+    private loadingManager = new THREE.LoadingManager();
+    private meshes: { [key: string]: GLTF } = {};
+
+    constructor(readonly name = 'default') {
+        this.loadingManager.onLoad = this.create.bind(this);
+    }
 
     init() {
         /* virtual method */
@@ -29,5 +45,14 @@ export class Scene implements IScene {
 
     update() {
         /* virtual method */
+    }
+
+    private loadGLTF(name: string, path: string) {
+        const loader = new GLTFLoader(this.loadingManager);
+        loader.load(path, gltf => (this.meshes[name] = gltf));
+    }
+
+    private getGLTF(name: string) {
+        return this.meshes[name];
     }
 }
