@@ -43,6 +43,9 @@ module.exports = {
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
+        alias: {
+            merlin: path.join(__dirname, 'engine'),
+        },
     },
     plugins: [
         new MiniCssExtractPlugin({

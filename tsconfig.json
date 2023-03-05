@@ -10,5 +10,8 @@
     "jsx": "react",
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
+    "paths": {
+      "merlin": ["./engine"]
+    }
   },
 }
