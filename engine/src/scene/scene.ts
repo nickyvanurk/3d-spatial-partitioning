@@ -1,6 +1,8 @@
 interface IScene {
     name: string;
 
+    init: () => void;
+    preload: () => void;
     create: () => void;
     fixedUpdate: () => void;
     update: () => void;
@@ -11,6 +13,14 @@ export class Scene implements IScene {
 
     constructor(name: string) {
         this.name = name;
+    }
+
+    init() {
+        /* virtual method */
+    }
+
+    preload() {
+        /* virtual method */
     }
 
     create() {

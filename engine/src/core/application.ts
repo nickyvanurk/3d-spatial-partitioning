@@ -13,15 +13,12 @@ type Config = {
 export class Application {
     running = false;
     renderer: THREE.WebGLRenderer;
-    scene: Scene | Scene[];
 
-    sceneManager = new SceneManager();
+    private sceneManager: SceneManager;
 
     private loop: Loop;
 
     constructor(config: Config) {
-        this.scene = config.scene;
-
         const canvas = document.createElement('canvas');
         const parent = document.querySelector(config.parent || 'body');
         parent.appendChild(canvas);
@@ -35,13 +32,7 @@ export class Application {
         this.loop = new Loop(1 / 50);
         this.loop.start(this.fixedStep.bind(this), this.step.bind(this));
 
-        if (config.scene instanceof Scene) {
-            this.sceneManager.create(config.scene);
-        } else {
-            for (const scene of config.scene) {
-                this.sceneManager.create(scene);
-            }
-        }
+        this.sceneManager = new SceneManager(config.scene);
     }
 
     fixedStep() {
