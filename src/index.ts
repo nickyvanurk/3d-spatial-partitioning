@@ -17,14 +17,12 @@ class Loading extends Merlin.Scene {
 
     preload() {
         console.log('preload ' + this.name);
-
-        this.load.gltf('spaceship', 'assets/models/station.glb');
+        this.load.gltf('spaceship', 'assets/models/fighter.glb');
     }
 
     create() {
         console.log('create ' + this.name);
-
-        console.log(this.add.mesh('spaceship'));
+        this.add.mesh('spaceship');
     }
 }
 

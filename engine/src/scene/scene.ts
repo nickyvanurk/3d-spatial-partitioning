@@ -16,14 +16,17 @@ export class Scene implements IScene {
     load = { gltf: this.loadGLTF.bind(this) };
     add = { mesh: this.addMesh.bind(this) };
 
+    scene = new THREE.Scene();
+    // Create Viewport class with viewport information
+    camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 0.1, 1000);
+
     private loadingManager = new THREE.LoadingManager();
     private loader = { gltf: new GLTFLoader(this.loadingManager) };
     private meshes: { [key: string]: Mesh } = {};
 
-    private scene = new THREE.Scene();
-
     constructor(readonly name = 'default') {
         this.loadingManager.onLoad = this.create.bind(this);
+        this.camera.position.z = 20;
     }
 
     init() {

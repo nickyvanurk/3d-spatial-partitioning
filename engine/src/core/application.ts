@@ -38,5 +38,6 @@ export class Application {
 
     step() {
         this.sceneManager.update();
+        this.renderer.render(this.sceneManager.current.scene, this.sceneManager.current.camera);
     }
 }
