@@ -33,11 +33,11 @@ export class Application {
         this.loop.start(this.fixedStep.bind(this), this.step.bind(this));
     }
 
-    fixedStep(_time: number, _fixedDelta: number) {
+    fixedStep() {
         //
     }
 
-    step(__time: number, _delta: number, _alpha: number, _fixedDelta: number) {
+    step() {
         //
     }
 }

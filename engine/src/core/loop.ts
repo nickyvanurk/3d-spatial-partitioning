@@ -1,40 +1,47 @@
-type fixedCallback = (time: number, fixedDelta: number) => void;
-type callback = (time: number, delta: number, alpha: number, fixedDelta: number) => void;
+export class Time {
+    static now = 0;
+    static last = 0;
+    static deltaTime = 0;
+    static fixedDeltaTime = 0;
+    static time = 0;
+    static fixedTime = 0;
+    static accumulator = 0;
+    static alpha = 0;
+}
 
 export class Loop {
-    running = false;
-    startTime = 0;
+    private fixedCallback: () => void;
+    private callback: () => void;
 
-    private currentTime = 0;
-    private accumulator = 0;
-    private time = 0;
-    private fixedCallback: fixedCallback;
-    private callback: callback;
+    constructor(fixedDeltaTime: number) {
+        Time.fixedDeltaTime = fixedDeltaTime;
+    }
 
-    constructor(private dt: number) {}
-
-    start(updateCallback: fixedCallback, renderCallback: callback) {
-        this.running = true;
-        this.startTime = window.performance.now();
-        this.fixedCallback = updateCallback;
-        this.callback = renderCallback;
+    start(fixedCallback: () => void, callback: () => void) {
+        Time.last = window.performance.now();
+        this.fixedCallback = fixedCallback;
+        this.callback = callback;
         window.requestAnimationFrame(this.step.bind(this));
     }
 
     step() {
-        const newTime = window.performance.now();
-        const frameTime = Math.min((newTime - this.currentTime) / 1000, 0.25);
-        this.currentTime = newTime;
-        this.accumulator += frameTime;
+        Time.now = window.performance.now();
+        Time.deltaTime = Math.min((Time.now - Time.last) / 1000, 0.25);
+        Time.last = Time.now;
 
-        if (this.accumulator >= this.dt) {
-            this.fixedCallback(this.time, this.dt);
-            this.time += this.dt;
-            this.accumulator -= this.dt;
+        Time.accumulator += Time.deltaTime;
+
+        if (Time.accumulator >= Time.fixedDeltaTime) {
+            this.fixedCallback();
+            Time.fixedTime += Time.fixedDeltaTime;
+            Time.accumulator -= Time.fixedDeltaTime;
         }
 
-        const alpha = this.accumulator / this.dt;
-        this.callback(this.time, frameTime, alpha, this.dt);
+        Time.alpha = Time.accumulator / Time.fixedDeltaTime;
+
+        this.callback();
+        Time.time += Time.deltaTime;
+
         window.requestAnimationFrame(this.step.bind(this));
     }
 }
