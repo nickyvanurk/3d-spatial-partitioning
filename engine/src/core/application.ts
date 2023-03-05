@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import { Loop } from './loop';
-import { Scene } from './scene';
+import { Scene } from '../scene/scene';
 
 type Config = {
     scene: Scene | Scene[];
