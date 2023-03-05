@@ -20,17 +20,13 @@ export class SceneManager {
 
     fixedUpdate() {
         for (const scene of this.scenes) {
-            if (scene.fixedUpdate) {
-                scene.fixedUpdate();
-            }
+            scene.fixedUpdate();
         }
     }
 
     update() {
         for (const scene of this.scenes) {
-            if (scene.update) {
-                scene.update();
-            }
+            scene.update();
         }
     }
 }
