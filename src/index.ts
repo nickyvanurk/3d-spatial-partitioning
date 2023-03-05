@@ -10,9 +10,21 @@ class Main extends Merlin.Scene {
     constructor() {
         super('main');
     }
+
+    init() {
+        console.log('init');
+    }
+
+    preload() {
+        console.log('preload');
+    }
+
+    create() {
+        console.log('create');
+    }
 }
 
 new Merlin.Application({
     backgroundColor: 0x131a29,
-    scene: new Main(),
+    scene: Main,
 });

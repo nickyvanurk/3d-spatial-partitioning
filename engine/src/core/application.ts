@@ -5,7 +5,7 @@ import { Scene } from '../scene/scene';
 import { SceneManager } from '../scene/scene_manager';
 
 type Config = {
-    scene: Scene | Scene[];
+    scene: { new (): Scene } | { new (): Scene }[];
     parent?: string;
     backgroundColor?: string | number;
 };

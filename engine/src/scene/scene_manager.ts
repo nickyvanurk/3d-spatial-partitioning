@@ -3,13 +3,13 @@ import { Scene } from './scene';
 export class SceneManager {
     scenes: Scene[] = [];
 
-    constructor(sceneConfig: Scene | Scene[]) {
+    constructor(sceneConfig: { new (): Scene } | { new (): Scene }[]) {
         if (!Array.isArray(sceneConfig)) {
             sceneConfig = [sceneConfig];
         }
 
         for (const scene of sceneConfig) {
-            this.scenes.push(scene);
+            this.scenes.push(new scene());
         }
 
         this.bootScene(this.scenes[0]);
