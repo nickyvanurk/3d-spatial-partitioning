@@ -11,11 +11,8 @@ type Config = {
 };
 
 export class Application {
-    running = false;
-    renderer: THREE.WebGLRenderer;
-
+    private renderer: THREE.WebGLRenderer;
     private sceneManager: SceneManager;
-
     private loop: Loop;
 
     constructor(config: Config) {
