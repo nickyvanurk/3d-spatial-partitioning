@@ -26,6 +26,8 @@ export class Application {
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.outputEncoding = THREE.sRGBEncoding;
 
+        window.addEventListener('resize', this.resize.bind(this));
+
         this.loop = new Loop(1 / 50);
         this.loop.start(this.fixedStep.bind(this), this.step.bind(this));
 
@@ -39,5 +41,12 @@ export class Application {
     step() {
         this.sceneManager.update();
         this.renderer.render(this.sceneManager.current.scene, this.sceneManager.current.camera);
+    }
+
+    resize() {
+        this.sceneManager.current.camera.aspect = window.innerWidth / window.innerHeight;
+        this.sceneManager.current.camera.updateProjectionMatrix();
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 }
