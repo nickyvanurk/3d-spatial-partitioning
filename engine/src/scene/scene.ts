@@ -32,7 +32,7 @@ export class Scene implements IScene {
     }
 
     preload() {
-        /* virtual method */
+        this.create();
     }
 
     create() {

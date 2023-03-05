@@ -16,15 +16,8 @@ export class SceneManager {
     }
 
     bootScene(scene: Scene) {
-        if (scene.init) {
-            scene.init();
-        }
-
-        if (scene.preload) {
-            scene.preload(); // Calls scene.create when done loading
-        } else if (scene.create) {
-            scene.create();
-        }
+        scene.init();
+        scene.preload();
     }
 
     fixedUpdate() {
