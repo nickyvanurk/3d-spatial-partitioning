@@ -1,20 +1,23 @@
 import * as THREE from 'three';
 import { Object3D } from 'three';
 
+import { Vector3 } from 'merlin';
+
 export class Entity {
     mesh: Object3D;
-    position: THREE.Vector3;
-    rotation: THREE.Vector3;
-    velocity = new THREE.Vector3();
-    acceleration = new THREE.Vector3();
-    angularVelocity = new THREE.Vector3();
+    position: Vector3;
+    rotation: Vector3;
+    velocity = new Vector3();
+    acceleration = new Vector3();
+    angularVelocity = new Vector3();
 
-    constructor(mesh: THREE.Object3D, position = new THREE.Vector3(), rotation = new THREE.Vector3()) {
+    constructor(mesh: THREE.Object3D, position = new Vector3(), rotation = new Vector3()) {
         this.mesh = mesh;
         this.position = position;
         this.rotation = rotation;
-        this.mesh.position.copy(position);
-        this.mesh.rotation.setFromVector3(rotation);
+
+        this.mesh.position.set(position.x, position.y, position.z);
+        this.mesh.rotation.set(rotation.x, rotation.y, rotation.z);
     }
 
     update(dt: number) {
