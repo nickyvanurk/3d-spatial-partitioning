@@ -9,11 +9,7 @@ interface IScene {
 }
 
 export class Scene implements IScene {
-    name: string;
-
-    constructor(name: string) {
-        this.name = name;
-    }
+    constructor(readonly name = 'default') {}
 
     init() {
         /* virtual method */
