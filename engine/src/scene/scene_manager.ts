@@ -2,6 +2,7 @@ import { Scene } from './scene';
 
 export class SceneManager {
     scenes: Scene[] = [];
+    current: Scene;
 
     constructor(sceneConfig: { new (): Scene } | { new (): Scene }[]) {
         if (!Array.isArray(sceneConfig)) {
@@ -12,12 +13,9 @@ export class SceneManager {
             this.scenes.push(new scene());
         }
 
-        this.bootScene(this.scenes[0]);
-    }
-
-    bootScene(scene: Scene) {
-        scene.init();
-        scene.preload();
+        this.current = this.scenes[0];
+        this.current.init();
+        this.current.preload();
     }
 
     fixedUpdate() {
