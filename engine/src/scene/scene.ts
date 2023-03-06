@@ -22,7 +22,7 @@ export class Scene implements IScene {
 
     scene = new THREE.Scene();
     // Create Viewport class with viewport information
-    camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 0.1, 10000);
+    camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 0.1, 1000);
 
     private loadingManager = new THREE.LoadingManager();
     private loader = { gltf: new GLTFLoader(this.loadingManager) };

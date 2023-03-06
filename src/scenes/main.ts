@@ -4,6 +4,9 @@ import * as Utils from '../app/helpers';
 export class Main extends Merlin.Scene {
     constructor() {
         super('main');
+
+        this.camera.far = 10000;
+        this.camera.updateProjectionMatrix();
     }
 
     preload() {
