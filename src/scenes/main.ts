@@ -1,4 +1,5 @@
 import * as Merlin from 'merlin';
+import * as Utils from '../app/helpers';
 
 export class Main extends Merlin.Scene {
     constructor() {
@@ -23,6 +24,7 @@ export class Main extends Merlin.Scene {
     }
 
     create() {
+        this.add.points(Utils.createPointCloudSphere(1000, 6000, 2000, 12.5, 0xffffff));
         this.add.mesh('spaceship');
     }
 }
