@@ -27,8 +27,12 @@ export class Application {
 
         window.addEventListener('resize', this.resize.bind(this));
 
-        new Loop(1 / 50, this.sceneManager.fixedUpdate.bind(this), this.update.bind(this));
         this.sceneManager = new SceneManager(config.scene);
+        new Loop(1 / 50, this.fixedUpdate.bind(this), this.update.bind(this));
+    }
+
+    fixedUpdate() {
+        this.sceneManager.fixedUpdate();
     }
 
     update() {
