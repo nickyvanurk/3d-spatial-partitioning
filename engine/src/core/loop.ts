@@ -4,18 +4,15 @@ export class Loop {
     private fixedCallback: () => void;
     private callback: () => void;
 
-    constructor(fixedDeltaTime: number) {
+    constructor(fixedDeltaTime: number, fixedCallback: () => void, callback: () => void) {
         Time.fixedDeltaTime = fixedDeltaTime;
-    }
-
-    start(fixedCallback: () => void, callback: () => void) {
         Time.last = window.performance.now();
         this.fixedCallback = fixedCallback;
         this.callback = callback;
-        window.requestAnimationFrame(this.step.bind(this));
+        window.requestAnimationFrame(this.run.bind(this));
     }
 
-    step() {
+    run() {
         Time.now = window.performance.now();
         Time.deltaTime = Math.min((Time.now - Time.last) / 1000, 0.25);
         Time.last = Time.now;
@@ -33,6 +30,6 @@ export class Loop {
         this.callback();
         Time.time += Time.deltaTime;
 
-        window.requestAnimationFrame(this.step.bind(this));
+        window.requestAnimationFrame(this.run.bind(this));
     }
 }

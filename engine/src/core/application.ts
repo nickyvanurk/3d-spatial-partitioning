@@ -13,7 +13,6 @@ type Config = {
 export class Application {
     private renderer: THREE.WebGLRenderer;
     private sceneManager: SceneManager;
-    private loop: Loop;
 
     constructor(config: Config) {
         const canvas = document.createElement('canvas');
@@ -28,17 +27,11 @@ export class Application {
 
         window.addEventListener('resize', this.resize.bind(this));
 
-        this.loop = new Loop(1 / 50);
-        this.loop.start(this.fixedStep.bind(this), this.step.bind(this));
-
+        new Loop(1 / 50, this.sceneManager.fixedUpdate.bind(this), this.update.bind(this));
         this.sceneManager = new SceneManager(config.scene);
     }
 
-    fixedStep() {
-        this.sceneManager.fixedUpdate();
-    }
-
-    step() {
+    update() {
         this.sceneManager.update();
         this.renderer.render(this.sceneManager.current.scene, this.sceneManager.current.camera);
     }
