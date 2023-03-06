@@ -19,14 +19,10 @@ export class SceneManager {
     }
 
     fixedUpdate() {
-        for (const scene of this.scenes) {
-            scene.fixedUpdate();
-        }
+        this.current.fixedUpdate();
     }
 
     update() {
-        for (const scene of this.scenes) {
-            scene.update();
-        }
+        this.current.update();
     }
 }
