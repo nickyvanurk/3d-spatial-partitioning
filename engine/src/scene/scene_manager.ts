@@ -1,7 +1,7 @@
 import { Scene } from './scene';
 
 export class SceneManager {
-    scenes: Scene[] = [];
+    scenes: { [key: string]: Scene } = {};
     current: Scene;
 
     constructor(sceneConfig: typeof Scene | (typeof Scene)[]) {
@@ -9,13 +9,12 @@ export class SceneManager {
             sceneConfig = [sceneConfig];
         }
 
-        for (const scene of sceneConfig) {
-            const s = new scene();
-            s.manager = this;
-            this.scenes.push(s);
+        for (const scene of sceneConfig.reverse()) {
+            this.current = new scene();
+            this.current.manager = this;
+            this.scenes[this.current.name] = this.current;
         }
 
-        this.current = this.scenes[0];
         this.current.init();
         this.current.preload();
     }
@@ -29,6 +28,10 @@ export class SceneManager {
     }
 
     switch(name: string) {
-        console.log('switching to ', name, ' scene');
+        if (this.scenes[name]) {
+            this.current = this.scenes[name];
+            this.current.init();
+            this.current.preload();
+        }
     }
 }

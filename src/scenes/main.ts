@@ -29,7 +29,5 @@ export class Main extends mln.Scene {
     create() {
         this.add.points(utils.createPointCloudSphere(1000, 6000, 2000, 12.5, 0xffffff));
         this.add.mesh('spaceship');
-
-        this.manager.switch('test');
     }
 }

@@ -34,7 +34,6 @@ export class Scene implements IScene {
     constructor(readonly name = 'default') {
         this.loadingManager.onLoad = this.create.bind(this);
         this.camera.position.z = 20;
-        console.log(name);
     }
 
     init() {
@@ -55,6 +54,10 @@ export class Scene implements IScene {
 
     update() {
         /* virtual method */
+    }
+
+    switch(name: string) {
+        this.manager.switch(name);
     }
 
     private loadGLTF(name: string, path: string) {
