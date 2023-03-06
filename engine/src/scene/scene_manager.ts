@@ -4,13 +4,15 @@ export class SceneManager {
     scenes: Scene[] = [];
     current: Scene;
 
-    constructor(sceneConfig: { new (): Scene } | { new (): Scene }[]) {
+    constructor(sceneConfig: typeof Scene | (typeof Scene)[]) {
         if (!Array.isArray(sceneConfig)) {
             sceneConfig = [sceneConfig];
         }
 
         for (const scene of sceneConfig) {
-            this.scenes.push(new scene());
+            const s = new scene();
+            s.manager = this;
+            this.scenes.push(s);
         }
 
         this.current = this.scenes[0];
@@ -24,5 +26,9 @@ export class SceneManager {
 
     update() {
         this.current.update();
+    }
+
+    switch(name: string) {
+        console.log('switching to ', name, ' scene');
     }
 }

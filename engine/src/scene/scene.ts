@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Mesh } from '../render';
+import type { SceneManager } from './scene_manager';
 
 interface IScene {
     name: string;
@@ -28,9 +29,12 @@ export class Scene implements IScene {
     private loader = { gltf: new GLTFLoader(this.loadingManager) };
     private meshes: { [key: string]: Mesh } = {};
 
+    manager: SceneManager;
+
     constructor(readonly name = 'default') {
         this.loadingManager.onLoad = this.create.bind(this);
         this.camera.position.z = 20;
+        console.log(name);
     }
 
     init() {

@@ -1,7 +1,7 @@
-import * as Merlin from 'merlin';
+import * as mln from 'merlin';
 import * as utils from '../app/utils';
 
-export class Main extends Merlin.Scene {
+export class Main extends mln.Scene {
     constructor() {
         super('main');
 
@@ -29,5 +29,7 @@ export class Main extends Merlin.Scene {
     create() {
         this.add.points(utils.createPointCloudSphere(1000, 6000, 2000, 12.5, 0xffffff));
         this.add.mesh('spaceship');
+
+        this.manager.switch('test');
     }
 }
