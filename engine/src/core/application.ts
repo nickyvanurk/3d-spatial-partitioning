@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { Loop } from './loop';
 import { Scene } from '../scene/scene';
 import { SceneManager } from '../scene/scene_manager';
+import { Window } from './window';
 
 type Config = {
     scene: { new (): Scene } | { new (): Scene }[];
@@ -13,19 +14,17 @@ type Config = {
 export class Application {
     private renderer: THREE.WebGLRenderer;
     private sceneManager: SceneManager;
+    private window: Window;
 
     constructor(config: Config) {
-        const canvas = document.createElement('canvas');
-        const parent = document.querySelector(config.parent || 'body');
-        parent.appendChild(canvas);
+        this.window = new Window(config.parent || 'body');
+        this.window.setResizeCallback(this.resize.bind(this));
 
-        this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.window.canvas, antialias: true });
         this.renderer.setClearColor(config.backgroundColor || 0x000000);
-        this.renderer.setSize(parent.clientWidth, parent.clientHeight);
+        this.renderer.setSize(this.window.width, this.window.height);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.outputEncoding = THREE.sRGBEncoding;
-
-        window.addEventListener('resize', this.resize.bind(this));
 
         this.sceneManager = new SceneManager(config.scene);
         new Loop(1 / 50, this.fixedUpdate.bind(this), this.update.bind(this));
