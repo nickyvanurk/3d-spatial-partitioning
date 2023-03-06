@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as Utils from './helpers';
+import * as utils from './utils';
 import { Fleet } from './fleet';
 import { Station } from './station';
 import { Context } from './types';
@@ -18,7 +18,7 @@ export class World {
         dirLight.position.setScalar(1);
         ctx.scene.add(dirLight);
 
-        const stars = Utils.createPointCloudSphere(1000, 6000, 2000, 12.5, 0xffffff, false);
+        const stars = utils.createPointCloudSphere(1000, 6000, 2000, 12.5, 0xffffff, false);
         ctx.scene.add(stars);
 
         this.station = new Station(ctx);

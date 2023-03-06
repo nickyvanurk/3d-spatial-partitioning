@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GPUComputationRenderer, Variable } from 'three/examples/jsm/misc/GPUComputationRenderer';
-import { nextPowerOf2 } from '../helpers';
+import * as utils from '../utils';
 import { Context } from '../types';
 
 import positionFs from './position.fs.glsl';
@@ -28,7 +28,7 @@ export class Fleet {
         this.ctx = ctx;
         this.size = size;
         this.bounds = bounds;
-        this.width = nextPowerOf2(Math.sqrt(size));
+        this.width = utils.nextPowerOf2(Math.sqrt(size));
         this.capacity = this.width * this.width;
         this.geometry = new THREE.BufferGeometry();
 
@@ -197,7 +197,7 @@ export class Fleet {
 
                 mat3 maty = mat3(cosry, 0, -sinry, 0, 1, 0, sinry, 0, cosry);
                 mat3 matz = mat3(cosrz, sinrz, 0, -sinrz, cosrz, 0, 0, 0, 1);
-                
+
                 newPosition = maty * matz * newPosition;
                 newPosition += view_pos;
 
