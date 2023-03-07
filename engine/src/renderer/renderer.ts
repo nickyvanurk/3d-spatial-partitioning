@@ -6,7 +6,6 @@ type Config = {
     antialias: boolean;
     clearColor: string | number;
     outputEncoding: typeof THREE.sRGBEncoding;
-    maxDevicePixelRatio: number;
 };
 
 export class Renderer {
@@ -14,7 +13,6 @@ export class Renderer {
         antialias: true,
         clearColor: 0x000000,
         outputEncoding: THREE.sRGBEncoding,
-        maxDevicePixelRatio: 2,
     };
     private webGlRenderer: THREE.WebGLRenderer;
 
