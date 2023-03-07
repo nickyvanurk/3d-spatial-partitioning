@@ -4,11 +4,11 @@ export interface ITreeNode<T> {
     children: Array<ITreeNode<T>>;
 }
 
-export interface ITree<T, P = ITreeNode<T>, R = P> {
-    add(data: T, parent: P): R;
-    find(data: T, parent: P): R | undefined;
-    traverse(cb: (data: T | P | R) => void, parent: P): void;
-    delete(data: T, parent: P): R;
+export interface ITree<T, N = ITreeNode<T>> {
+    add(data: T, parent: N): N;
+    find(data: T, parent: N): N | undefined;
+    traverse(cb: (data: N) => void, parent: N): void;
+    delete(data: T, parent: N): N;
 }
 
 export class TreeNode<T> implements ITreeNode<T> {
