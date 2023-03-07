@@ -52,7 +52,7 @@ export class Application {
     }
 
     onWindowResize(window: Window) {
-        this.renderer.onWindowResize(window);
         this.sceneManager.onWindowResize(window);
+        this.renderer.onWindowResize(window);
     }
 }
