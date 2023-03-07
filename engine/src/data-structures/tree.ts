@@ -4,13 +4,11 @@ export interface ITreeNode<T> {
     children: Array<ITreeNode<T>>;
 }
 
-export interface ITree<T> {
-    root: ITreeNode<T>;
-
-    add(data: T, parent: ITreeNode<T>): ITreeNode<T>;
-    find(data: T, parent: ITreeNode<T>): ITreeNode<T> | undefined;
-    traverse(cb: (data: T) => void, parent: ITreeNode<T>): void;
-    delete(data: T, parent: ITreeNode<T>): ITreeNode<T>;
+export interface ITree<T, P = ITreeNode<T>, R = P> {
+    add(data: T, parent: P): R;
+    find(data: T, parent: P): R | undefined;
+    traverse(cb: (data: T | P | R) => void, parent: P): void;
+    delete(data: T, parent: P): R;
 }
 
 export class TreeNode<T> implements ITreeNode<T> {
@@ -51,8 +49,8 @@ export class Tree<T> implements ITree<T> {
         return undefined;
     }
 
-    traverse(cb: (data: T) => void, parent = this.root) {
-        cb(parent.data);
+    traverse(cb: (data: ITreeNode<T>) => void, parent = this.root) {
+        cb(parent);
         for (const child of parent.children) {
             this.traverse(cb, child);
         }

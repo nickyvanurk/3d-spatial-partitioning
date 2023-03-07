@@ -1,5 +1,5 @@
 import './style.css';
-import { Tree } from '../engine/src/data-structures/tree';
+import { ITree, ITreeNode, Tree } from '../engine/src/data-structures/tree';
 
 // import { App } from './app/app';
 
@@ -14,8 +14,57 @@ import { Tree } from '../engine/src/data-structures/tree';
 //     scene: Main,
 // });
 
+type SceneData =
+    | {
+          name: string;
+      }
+    | string;
+
 class Scene {
-    constructor(readonly name?: string) {}
+    data: SceneData;
+
+    constructor(data?: SceneData) {
+        this.data = data || undefined;
+    }
+}
+
+class SceneTree implements ITree<SceneData, ITreeNode<Scene>> {
+    tree: Tree<Scene>;
+    map: { [key: string]: ITreeNode<Scene> } = {};
+
+    constructor(tree?: Tree<Scene>) {
+        this.tree = tree ?? new Tree(new Scene());
+        this.map['root'] = this.tree.root;
+    }
+
+    add(data: SceneData, parent = this.tree.root) {
+        data = this.setDefaultConfig(data);
+        const node = this.tree.add(new Scene(data), parent);
+        this.map[data.name] = node;
+        return node;
+    }
+
+    find(data: SceneData, parent = this.tree.root) {
+        data = this.setDefaultConfig(data);
+        return this.tree.find(this.map[data.name].data, parent);
+    }
+
+    traverse(cb: (node: ITreeNode<Scene>) => void, parent = this.tree.root) {
+        this.tree.traverse(cb, parent);
+    }
+
+    delete(data: SceneData, parent = this.tree.root) {
+        data = this.setDefaultConfig(data);
+        return this.tree.delete(this.map[data.name].data, parent);
+    }
+
+    private setDefaultConfig(data: SceneData) {
+        if (typeof data === 'object') {
+            return { name: 'root', ...data };
+        } else {
+            return { name: data };
+        }
+    }
 }
 
 const scenes = new Tree(new Scene('root'));
@@ -35,45 +84,44 @@ scenes.add(new Scene('4.1'), fourhtNode);
 scenes.add(new Scene('4.2'), fourhtNode);
 scenes.add(new Scene('4.3'), fourhtNode);
 
-scenes.traverse((scene: Scene) => {
-    console.log(scene);
+scenes.traverse(node => {
+    console.log(node);
 });
 
-const found = scenes.find(thirdNode.data);
+let found = scenes.find(thirdNode.data);
 console.log(found.data);
 
 console.log('deleting ', scenes.delete(found.data).data);
 
-scenes.traverse((scene: Scene) => {
-    console.log(scene);
+scenes.traverse(node => {
+    console.log(node);
 });
 
-// class Scenes {
-//     value = new Tree(new Scene());
-//     map: { [key: string]: TreeNode<Scene> } = {};
+console.log();
+console.log();
 
-//     constructor() {
-//         super(new Scene());
-//         this.map['root'] = this.root;
-//     }
+const s = new SceneTree();
 
-//     add(name: string, parent = '') {
-//         if (!parent) {
-//             this.map[name] = super.add(new Scene(name));
-//         } else {
-//             this.map[name] = super.add(new Scene(name), this.map[parent]);
-//         }
-//     }
+const secondScene = s.add('second');
+s.add('2.1', secondScene);
+s.add('2.2', secondScene);
+s.add('2.3', secondScene);
 
-//     // create(name: string) {
-//     //     const scene = new Scene(name);
-//     //     //
-//     // }
+const thirdScene = s.add('third');
+s.add('3.1', thirdScene);
+s.add('3.2', thirdScene);
+s.add('3.3', thirdScene);
 
-//     // find(name: string): Scene {
-//     //     return new Scene(name);
-//     //     //
-//     // }
-// }
+const fourthScene = s.add('fourth');
+s.add('4.1', fourthScene);
+s.add('4.2', fourthScene);
+s.add('4.3', fourthScene);
 
-// class Scene implements FSM
+s.traverse(node => {
+    console.log(node.data);
+});
+
+found = s.find(thirdScene.data.data);
+console.log(found.data);
+
+console.log('deleting ', s.delete(found.data.data).data);
