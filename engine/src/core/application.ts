@@ -1,9 +1,8 @@
-import * as THREE from 'three';
-
 import { Loop } from './loop';
 import { Scene } from '../scene/scene';
 import { SceneManager } from '../scene/scene_manager';
 import { Window } from './window';
+import { Renderer } from '../renderer/renderer';
 
 type Config = {
     scene: { new (): Scene } | { new (): Scene }[];
@@ -12,19 +11,14 @@ type Config = {
 };
 
 export class Application {
-    private renderer: THREE.WebGLRenderer;
+    private renderer: Renderer;
     private sceneManager: SceneManager;
-    private window: Window;
 
     constructor(config: Config) {
-        this.window = new Window(config.parent || 'body');
-        this.window.setResizeCallback(this.resize.bind(this));
+        const window = new Window(config.parent || 'body');
+        window.setResizeCallback(this.onWindowResize.bind(this));
 
-        this.renderer = new THREE.WebGLRenderer({ canvas: this.window.canvas, antialias: true });
-        this.renderer.setClearColor(config.backgroundColor || 0x000000);
-        this.renderer.setSize(this.window.width, this.window.height);
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer = new Renderer(window, { clearColor: config.backgroundColor });
 
         this.sceneManager = new SceneManager(config.scene);
         new Loop(1 / 50, this.fixedUpdate.bind(this), this.update.bind(this));
@@ -36,13 +30,12 @@ export class Application {
 
     update() {
         this.sceneManager.update();
-        this.renderer.render(this.sceneManager.current.scene, this.sceneManager.current.camera);
+        this.renderer.render(this.sceneManager.current);
     }
 
-    resize() {
-        this.sceneManager.current.camera.aspect = window.innerWidth / window.innerHeight;
+    onWindowResize(window: Window) {
+        this.renderer.onWindowResize(window);
+        this.sceneManager.current.camera.aspect = window.width / window.height;
         this.sceneManager.current.camera.updateProjectionMatrix();
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 }
