@@ -35,7 +35,6 @@ export class Application {
 
     onWindowResize(window: Window) {
         this.renderer.onWindowResize(window);
-        this.sceneManager.current.camera.aspect = window.width / window.height;
-        this.sceneManager.current.camera.updateProjectionMatrix();
+        this.sceneManager.onWindowResize(window);
     }
 }

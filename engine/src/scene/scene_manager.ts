@@ -1,4 +1,5 @@
 import { Scene } from './scene';
+import { type Window } from '../core/window';
 
 export class SceneManager {
     scenes: { [key: string]: Scene } = {};
@@ -33,5 +34,10 @@ export class SceneManager {
             this.current.init();
             this.current.preload();
         }
+    }
+
+    public onWindowResize(window: Window) {
+        this.current.camera.aspect = window.width / window.height;
+        this.current.camera.updateProjectionMatrix();
     }
 }

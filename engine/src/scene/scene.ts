@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Mesh } from '../renderer';
-import type { SceneManager } from './scene_manager';
+import { type SceneManager } from './scene_manager';
 
 interface IScene {
     name: string;
