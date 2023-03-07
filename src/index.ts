@@ -8,6 +8,6 @@ import * as mln from 'merlin';
 import { Main } from './scenes';
 
 new mln.Application({
-    backgroundColor: 0x131a29,
+    clearColor: 0x131a29,
     scene: Main,
 });

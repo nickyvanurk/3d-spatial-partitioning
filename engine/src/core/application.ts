@@ -5,24 +5,28 @@ import { Renderer } from '../renderer/renderer';
 import { Time } from './time';
 
 type Config = {
-    scene: { new (): Scene } | { new (): Scene }[];
-    parent?: string;
-    backgroundColor?: string | number;
+    fps: number;
+    scene: typeof Scene | (typeof Scene)[];
+    parent: string;
+    clearColor: string | number;
 };
 
 export class Application {
+    private config: Config = { fps: 1 / 50, scene: [], parent: 'body', clearColor: 0x0000 };
     private renderer: Renderer;
     private sceneManager: SceneManager;
 
-    constructor(config: Config) {
-        const w = new Window(config.parent || 'body');
+    constructor(config: Partial<Config>) {
+        this.config = { ...this.config, ...config };
+
+        const w = new Window(config.parent);
         w.setResizeCallback(this.onWindowResize.bind(this));
 
-        this.renderer = new Renderer(w, { clearColor: config.backgroundColor });
+        this.renderer = new Renderer(w, { clearColor: this.config.clearColor });
 
-        this.sceneManager = new SceneManager(config.scene);
+        this.sceneManager = new SceneManager(this.config.scene);
 
-        Time.fixedDeltaTime = 1 / 50;
+        Time.fixedDeltaTime = this.config.fps;
         Time.last = window.performance.now();
         window.requestAnimationFrame(this.run.bind(this));
     }
