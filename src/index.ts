@@ -126,12 +126,20 @@ import { ITree, ITreeNode, Tree } from '../engine/src/data-structures/tree';
 
 // console.log('deleting ', s.delete(found.data.data).data);
 
+type SceneConfig = {
+    name: string;
+};
+
 export class SceneNode<T> implements ITreeNode<T> {
     data: T;
     parent: ITreeNode<T>;
     children: Array<ITreeNode<T>>;
 
-    constructor(data?: T, parent?: ITreeNode<T>) {
+    constructor(data = { name: 'default' } as T, parent?: ITreeNode<T>) {
+        if (typeof data !== 'object') {
+            data = { name: data } as T;
+        }
+
         this.data = data || undefined;
         this.parent = parent || undefined;
         this.children = [];
@@ -142,7 +150,7 @@ export class SceneNode<T> implements ITreeNode<T> {
     }
 }
 
-export class SceneTree<T> implements ITree<T> {
+export class SceneTree<T = SceneConfig | string | number> implements ITree<T> {
     tree: Tree<T>;
 
     constructor(data = { name: 'root' } as T) {
@@ -184,9 +192,8 @@ s.add('4.2', fourthScene);
 s.add('4.3', fourthScene);
 
 s.traverse(scene => {
-    // scene.test();
     scene.test();
-    console.log(scene);
+    console.log(scene.data);
 });
 
 const found = s.find(thirdScene.data);
