@@ -1,5 +1,5 @@
 import './style.css';
-import { ITree, ITreeNode, Tree, TreeNode } from '../engine/src/data-structures/tree';
+import { ITree, ITreeNode, Tree } from '../engine/src/data-structures/tree';
 
 // import { App } from './app/app';
 
@@ -126,27 +126,27 @@ import { ITree, ITreeNode, Tree, TreeNode } from '../engine/src/data-structures/
 
 // console.log('deleting ', s.delete(found.data.data).data);
 
-// export class SceneNode<T> implements ITreeNode<T> {
-//     data: T;
-//     parent: ITreeNode<T>;
-//     children: Array<ITreeNode<T>>;
+export class SceneNode<T> implements ITreeNode<T> {
+    data: T;
+    parent: ITreeNode<T>;
+    children: Array<ITreeNode<T>>;
 
-//     constructor(data?: T, parent?: ITreeNode<T>) {
-//         this.data = data || undefined;
-//         this.parent = parent || undefined;
-//         this.children = [];
-//     }
+    constructor(data?: T, parent?: ITreeNode<T>) {
+        this.data = data || undefined;
+        this.parent = parent || undefined;
+        this.children = [];
+    }
 
-//     public lol() {
-//         console.log('lol');
-//     }
-// }
+    public test() {
+        console.log('test');
+    }
+}
 
 export class SceneTree<T> implements ITree<T> {
     tree: Tree<T>;
 
     constructor(data = { name: 'root' } as T) {
-        this.tree = new Tree(data);
+        this.tree = new Tree(data, SceneNode);
     }
 
     add(data: T, parent = this.tree.root) {
@@ -157,7 +157,7 @@ export class SceneTree<T> implements ITree<T> {
         return this.tree.find(data, parent);
     }
 
-    traverse(cb: (data: TreeNode<T>) => void, parent = this.tree.root) {
+    traverse(cb: (data: SceneNode<T>) => void, parent = this.tree.root) {
         this.tree.traverse(cb, parent);
     }
 
@@ -184,8 +184,8 @@ s.add('4.2', fourthScene);
 s.add('4.3', fourthScene);
 
 s.traverse(scene => {
-    // scene.lol();
-    // console.log(scene.lol);
+    // scene.test();
+    scene.test();
     console.log(scene);
 });
 

@@ -5,7 +5,7 @@ export interface ITreeNode<T> {
 }
 
 export interface ITree<T, N = ITreeNode<T>> {
-    add(data: T, parent: N): N;
+    add(data: T | N, parent: N, ctor: { new (data: T, parent: N): N }): N;
     find(data: T, parent: N): N | undefined;
     traverse(cb: (data: N) => void, parent: N): void;
     delete(data: T, parent: N): N;
@@ -24,19 +24,19 @@ export class TreeNode<T> implements ITreeNode<T> {
 }
 
 export class Tree<T> implements ITree<T> {
-    root: ITreeNode<T>;
+    public root: ITreeNode<T>;
 
-    constructor(data: T) {
-        this.root = new TreeNode(data);
+    constructor(data: T, private ctor: { new (data?: T, parent?: ITreeNode<T>): ITreeNode<T> } = TreeNode) {
+        this.root = new ctor(data);
     }
 
     add(data: T, parent = this.root) {
-        const node = new TreeNode(data, parent);
+        const node = new this.ctor(data, parent);
         parent.children.push(node);
         return node;
     }
 
-    find(data: T, parent = this.root): TreeNode<T> | undefined {
+    find(data: T, parent = this.root): ITreeNode<T> | undefined {
         if (parent.data === data) {
             return parent;
         }
