@@ -28,11 +28,7 @@ export class TreeNode {
         }
     }
 
-    fixedUpdate() {
-        // do nothing
-    }
+    fixedUpdate() {}
 
-    update() {
-        // do nothing
-    }
+    update() {}
 }
