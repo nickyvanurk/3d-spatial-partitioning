@@ -12,7 +12,9 @@ class SceneA extends mln.Scene {
     constructor() {
         super('Scene A');
         console.log('I am ', this.name);
+    }
 
+    onActive() {
         setTimeout(() => (this.tree.currentScene = 'Scene B'), 2000);
     }
 
@@ -25,8 +27,10 @@ class SceneB extends mln.Scene {
     constructor() {
         super('Scene B');
         console.log('I am ', this.name);
+    }
 
-        // setTimeout(() => (this.tree.currentScene = 'Scene A'), 2000);
+    onActive() {
+        setTimeout(() => (this.tree.currentScene = 'Scene A'), 2000);
     }
 
     update() {

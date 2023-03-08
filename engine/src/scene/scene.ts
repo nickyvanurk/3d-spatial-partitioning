@@ -4,6 +4,8 @@ export class Scene extends TreeNode {
     constructor(name = 'Scene') {
         super({ name });
     }
+
+    onActive() {}
 }
 
 // import * as THREE from 'three';
