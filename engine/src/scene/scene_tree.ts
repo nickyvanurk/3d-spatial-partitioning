@@ -31,7 +31,13 @@ export class SceneTree {
         }
     }
 
-    public set currentScene(scene: TreeNode) {
+    public set currentScene(scene: TreeNode | string) {
+        if (typeof scene === 'string') {
+            const name = scene;
+            scene = this.root.children.find(s => s.name === name);
+            if (!scene) throw new Error(`Scene ${name} not found`);
+        }
+
         if (scene && scene.getParent() !== this.root) throw new Error('Not a child node of root');
         this._currentScene = scene;
     }
