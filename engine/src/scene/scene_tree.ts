@@ -8,12 +8,7 @@ export class SceneTree {
 
     init(scenes: typeof TreeNode | (typeof TreeNode)[]) {
         if (!Array.isArray(scenes)) scenes = [scenes];
-        const constructedScenes = scenes.map(Scene => {
-            const scene = new Scene();
-            scene.tree = this;
-            scene.root = this.root;
-            return scene;
-        });
+        const constructedScenes = scenes.map(Scene => new Scene());
         this.addScene(constructedScenes);
         this.setCurrentScene(constructedScenes[0]);
     }
@@ -55,10 +50,15 @@ export class SceneTree {
 }
 
 export class TreeNode {
-    public tree: SceneTree;
-    public root: TreeNode;
+    public name = 'Node';
+    public parent: TreeNode = undefined;
+    public children: TreeNode[] = [];
+    public tree: SceneTree = undefined;
+    public root: TreeNode = undefined;
 
-    constructor(public name = 'Node', public parent: TreeNode = undefined, public children: TreeNode[] = []) {}
+    constructor(config?: string | Partial<TreeNode>) {
+        typeof config === 'string' ? (this.name = config) : Object.assign(this, config);
+    }
 
     getParent() {
         return this.parent;

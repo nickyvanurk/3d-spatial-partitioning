@@ -2,7 +2,7 @@ import { TreeNode } from './scene_tree';
 
 export class Scene extends TreeNode {
     constructor(name = 'Scene') {
-        super(name);
+        super({ name });
     }
 }
 
