@@ -12,6 +12,7 @@ type Config = {
 };
 
 export class Application {
+    private window: Window;
     private config: Config = { fps: 1 / 50, scene: [], parent: 'body', clearColor: 0x0000 };
     private renderer: Renderer;
     private sceneManager: SceneManager;
@@ -20,18 +21,15 @@ export class Application {
 
     constructor(config: Partial<Config>) {
         this.config = { ...this.config, ...config };
-
-        const w = new Window(config.parent);
-        w.setResizeCallback(this.onWindowResize.bind(this));
-
-        this.renderer = new Renderer(w, { clearColor: this.config.clearColor });
-
+        this.window = new Window(config.parent);
+        this.renderer = new Renderer(this.window, { clearColor: this.config.clearColor });
         // this.sceneManager = new SceneManager(this.config.scene);
-
         this.sceneTree = new SceneTree();
     }
 
     run() {
+        this.window.setResizeCallback(this.onWindowResize.bind(this));
+
         if (!Array.isArray(this.config.scene)) {
             this.config.scene = [this.config.scene];
         }
