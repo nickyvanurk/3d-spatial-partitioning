@@ -6,6 +6,10 @@ export class Scene extends TreeNode {
     constructor(name = 'Scene') {
         super({ name });
     }
+
+    public changeScene(scene: Scene | string) {
+        this.tree.currentScene = scene;
+    }
 }
 
 // import * as THREE from 'three';

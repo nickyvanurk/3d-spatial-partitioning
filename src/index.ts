@@ -13,9 +13,7 @@ class SceneA extends mln.Scene {
         super('Scene A');
         console.log('I am ', this.name);
 
-        this.onActiveCallback = () => {
-            setTimeout(() => (this.tree.currentScene = 'Scene B'), 2000);
-        };
+        this.onActiveCallback = () => setTimeout(() => this.changeScene('Scene B'), 2000);
     }
 
     update() {
@@ -28,9 +26,7 @@ class SceneB extends mln.Scene {
         super('Scene B');
         console.log('I am ', this.name);
 
-        this.onActiveCallback = () => {
-            setTimeout(() => (this.tree.currentScene = 'Scene A'), 2000);
-        };
+        this.onActiveCallback = () => setTimeout(() => this.changeScene('Scene A'), 2000);
     }
 
     update() {
