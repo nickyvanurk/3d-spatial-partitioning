@@ -1,9 +1,18 @@
 export class SceneTree {
-    public root: TreeNode = new TreeNode('root');
+    private static instance: SceneTree;
+    public root: TreeNode = undefined;
+    private currentScene: TreeNode;
 
-    constructor(private currentScene = new TreeNode()) {
-        this.root.root = this.root;
-        this.root.tree = this;
+    private constructor() {
+        // empty
+    }
+
+    public static getInstance() {
+        if (!SceneTree.instance) {
+            SceneTree.instance = new SceneTree();
+            SceneTree.instance.root = new TreeNode('root');
+        }
+        return SceneTree.instance;
     }
 
     init(scenes: typeof TreeNode | (typeof TreeNode)[]) {
@@ -53,8 +62,8 @@ export class TreeNode {
     public name = 'Node';
     public parent: TreeNode = undefined;
     public children: TreeNode[] = [];
-    public tree: SceneTree = undefined;
-    public root: TreeNode = undefined;
+    public tree = SceneTree.getInstance();
+    public root = SceneTree.getInstance().root;
 
     constructor(config?: string | Partial<TreeNode>) {
         typeof config === 'string' ? (this.name = config) : Object.assign(this, config);
@@ -66,8 +75,6 @@ export class TreeNode {
 
     addChild(node: TreeNode) {
         node.parent = this;
-        node.tree = this.tree;
-        node.root = this.root;
         this.children.push(node);
         return node;
     }
