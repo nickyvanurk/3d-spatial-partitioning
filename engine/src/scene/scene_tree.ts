@@ -1,7 +1,7 @@
 export class SceneTree {
     public root: TreeNode = new TreeNode();
 
-    private currentScene: TreeNode = null;
+    private currentScene: TreeNode = new TreeNode('main', this.root);
 
     setCurrentScene(scene: TreeNode) {
         if (scene && scene.getParent() !== this.root) throw new Error('Not a child node of root');
