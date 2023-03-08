@@ -10,7 +10,7 @@ export class SceneTree {
     }
 
     public root: TreeNode = undefined;
-    private currentScene: TreeNode;
+    private _currentScene: TreeNode;
 
     private constructor() {}
 
@@ -18,7 +18,7 @@ export class SceneTree {
         if (!Array.isArray(scenes)) scenes = [scenes];
         const constructedScenes = scenes.map(Scene => new Scene());
         this.addScene(constructedScenes);
-        this.setCurrentScene(constructedScenes[0]);
+        this.currentScene = constructedScenes[0];
     }
 
     addScene(scenes: TreeNode | TreeNode[]) {
@@ -31,12 +31,12 @@ export class SceneTree {
         }
     }
 
-    setCurrentScene(scene: TreeNode) {
+    public set currentScene(scene: TreeNode) {
         if (scene && scene.getParent() !== this.root) throw new Error('Not a child node of root');
-        this.currentScene = scene;
+        this._currentScene = scene;
     }
 
-    fixedUpdate(node = this.currentScene) {
+    fixedUpdate(node = this._currentScene) {
         if (node) {
             node.fixedUpdate();
         }
@@ -46,7 +46,7 @@ export class SceneTree {
         }
     }
 
-    update(node = this.currentScene) {
+    update(node = this._currentScene) {
         if (node) {
             node.update();
         }
