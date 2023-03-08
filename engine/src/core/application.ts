@@ -16,6 +16,8 @@ export class Application {
     private sceneTree: SceneTree;
     private renderer: Renderer;
 
+    private initialized = false;
+
     constructor(config: Partial<Config>) {
         this.config = { ...this.config, ...config };
         this.window = new Window(config.parent);
@@ -23,7 +25,7 @@ export class Application {
         this.sceneTree = new SceneTree();
     }
 
-    run() {
+    public init() {
         this.window.init();
         this.window.setResizeCallback(this.onWindowResize.bind(this));
 
@@ -34,6 +36,12 @@ export class Application {
         const initialScene = new this.config.scene[0]();
         this.sceneTree.addScene(initialScene);
         this.sceneTree.setCurrentScene(initialScene);
+
+        this.initialized = true;
+    }
+
+    public run() {
+        if (!this.initialized) this.init();
 
         Time.fixedDeltaTime = this.config.fps;
         Time.last = window.performance.now();
