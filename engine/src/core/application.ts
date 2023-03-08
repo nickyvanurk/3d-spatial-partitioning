@@ -33,9 +33,9 @@ export class Application {
             this.config.scene = [this.config.scene];
         }
 
-        const initialScene = new this.config.scene[0]();
-        this.sceneTree.addScene(initialScene);
-        this.sceneTree.setCurrentScene(initialScene);
+        const scenes = this.config.scene.map(Scene => new Scene());
+        this.sceneTree.addScene(scenes);
+        this.sceneTree.setCurrentScene(scenes[0]);
 
         this.initialized = true;
     }

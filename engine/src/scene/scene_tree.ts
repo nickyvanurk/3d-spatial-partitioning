@@ -3,8 +3,14 @@ export class SceneTree {
 
     constructor(private currentScene = new TreeNode()) {}
 
-    addScene(scene: TreeNode) {
-        this.root.addChild(scene);
+    addScene(scene: TreeNode | TreeNode[]) {
+        if (!Array.isArray(scene)) {
+            scene = [scene];
+        }
+
+        for (const s of scene) {
+            this.root.addChild(s);
+        }
     }
 
     setCurrentScene(scene: TreeNode) {
