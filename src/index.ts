@@ -1,5 +1,5 @@
 import './style.css';
-import { ITree, ITreeNode, Tree } from '../engine/src/data-structures/tree';
+import { Tree, TreeNode } from '../engine/src/data-structures/tree2';
 
 // import { App } from './app/app';
 
@@ -14,23 +14,9 @@ import { ITree, ITreeNode, Tree } from '../engine/src/data-structures/tree';
 //     scene: Main,
 // });
 
-type SceneConfig = {
-    name: string;
-};
-
-export class SceneNode<T> implements ITreeNode<T> {
-    data: T;
-    parent: ITreeNode<T>;
-    children: Array<ITreeNode<T>>;
-
-    constructor(data = { name: 'default' } as T, parent?: ITreeNode<T>) {
-        if (typeof data !== 'object') {
-            data = { name: data } as T;
-        }
-
-        this.data = data || undefined;
-        this.parent = parent || undefined;
-        this.children = [];
+export class SceneNode<T> extends TreeNode<T> {
+    constructor(data?: T, parent?: SceneNode<T> | TreeNode<T>) {
+        super(data, parent);
     }
 
     public test() {
@@ -38,27 +24,25 @@ export class SceneNode<T> implements ITreeNode<T> {
     }
 }
 
-export class SceneTree<T = SceneConfig | string | number> implements ITree<T> {
-    tree: Tree<T>;
-
-    constructor(data = { name: 'root' } as T) {
-        this.tree = new Tree(data, SceneNode);
+export class SceneTree<T> extends Tree<T> {
+    constructor() {
+        super(new SceneNode('root' as T));
     }
 
-    add(data: T, parent = this.tree.root) {
-        return this.tree.add(data, parent);
+    public add(data: T, parent = this.root) {
+        return super.add(new SceneNode(data, parent)) as SceneNode<T>;
     }
 
-    find(data: T, parent = this.tree.root) {
-        return this.tree.find(data, parent);
+    public find(data: T, parent = this.root) {
+        return super.find(data, parent) as SceneNode<T>;
     }
 
-    traverse(cb: (data: SceneNode<T>) => void, parent = this.tree.root) {
-        this.tree.traverse(cb, parent);
+    public traverse(cb: (data: SceneNode<T>) => void, parent = this.root) {
+        super.traverse(cb, parent);
     }
 
-    delete(data: T, parent = this.tree.root) {
-        return this.tree.delete(data, parent);
+    public delete(data: T, parent = this.root) {
+        return super.delete(data, parent) as SceneNode<T>;
     }
 }
 
@@ -87,4 +71,6 @@ s.traverse(scene => {
 const found = s.find(thirdScene.data);
 console.log(found);
 
-console.log('deleting ', s.delete(found.data));
+const x = s.delete(found.data);
+console.log('deleting ', x);
+x.test();
