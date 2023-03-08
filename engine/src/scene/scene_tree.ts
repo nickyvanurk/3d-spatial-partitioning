@@ -3,9 +3,7 @@ export class SceneTree {
     public root: TreeNode = undefined;
     private currentScene: TreeNode;
 
-    private constructor() {
-        // empty
-    }
+    private constructor() {}
 
     public static getInstance() {
         if (!SceneTree.instance) {

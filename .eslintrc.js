@@ -27,6 +27,7 @@ module.exports = {
                 caughtErrorsIgnorePattern: '^_',
             },
         ],
+        '@typescript-eslint/no-empty-function': 'off',
     },
     overrides: [
         {
