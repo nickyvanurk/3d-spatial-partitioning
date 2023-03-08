@@ -1,8 +1,7 @@
-import { SceneManager } from '../scene/scene_manager';
 import { Window } from './window';
-import { Renderer } from '../renderer/renderer';
-import { Time } from './time';
 import { SceneTree, TreeNode } from '../scene/scene_tree';
+import { Time } from './time';
+import { Renderer } from '../renderer/renderer';
 
 type Config = {
     fps: number;
@@ -12,18 +11,15 @@ type Config = {
 };
 
 export class Application {
-    private window: Window;
     private config: Config = { fps: 1 / 50, scene: [], parent: 'body', clearColor: 0x0000 };
-    private renderer: Renderer;
-    private sceneManager: SceneManager;
-
+    private window: Window;
     private sceneTree: SceneTree;
+    private renderer: Renderer;
 
     constructor(config: Partial<Config>) {
         this.config = { ...this.config, ...config };
         this.window = new Window(config.parent);
         this.renderer = new Renderer(this.window, { clearColor: this.config.clearColor });
-        // this.sceneManager = new SceneManager(this.config.scene);
         this.sceneTree = new SceneTree();
     }
 
@@ -50,24 +46,19 @@ export class Application {
 
         Time.accumulator += Time.deltaTime;
         if (Time.accumulator >= Time.fixedDeltaTime) {
-            // this.sceneManager.fixedUpdate();
             this.sceneTree.fixedUpdate();
-
             Time.fixedTime += Time.fixedDeltaTime;
             Time.accumulator -= Time.fixedDeltaTime;
         }
 
         Time.alpha = Time.accumulator / Time.fixedDeltaTime;
-        // this.sceneManager.update();
         this.sceneTree.update();
-        // this.renderer.render(this.sceneManager.current);
         Time.time += Time.deltaTime;
 
         window.requestAnimationFrame(this.update.bind(this));
     }
 
     private onWindowResize(window: Window) {
-        // this.sceneManager.onWindowResize(window);
         this.renderer.onWindowResize(window);
     }
 }
