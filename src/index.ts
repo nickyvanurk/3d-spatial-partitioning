@@ -12,6 +12,7 @@ class SceneA extends mln.Scene {
     constructor() {
         super('Scene A');
         console.log('I am ', this.name);
+        console.log(this.tree);
     }
 }
 

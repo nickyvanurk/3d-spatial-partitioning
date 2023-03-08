@@ -1,15 +1,18 @@
 export class SceneTree {
     public root: TreeNode = new TreeNode('root');
 
-    constructor(private currentScene = new TreeNode()) {}
+    constructor(private currentScene = new TreeNode()) {
+        this.root.root = this.root;
+        this.root.tree = this;
+    }
 
-    addScene(scene: TreeNode | TreeNode[]) {
-        if (!Array.isArray(scene)) {
-            scene = [scene];
+    addScene(scenes: TreeNode | TreeNode[]) {
+        if (!Array.isArray(scenes)) {
+            scenes = [scenes];
         }
 
-        for (const s of scene) {
-            this.root.addChild(s);
+        for (const scene of scenes) {
+            this.root.addChild(scene);
         }
     }
 
@@ -40,6 +43,9 @@ export class SceneTree {
 }
 
 export class TreeNode {
+    public tree: SceneTree;
+    public root: TreeNode;
+
     constructor(public name = 'Node', public parent: TreeNode = undefined, public children: TreeNode[] = []) {}
 
     getParent() {
@@ -48,6 +54,8 @@ export class TreeNode {
 
     addChild(node: TreeNode) {
         node.parent = this;
+        node.tree = this.tree;
+        node.root = this.root;
         this.children.push(node);
         return node;
     }
