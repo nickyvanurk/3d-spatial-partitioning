@@ -1,17 +1,18 @@
 export class SceneTree {
-    private static instance: SceneTree;
+    private static _instance: SceneTree;
+
+    public static get instance() {
+        if (!SceneTree._instance) {
+            SceneTree._instance = new SceneTree();
+            SceneTree._instance.root = new TreeNode('root');
+        }
+        return SceneTree._instance;
+    }
+
     public root: TreeNode = undefined;
     private currentScene: TreeNode;
 
     private constructor() {}
-
-    public static getInstance() {
-        if (!SceneTree.instance) {
-            SceneTree.instance = new SceneTree();
-            SceneTree.instance.root = new TreeNode('root');
-        }
-        return SceneTree.instance;
-    }
 
     init(scenes: typeof TreeNode | (typeof TreeNode)[]) {
         if (!Array.isArray(scenes)) scenes = [scenes];
@@ -60,8 +61,8 @@ export class TreeNode {
     public name = 'Node';
     public parent: TreeNode = undefined;
     public children: TreeNode[] = [];
-    public tree = SceneTree.getInstance();
-    public root = SceneTree.getInstance().root;
+    public tree = SceneTree.instance;
+    public root = SceneTree.instance.root;
 
     constructor(config?: string | Partial<TreeNode>) {
         typeof config === 'string' ? (this.name = config) : Object.assign(this, config);

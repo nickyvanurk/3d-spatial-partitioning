@@ -22,7 +22,7 @@ export class Application {
         this.config = { ...this.config, ...config };
         this.window = new Window(config.parent);
         this.renderer = new Renderer(this.window, { clearColor: this.config.clearColor });
-        this.sceneTree = SceneTree.getInstance();
+        this.sceneTree = SceneTree.instance;
     }
 
     public init() {
