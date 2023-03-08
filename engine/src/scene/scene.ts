@@ -1,4 +1,4 @@
-import { TreeNode } from './scene_tree';
+import { TreeNode } from './tree_node';
 
 export class Scene extends TreeNode {
     public onActiveCallback = () => {};
