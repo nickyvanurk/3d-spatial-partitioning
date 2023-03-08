@@ -8,17 +8,22 @@ import './style.css';
 
 import * as mln from 'merlin';
 
-class SceneA extends mln.TreeNode {
-    constructor() {
-        super();
-        console.log('I am scene A');
+class Scene extends mln.TreeNode {
+    constructor(name = 'Scene') {
+        super(name);
+        console.log('I am ', this.name);
     }
 }
 
-class SceneB extends mln.TreeNode {
+class SceneA extends Scene {
     constructor() {
-        super();
-        console.log('I am scene B');
+        super('Scene A');
+    }
+}
+
+class SceneB extends Scene {
+    constructor() {
+        super('Scene B');
     }
 }
 
