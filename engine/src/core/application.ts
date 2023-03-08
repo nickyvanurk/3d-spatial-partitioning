@@ -28,14 +28,18 @@ export class Application {
 
         // this.sceneManager = new SceneManager(this.config.scene);
 
+        this.sceneTree = new SceneTree();
+    }
+
+    run() {
         if (!Array.isArray(this.config.scene)) {
             this.config.scene = [this.config.scene];
         }
 
-        this.sceneTree = new SceneTree(new this.config.scene[0]());
-    }
+        const initialScene = new this.config.scene[0]();
+        this.sceneTree.addScene(initialScene);
+        this.sceneTree.setCurrentScene(initialScene);
 
-    run() {
         Time.fixedDeltaTime = this.config.fps;
         Time.last = window.performance.now();
         window.requestAnimationFrame(this.update.bind(this));
