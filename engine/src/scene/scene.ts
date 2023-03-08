@@ -1,11 +1,11 @@
 import { TreeNode } from './scene_tree';
 
 export class Scene extends TreeNode {
+    public onActiveCallback = () => {};
+
     constructor(name = 'Scene') {
         super({ name });
     }
-
-    onActive() {}
 }
 
 // import * as THREE from 'three';
