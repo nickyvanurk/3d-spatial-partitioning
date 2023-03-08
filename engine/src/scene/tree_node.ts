@@ -11,10 +11,6 @@ export class TreeNode {
         typeof config === 'string' ? (this.name = config) : Object.assign(this, config);
     }
 
-    getParent() {
-        return this.parent;
-    }
-
     addChild(node: TreeNode) {
         node.parent = this;
         this.children.push(node);
