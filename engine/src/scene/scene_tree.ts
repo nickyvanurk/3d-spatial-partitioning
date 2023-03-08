@@ -1,5 +1,5 @@
 export class SceneTree {
-    public root: TreeNode = new TreeNode();
+    public root: TreeNode = new TreeNode('root');
 
     private currentScene: TreeNode = new TreeNode('main', this.root);
 
