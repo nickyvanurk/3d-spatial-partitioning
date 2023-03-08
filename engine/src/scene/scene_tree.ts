@@ -6,6 +6,18 @@ export class SceneTree {
         this.root.tree = this;
     }
 
+    init(scenes: typeof TreeNode | (typeof TreeNode)[]) {
+        if (!Array.isArray(scenes)) scenes = [scenes];
+        const constructedScenes = scenes.map(Scene => {
+            const scene = new Scene();
+            scene.tree = this;
+            scene.root = this.root;
+            return scene;
+        });
+        this.addScene(constructedScenes);
+        this.setCurrentScene(constructedScenes[0]);
+    }
+
     addScene(scenes: TreeNode | TreeNode[]) {
         if (!Array.isArray(scenes)) {
             scenes = [scenes];

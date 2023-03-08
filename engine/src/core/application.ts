@@ -28,14 +28,7 @@ export class Application {
     public init() {
         this.window.init();
         this.window.setResizeCallback(this.onWindowResize.bind(this));
-
-        if (!Array.isArray(this.config.scene)) {
-            this.config.scene = [this.config.scene];
-        }
-
-        const scenes = this.config.scene.map(Scene => new Scene());
-        this.sceneTree.addScene(scenes);
-        this.sceneTree.setCurrentScene(scenes[0]);
+        this.sceneTree.init(this.config.scene);
 
         this.initialized = true;
     }
