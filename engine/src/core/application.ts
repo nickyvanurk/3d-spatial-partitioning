@@ -1,5 +1,6 @@
 import { Window } from './window';
-import { SceneTree, TreeNode } from '../scene/scene_tree';
+import { TreeNode } from '../scene/tree_node';
+import { SceneTree } from '../scene/scene_tree';
 import { Time } from './time';
 import { Renderer } from '../renderer/renderer';
 
