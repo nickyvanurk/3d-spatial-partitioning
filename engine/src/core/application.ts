@@ -3,6 +3,7 @@ import { SceneManager } from '../scene/scene_manager';
 import { Window } from './window';
 import { Renderer } from '../renderer/renderer';
 import { Time } from './time';
+import { SceneTree } from '../scene/scene_tree';
 
 type Config = {
     fps: number;
@@ -16,6 +17,8 @@ export class Application {
     private renderer: Renderer;
     private sceneManager: SceneManager;
 
+    private sceneTree: SceneTree;
+
     constructor(config: Partial<Config>) {
         this.config = { ...this.config, ...config };
 
@@ -25,6 +28,8 @@ export class Application {
         this.renderer = new Renderer(w, { clearColor: this.config.clearColor });
 
         this.sceneManager = new SceneManager(this.config.scene);
+
+        this.sceneTree = new SceneTree();
 
         Time.fixedDeltaTime = this.config.fps;
         Time.last = window.performance.now();
