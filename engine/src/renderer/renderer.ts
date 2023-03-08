@@ -29,7 +29,7 @@ export class Renderer {
         this.webGlRenderer.setPixelRatio(window.devicePixelRatio);
     }
 
-    public render(scene: Scene) {
-        this.webGlRenderer.render(scene.scene, scene.camera);
+    public render(_scene: Scene) {
+        // this.webGlRenderer.render(scene.scene, scene.camera);
     }
 }
