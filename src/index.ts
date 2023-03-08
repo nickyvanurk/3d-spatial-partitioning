@@ -7,17 +7,23 @@ import './style.css';
 // app.run();
 
 import * as mln from 'merlin';
-// import { Main } from './scenes';
 
-class Scene extends mln.TreeNode {
+class SceneA extends mln.TreeNode {
     constructor() {
         super();
-        console.log('I am a scene');
+        console.log('I am scene A');
+    }
+}
+
+class SceneB extends mln.TreeNode {
+    constructor() {
+        super();
+        console.log('I am scene B');
     }
 }
 
 const app = new mln.Application({
     clearColor: 0x131a29,
-    scene: Scene,
+    scene: [SceneA, SceneB],
 });
 app.run();
