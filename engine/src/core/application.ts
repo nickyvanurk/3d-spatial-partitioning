@@ -1,13 +1,12 @@
-import { Scene } from '../scene/scene';
 import { SceneManager } from '../scene/scene_manager';
 import { Window } from './window';
 import { Renderer } from '../renderer/renderer';
 import { Time } from './time';
-import { SceneTree } from '../scene/scene_tree';
+import { SceneTree, TreeNode } from '../scene/scene_tree';
 
 type Config = {
     fps: number;
-    scene: typeof Scene | (typeof Scene)[];
+    scene: typeof TreeNode | (typeof TreeNode)[];
     parent: string;
     clearColor: string | number;
 };
@@ -27,9 +26,13 @@ export class Application {
 
         this.renderer = new Renderer(w, { clearColor: this.config.clearColor });
 
-        this.sceneManager = new SceneManager(this.config.scene);
+        // this.sceneManager = new SceneManager(this.config.scene);
 
-        this.sceneTree = new SceneTree();
+        if (!Array.isArray(this.config.scene)) {
+            this.config.scene = [this.config.scene];
+        }
+
+        this.sceneTree = new SceneTree(new this.config.scene[0]());
 
         Time.fixedDeltaTime = this.config.fps;
         Time.last = window.performance.now();
@@ -43,7 +46,7 @@ export class Application {
 
         Time.accumulator += Time.deltaTime;
         if (Time.accumulator >= Time.fixedDeltaTime) {
-            this.sceneManager.fixedUpdate();
+            // this.sceneManager.fixedUpdate();
             this.sceneTree.fixedUpdate();
 
             Time.fixedTime += Time.fixedDeltaTime;
@@ -51,16 +54,16 @@ export class Application {
         }
 
         Time.alpha = Time.accumulator / Time.fixedDeltaTime;
-        this.sceneManager.update();
+        // this.sceneManager.update();
         this.sceneTree.update();
-        this.renderer.render(this.sceneManager.current);
+        // this.renderer.render(this.sceneManager.current);
         Time.time += Time.deltaTime;
 
         window.requestAnimationFrame(this.run.bind(this));
     }
 
     onWindowResize(window: Window) {
-        this.sceneManager.onWindowResize(window);
+        // this.sceneManager.onWindowResize(window);
         this.renderer.onWindowResize(window);
     }
 }
