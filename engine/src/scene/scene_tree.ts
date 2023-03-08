@@ -40,7 +40,7 @@ export class SceneTree {
 }
 
 export class TreeNode {
-    constructor(public name: string = '', public parent: TreeNode = undefined, public children: TreeNode[] = []) {}
+    constructor(public name = 'Node', public parent: TreeNode = undefined, public children: TreeNode[] = []) {}
 
     getParent() {
         return this.parent;
