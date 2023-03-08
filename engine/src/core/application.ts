@@ -44,12 +44,15 @@ export class Application {
         Time.accumulator += Time.deltaTime;
         if (Time.accumulator >= Time.fixedDeltaTime) {
             this.sceneManager.fixedUpdate();
+            this.sceneTree.fixedUpdate();
+
             Time.fixedTime += Time.fixedDeltaTime;
             Time.accumulator -= Time.fixedDeltaTime;
         }
 
         Time.alpha = Time.accumulator / Time.fixedDeltaTime;
         this.sceneManager.update();
+        this.sceneTree.update();
         this.renderer.render(this.sceneManager.current);
         Time.time += Time.deltaTime;
 
