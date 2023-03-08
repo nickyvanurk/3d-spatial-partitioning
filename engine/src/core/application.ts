@@ -33,13 +33,15 @@ export class Application {
         }
 
         this.sceneTree = new SceneTree(new this.config.scene[0]());
-
-        Time.fixedDeltaTime = this.config.fps;
-        Time.last = window.performance.now();
-        window.requestAnimationFrame(this.run.bind(this));
     }
 
     run() {
+        Time.fixedDeltaTime = this.config.fps;
+        Time.last = window.performance.now();
+        window.requestAnimationFrame(this.update.bind(this));
+    }
+
+    private update() {
         Time.now = window.performance.now();
         Time.deltaTime = Math.min((Time.now - Time.last) / 1000, 0.25);
         Time.last = Time.now;
@@ -59,10 +61,10 @@ export class Application {
         // this.renderer.render(this.sceneManager.current);
         Time.time += Time.deltaTime;
 
-        window.requestAnimationFrame(this.run.bind(this));
+        window.requestAnimationFrame(this.update.bind(this));
     }
 
-    onWindowResize(window: Window) {
+    private onWindowResize(window: Window) {
         // this.sceneManager.onWindowResize(window);
         this.renderer.onWindowResize(window);
     }
