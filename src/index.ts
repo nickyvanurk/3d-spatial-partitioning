@@ -16,7 +16,8 @@ class Scene extends mln.TreeNode {
     }
 }
 
-new mln.Application({
+const app = new mln.Application({
     clearColor: 0x131a29,
     scene: Scene,
 });
+app.run();

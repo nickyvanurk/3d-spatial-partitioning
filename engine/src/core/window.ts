@@ -1,22 +1,24 @@
 export class Window {
     public width: number;
     public height: number;
-    public canvas: HTMLElement;
     public devicePixelRatio: number;
+    public canvas: HTMLElement;
 
-    private readonly parent: HTMLElement;
+    private parent: HTMLElement;
     private resizeCallback: (window: this) => void;
 
     constructor(selector = 'body') {
         this.canvas = document.createElement('canvas');
         this.parent = document.querySelector(selector);
-        this.parent.appendChild(this.canvas);
 
         this.width = this.parent.clientWidth;
         this.height = this.parent.clientHeight;
         this.devicePixelRatio = Math.min(window.devicePixelRatio, 2);
+    }
 
+    public init() {
         window.addEventListener('resize', this.onWindowResize.bind(this));
+        this.parent.appendChild(this.canvas);
     }
 
     public setResizeCallback(cb: () => void) {

@@ -24,6 +24,7 @@ export class Application {
     }
 
     run() {
+        this.window.init();
         this.window.setResizeCallback(this.onWindowResize.bind(this));
 
         if (!Array.isArray(this.config.scene)) {
