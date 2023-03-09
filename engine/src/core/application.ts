@@ -1,12 +1,12 @@
 import { Window } from './window';
-import { TreeNode } from '../scene/tree_node';
+import { Node } from '../scene/node';
 import { SceneTree } from '../scene/scene_tree';
 import { Time } from './time';
 import { Renderer } from '../renderer/renderer';
 
 type Config = {
     fps: number;
-    scene: typeof TreeNode | (typeof TreeNode)[];
+    scene: typeof Node | (typeof Node)[];
     parent: string;
     clearColor: string | number;
 };

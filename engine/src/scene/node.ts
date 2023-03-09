@@ -1,23 +1,23 @@
 import { SceneTree } from './scene_tree';
 
-export class TreeNode {
+export class Node {
     public name = 'Node';
-    public parent: TreeNode = undefined;
-    public children: TreeNode[] = [];
+    public parent: Node = undefined;
+    public children: Node[] = [];
     public tree = SceneTree.instance;
     public root = SceneTree.instance.root;
 
-    constructor(config?: string | Partial<TreeNode>) {
+    constructor(config?: string | Partial<Node>) {
         typeof config === 'string' ? (this.name = config) : Object.assign(this, config);
     }
 
-    addChild(node: TreeNode) {
+    addChild(node: Node) {
         node.parent = this;
         this.children.push(node);
         return node;
     }
 
-    traverseChildren(cb: (node: TreeNode) => void) {
+    traverseChildren(cb: (node: Node) => void) {
         cb(this);
         for (const child of this.children) {
             child.traverseChildren(cb);

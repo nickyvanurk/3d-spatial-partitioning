@@ -1,6 +1,6 @@
-import { TreeNode } from './tree_node';
+import { Node } from './node';
 
-export class Scene extends TreeNode {
+export class Scene extends Node {
     public onActiveCallback = () => {};
 
     constructor(name = 'Scene') {

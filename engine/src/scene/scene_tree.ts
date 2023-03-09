@@ -1,5 +1,5 @@
 import { Scene } from './scene';
-import { TreeNode } from './tree_node';
+import { Node } from './node';
 
 export class SceneTree {
     private static _instance: SceneTree;
@@ -7,24 +7,24 @@ export class SceneTree {
     public static get instance() {
         if (!SceneTree._instance) {
             SceneTree._instance = new SceneTree();
-            SceneTree._instance.root = new TreeNode('root');
+            SceneTree._instance.root = new Node('root');
         }
         return SceneTree._instance;
     }
 
-    public root: TreeNode = undefined;
+    public root: Node = undefined;
     private _currentScene: Scene;
 
     private constructor() {}
 
-    init(scenes: typeof TreeNode | (typeof TreeNode)[]) {
+    init(scenes: typeof Node | (typeof Node)[]) {
         if (!Array.isArray(scenes)) scenes = [scenes];
         const constructedScenes = scenes.map(Scene => new Scene());
         this.addScene(constructedScenes);
         this.currentScene = constructedScenes[0] as Scene;
     }
 
-    addScene(scenes: TreeNode | TreeNode[]) {
+    addScene(scenes: Node | Node[]) {
         if (!Array.isArray(scenes)) {
             scenes = [scenes];
         }
@@ -46,7 +46,7 @@ export class SceneTree {
         this._currentScene.onActiveCallback();
     }
 
-    fixedUpdate(node = this._currentScene as TreeNode) {
+    fixedUpdate(node = this._currentScene as Node) {
         if (node) {
             node.fixedUpdate();
         }
@@ -56,7 +56,7 @@ export class SceneTree {
         }
     }
 
-    update(node = this._currentScene as TreeNode) {
+    update(node = this._currentScene as Node) {
         if (node) {
             node.update();
         }
