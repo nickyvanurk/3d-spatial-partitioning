@@ -1,19 +1,20 @@
 import { Scene } from './scene';
+import { Viewport } from './viewport';
 import { Node } from './node';
 
 export class SceneTree {
+    root: Viewport;
+
     private static _instance: SceneTree;
+    private _currentScene: Scene;
 
     public static get instance() {
         if (!SceneTree._instance) {
             SceneTree._instance = new SceneTree();
-            SceneTree._instance.root = new Node('root');
+            SceneTree._instance.root = new Viewport('root');
         }
         return SceneTree._instance;
     }
-
-    public root: Node = undefined;
-    private _currentScene: Scene;
 
     private constructor() {}
 
