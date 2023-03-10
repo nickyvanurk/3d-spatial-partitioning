@@ -7,7 +7,7 @@ export class Camera3D extends Node {
     far = 4000;
     current = false;
 
-    private camera: THREE.Camera;
+    camera: THREE.Camera;
 
     constructor() {
         super();
