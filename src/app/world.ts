@@ -4,12 +4,15 @@ import { Fleet } from './fleet';
 import { Station } from './station';
 import { Context } from './types';
 import { Ship } from './ship';
+import { Asteroid } from './asteroid';
+import { Vector3 } from '../../engine/src/math/vector';
 
 export class World {
     ctx: Context;
     station: Station;
     fleet: Fleet;
     ship: Ship;
+    asteroid: Asteroid;
 
     constructor(ctx: Context) {
         this.ctx = ctx;
@@ -31,6 +34,7 @@ export class World {
         // this.fleet = new Fleet(ctx, 50, 1000);
 
         this.ship = new Ship(ctx);
+        this.asteroid = new Asteroid(ctx, new Vector3(-50, 0, -50));
     }
 
     update(dt: number) {
@@ -38,6 +42,7 @@ export class World {
         // this.fleet.update(dt);
 
         this.ship.update(dt);
+        this.asteroid.update(dt);
     }
 
     render(alpha: number, dt: number) {
@@ -45,5 +50,6 @@ export class World {
         // this.fleet.render(alpha);
 
         this.ship.render(alpha, dt);
+        this.asteroid.render(alpha, dt);
     }
 }
