@@ -57,3 +57,57 @@ export class Vector3 {
         this.z *= s;
     }
 }
+
+export class Vector2 {
+    x: number;
+    y: number;
+
+    constructor(x = 0, y = 0) {
+        this.set(x, y);
+    }
+
+    set(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+
+    copy(v: Vector2) {
+        this.set(v.x, v.y);
+    }
+
+    add(v: Vector2) {
+        return new Vector2(this.x + v.x, this.y + v.y);
+    }
+
+    addScalar(s: number) {
+        return new Vector2(this.x + s, this.y + s);
+    }
+
+    addInPlace(v: Vector2) {
+        this.x += v.x;
+        this.y += v.y;
+    }
+
+    addScalarInPlace(s: number) {
+        this.x += s;
+        this.y += s;
+    }
+
+    multiply(v: Vector2) {
+        return new Vector2(this.x * v.x, this.y * v.y);
+    }
+
+    multiplyScalar(s: number) {
+        return new Vector2(this.x * s, this.y * s);
+    }
+
+    multiplyInPlace(v: Vector2) {
+        this.x *= v.x;
+        this.y *= v.y;
+    }
+
+    multiplyScalarInPlace(s: number) {
+        this.x *= s;
+        this.y *= s;
+    }
+}
