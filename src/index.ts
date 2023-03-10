@@ -9,8 +9,8 @@ import './style.css';
 import * as mln from 'merlin';
 
 class Main extends mln.Scene {
-    constructor() {
-        super('main');
+    init() {
+        this.name = 'main';
     }
 }
 

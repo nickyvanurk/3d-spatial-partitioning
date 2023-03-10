@@ -16,8 +16,6 @@ export class SceneTree {
         return SceneTree._instance;
     }
 
-    private constructor() {}
-
     init(scenes: typeof Node | (typeof Node)[]) {
         if (!Array.isArray(scenes)) scenes = [scenes];
         const constructedScenes = scenes.map(Scene => new Scene());
@@ -32,6 +30,7 @@ export class SceneTree {
 
         for (const scene of scenes) {
             this.root.addChild(scene);
+            scene.init();
         }
     }
 

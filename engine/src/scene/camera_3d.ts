@@ -11,6 +11,7 @@ export class Camera3D extends Node {
 
     constructor() {
         super();
+        this.name = 'Camera3D';
 
         //@TODO: Refactor aspect into:
         // Size2 viewport_size = get_viewport().get_camera_rest_size()

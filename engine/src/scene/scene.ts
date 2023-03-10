@@ -1,13 +1,13 @@
 import { Node } from './node';
 
 export class Scene extends Node {
-    public onActiveCallback = () => {};
+    onActiveCallback = () => {};
 
-    constructor(name = 'Scene') {
-        super({ name });
+    constructor() {
+        super();
     }
 
-    public changeScene(scene: Scene | string) {
+    changeScene(scene: Scene | string) {
         this.tree.currentScene = scene;
     }
 }
