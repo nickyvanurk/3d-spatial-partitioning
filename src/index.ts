@@ -7,10 +7,14 @@ import './style.css';
 // app.run();
 
 import * as mln from 'merlin';
+import { Camera3D } from '../engine/src/scene/camera_3d';
 
 class Main extends mln.Scene {
     init() {
         this.name = 'main';
+
+        const camera = new Camera3D();
+        this.addChild(camera);
     }
 }
 
