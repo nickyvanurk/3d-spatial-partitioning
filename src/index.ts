@@ -8,34 +8,14 @@ import './style.css';
 
 import * as mln from 'merlin';
 
-class SceneA extends mln.Scene {
+class Main extends mln.Scene {
     constructor() {
-        super('Scene A');
-        console.log('I am ', this.name);
-
-        this.onActiveCallback = () => setTimeout(() => this.changeScene('Scene B'), 2000);
-    }
-
-    update() {
-        console.log(false);
-    }
-}
-
-class SceneB extends mln.Scene {
-    constructor() {
-        super('Scene B');
-        console.log('I am ', this.name);
-
-        this.onActiveCallback = () => setTimeout(() => this.changeScene('Scene A'), 2000);
-    }
-
-    update() {
-        console.log(true);
+        super('main');
     }
 }
 
 const app = new mln.Application({
     clearColor: 0x131a29,
-    scene: [SceneA, SceneB],
+    scene: Main,
 });
 app.run();
