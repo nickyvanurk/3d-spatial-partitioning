@@ -34,7 +34,7 @@ export class World {
         // this.fleet = new Fleet(ctx, 50, 1000);
 
         this.ship = new Ship(ctx);
-        this.asteroid = new Asteroid(ctx, new Vector3(-50, 0, -50));
+        this.asteroid = new Asteroid(ctx, new Vector3(50, 0, 0));
     }
 
     update(dt: number) {

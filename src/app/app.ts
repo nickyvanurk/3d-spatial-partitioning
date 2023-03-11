@@ -47,8 +47,8 @@ export class App {
         this.renderer.outputEncoding = THREE.sRGBEncoding;
 
         this.camera = new THREE.PerspectiveCamera(71, window.innerWidth / window.innerHeight, 1, 10000);
-        this.camera.position.y = 50;
-        this.camera.position.z = 100;
+        this.camera.position.y = 100;
+        this.camera.position.z = 80;
 
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
