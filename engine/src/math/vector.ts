@@ -37,6 +37,26 @@ export class Vector3 {
         this.z += s;
     }
 
+    sub(v: Vector3) {
+        return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z);
+    }
+
+    subScalar(s: number) {
+        return new Vector3(this.x - s, this.y - s, this.z - s);
+    }
+
+    subInPlace(v: Vector3) {
+        this.x -= v.x;
+        this.y -= v.y;
+        this.z -= v.z;
+    }
+
+    subScalarInPlace(s: number) {
+        this.x -= s;
+        this.y -= s;
+        this.z -= s;
+    }
+
     multiply(v: Vector3) {
         return new Vector3(this.x * v.x, this.y * v.y, this.z * v.z);
     }
@@ -91,6 +111,24 @@ export class Vector2 {
     addScalarInPlace(s: number) {
         this.x += s;
         this.y += s;
+    }
+
+    sub(v: Vector2) {
+        return new Vector2(this.x - v.x, this.y - v.y);
+    }
+
+    subScalar(s: number) {
+        return new Vector2(this.x - s, this.y - s);
+    }
+
+    subInPlace(v: Vector2) {
+        this.x -= v.x;
+        this.y -= v.y;
+    }
+
+    subScalarInPlace(s: number) {
+        this.x -= s;
+        this.y -= s;
     }
 
     multiply(v: Vector2) {
