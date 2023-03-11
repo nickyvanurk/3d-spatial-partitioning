@@ -76,6 +76,22 @@ export class Vector3 {
         this.y *= s;
         this.z *= s;
     }
+
+    normalize() {
+        const length = this.length();
+        return new Vector3(this.x / length, this.y / length, this.z / length);
+    }
+
+    normalizeInPlace() {
+        const length = this.length();
+        this.x /= length;
+        this.y /= length;
+        this.z /= length;
+    }
+
+    length() {
+        return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
+    }
 }
 
 export class Vector2 {
@@ -147,5 +163,20 @@ export class Vector2 {
     multiplyScalarInPlace(s: number) {
         this.x *= s;
         this.y *= s;
+    }
+
+    normalize() {
+        const length = this.length();
+        return new Vector3(this.x / length, this.y / length);
+    }
+
+    normalizeInPlace() {
+        const length = this.length();
+        this.x /= length;
+        this.y /= length;
+    }
+
+    length() {
+        return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 }
