@@ -16,7 +16,6 @@ export class Ship extends Entity {
     }
 
     update(dt: number) {
-        this.seek(new Vector3(0, 5, 5));
         super.update(dt);
         this.acceleration.set(0, 0, 0);
 

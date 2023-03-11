@@ -41,6 +41,8 @@ export class World {
         // this.station.update(dt);
         // this.fleet.update(dt);
 
+        this.ship.seek(this.asteroid.position);
+
         this.ship.update(dt);
         this.asteroid.update(dt);
     }
