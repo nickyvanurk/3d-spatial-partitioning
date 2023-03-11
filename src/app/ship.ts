@@ -1,6 +1,9 @@
 import { Mesh, Vector3 } from 'merlin';
 import { Entity } from './entity';
 import { Context } from './types';
+import * as THREE from 'three';
+
+const obj = new THREE.Object3D();
 
 export class Ship extends Entity {
     maxForce = 5;
@@ -16,6 +19,11 @@ export class Ship extends Entity {
         this.seek(new Vector3(0, 5, 5));
         super.update(dt);
         this.acceleration.set(0, 0, 0);
+
+        obj.lookAt(new THREE.Vector3(this.velocity.x, this.velocity.y, this.velocity.z));
+        this.rotation.x = obj.rotation.x;
+        this.rotation.y = obj.rotation.y;
+        this.rotation.z = obj.rotation.z;
     }
 
     render(alpha: number, dt: number) {
