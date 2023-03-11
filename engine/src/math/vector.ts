@@ -92,6 +92,21 @@ export class Vector3 {
     length() {
         return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
     }
+
+    setLength(s: number) {
+        return this.normalize().multiplyScalarInPlace(s);
+    }
+
+    setLengthInPlace(s: number) {
+        this.normalizeInPlace();
+        this.multiplyScalarInPlace(s);
+    }
+
+    limit(s: number) {
+        if (this.length() > s) {
+            this.setLengthInPlace(s);
+        }
+    }
 }
 
 export class Vector2 {
