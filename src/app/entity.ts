@@ -7,6 +7,7 @@ export class Entity {
     velocity = new Vector3();
     acceleration = new Vector3();
     angularVelocity = new Vector3();
+    maxSpeed = 1;
 
     constructor(mesh: Mesh, position = new Vector3(), rotation = new Vector3()) {
         this.mesh = mesh;
@@ -20,6 +21,7 @@ export class Entity {
 
     update(dt: number) {
         this.velocity.addInPlace(this.acceleration.multiplyScalar(dt));
+        this.velocity.limit(this.maxSpeed);
         this.position.addInPlace(this.velocity.multiplyScalar(dt));
         this.rotation.addInPlace(this.angularVelocity.multiplyScalar(dt));
     }
@@ -28,5 +30,9 @@ export class Entity {
         this.mesh.position.copy(this.position.add(this.velocity.multiplyScalar(dt * alpha)));
         this.mesh.rotation.copy(this.rotation.add(this.angularVelocity.multiplyScalar(dt * alpha)));
         this.mesh.update();
+    }
+
+    applyForce(force: Vector3) {
+        this.acceleration.addInPlace(force);
     }
 }
