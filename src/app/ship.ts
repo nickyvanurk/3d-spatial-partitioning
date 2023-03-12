@@ -7,6 +7,7 @@ const obj = new THREE.Object3D();
 
 export class Ship extends Entity {
     maxForce = 30;
+    arrived = false;
 
     constructor(ctx: Context, position = new Vector3(), rotation = new Vector3()) {
         super(new Mesh(ctx.models.get('spaceship').scene), position, rotation);
@@ -46,5 +47,7 @@ export class Ship extends Entity {
         steer.multiplyScalarInPlace(10); // 0.1s to reach desired speed
         steer.limit(this.maxForce);
         this.applyForce(steer);
+
+        this.arrived = d < 0.1;
     }
 }
