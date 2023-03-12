@@ -28,7 +28,9 @@ export class Entity {
 
     render(alpha: number, dt: number) {
         this.mesh.position.copy(this.position.add(this.velocity.multiplyScalar(dt * alpha)));
-        this.mesh.rotation.copy(this.rotation.add(this.angularVelocity.multiplyScalar(dt * alpha)));
+        if (this.velocity.length() > 0 || this.angularVelocity.length() > 0) {
+            this.mesh.rotation.copy(this.rotation.add(this.angularVelocity.multiplyScalar(dt * alpha)));
+        }
         this.mesh.update();
     }
 
