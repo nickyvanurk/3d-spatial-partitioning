@@ -35,7 +35,7 @@ export class World {
 
         // this.fleet = new Fleet(ctx, 50, 1000);
 
-        this.ship = new Ship(ctx, new Vector3(-50, 0, 0));
+        this.ship = new Ship(ctx, new Vector3(0, 0, 0));
         // this.ship.velocity.y = 100;
 
         this.asteroids = [
@@ -50,9 +50,17 @@ export class World {
         // this.station.update(dt);
         // this.fleet.update(dt);
 
-        this.ship.arrive(this.asteroids[this.currentAsteroid].position, 60, 15, 0.2);
-        if (this.ship.arrived) {
-            this.currentAsteroid = (this.currentAsteroid + 1) % this.asteroids.length;
+        const asteroid = this.asteroids[this.currentAsteroid];
+
+        if (asteroid.resource > 0) {
+            this.ship.arrive(asteroid.position, 60, 15, 0.2);
+            if (this.ship.arrived) {
+                this.ship.mine(asteroid);
+            }
+        } else if (this.currentAsteroid < this.asteroids.length) {
+            this.currentAsteroid++;
+        } else {
+            this.ship.arrive(new Vector3(), 45, 0, 0.2);
         }
 
         this.ship.update(dt);

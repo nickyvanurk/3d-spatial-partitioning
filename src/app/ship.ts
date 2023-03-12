@@ -2,12 +2,15 @@ import { Mesh, Vector3 } from 'merlin';
 import { Entity } from './entity';
 import { Context } from './types';
 import * as THREE from 'three';
+import { Asteroid } from './asteroid';
 
 const obj = new THREE.Object3D();
 
 export class Ship extends Entity {
     maxForce = 30;
     arrived = false;
+
+    resource = 0;
 
     constructor(ctx: Context, position = new Vector3(), rotation = new Vector3()) {
         super(new Mesh(ctx.models.get('spaceship').scene), position, rotation);
@@ -49,5 +52,12 @@ export class Ship extends Entity {
         this.applyForce(steer);
 
         this.arrived = d < margin;
+    }
+
+    mine(asteroid: Asteroid) {
+        if (asteroid.resource > 0) {
+            asteroid.resource--;
+            this.resource++;
+        }
     }
 }
