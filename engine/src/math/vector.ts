@@ -94,7 +94,7 @@ export class Vector3 {
     }
 
     setLength(s: number) {
-        return this.normalize().multiplyScalarInPlace(s);
+        return this.normalize().multiplyScalar(s);
     }
 
     setLengthInPlace(s: number) {
