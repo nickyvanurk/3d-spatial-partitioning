@@ -39,7 +39,7 @@ export class Ship extends Entity {
         this.applyForce(steer);
     }
 
-    arrive(target: Vector3, slowRadius = 60, targetRadius = 15) {
+    arrive(target: Vector3, slowRadius = 10, targetRadius = 0, margin = 0.1) {
         const desired = target.sub(this.position);
         const d = desired.length() - targetRadius;
         desired.setLengthInPlace(d > slowRadius ? this.maxSpeed : (d / slowRadius) * this.maxSpeed);
@@ -48,6 +48,6 @@ export class Ship extends Entity {
         steer.limit(this.maxForce);
         this.applyForce(steer);
 
-        this.arrived = d < 0.1;
+        this.arrived = d < margin;
     }
 }

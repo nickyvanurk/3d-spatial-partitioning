@@ -13,6 +13,8 @@ export class World {
     fleet: Fleet;
     ship: Ship;
     asteroid: Asteroid;
+    asteroids: Asteroid[];
+    currentAsteroid = 0;
 
     constructor(ctx: Context) {
         this.ctx = ctx;
@@ -34,19 +36,29 @@ export class World {
         // this.fleet = new Fleet(ctx, 50, 1000);
 
         this.ship = new Ship(ctx, new Vector3(-50, 0, 0));
-        this.asteroid = new Asteroid(ctx, new Vector3(50, 0, 0));
-        this.ship.velocity.z = -100;
-        this.ship.velocity.x = -200;
+        // this.ship.velocity.y = 100;
+
+        this.asteroids = [
+            new Asteroid(ctx, new Vector3(50, 0, 50)),
+            new Asteroid(ctx, new Vector3(-50, 0, 50)),
+            new Asteroid(ctx, new Vector3(50, 0, -50)),
+            new Asteroid(ctx, new Vector3(-50, 0, -50)),
+        ];
     }
 
     update(dt: number) {
         // this.station.update(dt);
         // this.fleet.update(dt);
 
-        this.ship.arrive(this.asteroid.position);
+        this.ship.arrive(this.asteroids[this.currentAsteroid].position, 60, 15, 0.2);
+        if (this.ship.arrived) {
+            this.currentAsteroid = (this.currentAsteroid + 1) % this.asteroids.length;
+        }
 
         this.ship.update(dt);
-        this.asteroid.update(dt);
+        for (const asteroid of this.asteroids) {
+            asteroid.update(dt);
+        }
     }
 
     render(alpha: number, dt: number) {
@@ -54,6 +66,8 @@ export class World {
         // this.fleet.render(alpha);
 
         this.ship.render(alpha, dt);
-        this.asteroid.render(alpha, dt);
+        for (const asteroid of this.asteroids) {
+            asteroid.render(alpha, dt);
+        }
     }
 }
