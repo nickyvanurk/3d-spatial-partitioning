@@ -53,11 +53,11 @@ export class World {
         const asteroid = this.asteroids[this.currentAsteroid];
 
         if (asteroid.resource > 0) {
-            this.ship.arrive(asteroid.position, 60, 15, 0.2);
+            this.ship.arrive(asteroid.position, 60, 15, 1);
             if (this.ship.arrived) {
-                this.ship.mine(asteroid);
+                this.ship.mine(asteroid, 5);
             }
-        } else if (this.currentAsteroid < this.asteroids.length) {
+        } else if (this.currentAsteroid < this.asteroids.length - 1) {
             this.currentAsteroid++;
         } else {
             this.ship.arrive(new Vector3(), 45, 0, 0.2);

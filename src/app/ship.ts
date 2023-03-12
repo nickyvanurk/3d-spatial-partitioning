@@ -7,7 +7,7 @@ import { Asteroid } from './asteroid';
 const obj = new THREE.Object3D();
 
 export class Ship extends Entity {
-    maxForce = 30;
+    maxForce = 50;
     arrived = false;
 
     resource = 0;
@@ -54,10 +54,10 @@ export class Ship extends Entity {
         this.arrived = d < margin;
     }
 
-    mine(asteroid: Asteroid) {
+    mine(asteroid: Asteroid, multiplier = 1) {
         if (asteroid.resource > 0) {
-            asteroid.resource--;
-            this.resource++;
+            asteroid.resource -= multiplier;
+            this.resource += multiplier;
         }
     }
 }
