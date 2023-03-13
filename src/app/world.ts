@@ -15,6 +15,7 @@ export class World {
     asteroid: Asteroid;
     asteroids: Asteroid[];
     currentAsteroid = 0;
+    home = new Vector3();
 
     constructor(ctx: Context) {
         this.ctx = ctx;
@@ -56,7 +57,7 @@ export class World {
         } else if (this.currentAsteroid < this.asteroids.length - 1) {
             this.currentAsteroid++;
         } else {
-            this.ship.arrive(new Vector3(), 45, 0, 0.2);
+            this.ship.arrive(this.home, 45, 0, 0.2);
         }
 
         this.ship.update(dt);
