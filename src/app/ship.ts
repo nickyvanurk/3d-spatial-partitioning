@@ -11,6 +11,7 @@ export class Ship extends Entity {
     arrived = false;
 
     resource = 0;
+    miningRange = 16;
 
     constructor(ctx: Context, position = new Vector3(), rotation = new Vector3()) {
         super(new Mesh(ctx.models.get('spaceship').scene), position, rotation);
@@ -54,10 +55,15 @@ export class Ship extends Entity {
         this.arrived = d < margin;
     }
 
-    mine(asteroid: Asteroid, multiplier = 1) {
-        if (asteroid.resource > 0) {
-            asteroid.resource -= multiplier;
-            this.resource += multiplier;
+    mine(asteroid: Asteroid, multiplier = 5) {
+        const distance = asteroid.position.sub(this.position).length();
+        if (distance > this.miningRange) {
+            this.arrive(asteroid.position, 40, this.miningRange - 1, 1);
+        } else {
+            if (asteroid.resource > 0) {
+                asteroid.resource -= multiplier;
+                this.resource += multiplier;
+            }
         }
     }
 }

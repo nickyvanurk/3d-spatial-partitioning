@@ -51,12 +51,8 @@ export class World {
         // this.fleet.update(dt);
 
         const asteroid = this.asteroids[this.currentAsteroid];
-
         if (asteroid.resource > 0) {
-            this.ship.arrive(asteroid.position, 60, 15, 1);
-            if (this.ship.arrived) {
-                this.ship.mine(asteroid, 5);
-            }
+            this.ship.mine(asteroid);
         } else if (this.currentAsteroid < this.asteroids.length - 1) {
             this.currentAsteroid++;
         } else {
