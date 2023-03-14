@@ -30,24 +30,16 @@ export class Vector3 {
         return this;
     }
 
-    sub(v: Vector3) {
-        return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z);
+    static sub(v1: Vector3, v2: Vector3, target = v1.clone()) {
+        return target.set(v1).sub(v2);
     }
 
-    subScalar(s: number) {
-        return new Vector3(this.x - s, this.y - s, this.z - s);
-    }
-
-    subInPlace(v: Vector3) {
-        this.x -= v.x;
-        this.y -= v.y;
-        this.z -= v.z;
-    }
-
-    subScalarInPlace(s: number) {
-        this.x -= s;
-        this.y -= s;
-        this.z -= s;
+    sub(x: Vector3 | Array<number> | number, y?: number, z?: number) {
+        const p = parseArgs(x, y, z);
+        this.x -= p.x;
+        this.y -= p.y;
+        this.z -= p.z;
+        return this;
     }
 
     multiply(v: Vector3) {

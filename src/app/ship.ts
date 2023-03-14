@@ -35,19 +35,19 @@ export class Ship extends Entity {
     }
 
     seek(target: Vector3) {
-        const desired = target.sub(this.position);
+        const desired = Vector3.sub(target, this.position);
         desired.normalizeInPlace();
         desired.multiplyScalarInPlace(this.maxSpeed);
-        const steer = desired.sub(this.velocity);
+        const steer = Vector3.sub(desired, this.velocity);
         steer.limit(this.maxForce);
         this.applyForce(steer);
     }
 
     arrive(target: Vector3, slowRadius = 10, targetRadius = 0, margin = 0.1) {
-        const desired = target.sub(this.position);
+        const desired = Vector3.sub(target, this.position);
         const d = desired.length() - targetRadius;
         desired.setLengthInPlace(d > slowRadius ? this.maxSpeed : (d / slowRadius) * this.maxSpeed);
-        const steer = desired.sub(this.velocity);
+        const steer = Vector3.sub(desired, this.velocity);
         steer.multiplyScalarInPlace(10); // 0.1s to reach desired speed
         steer.limit(this.maxForce);
         this.applyForce(steer);
@@ -56,7 +56,7 @@ export class Ship extends Entity {
     }
 
     mine(asteroid: Asteroid, multiplier = 5) {
-        const distance = asteroid.position.sub(this.position).length();
+        const distance = Vector3.sub(asteroid.position, this.position).length();
         if (distance > this.miningRange) {
             this.arrive(asteroid.position, 40, this.miningRange - 1, 1);
         } else {
