@@ -1,7 +1,7 @@
 export class Vector3 {
     constructor(public x = 0, public y = 0, public z = 0) {}
 
-    set(x: Vector3 | Array<number> | number, y?: number, z?: number) {
+    set(x: VecArrayNum, y?: number, z?: number) {
         const p = parseArgs(x, y, z);
         this.x = p.x;
         this.y = p.y;
@@ -18,11 +18,11 @@ export class Vector3 {
         return new Vector3().copy(this);
     }
 
-    static add(v1: Vector3, v2: Vector3, target = v1.clone()) {
+    static add(v1: VecArrayNum, v2: VecArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
         return target.set(v1).add(v2);
     }
 
-    add(x: Vector3 | Array<number> | number, y?: number, z?: number) {
+    add(x: VecArrayNum, y?: number, z?: number) {
         const p = parseArgs(x, y, z);
         this.x += p.x;
         this.y += p.y;
@@ -30,11 +30,11 @@ export class Vector3 {
         return this;
     }
 
-    static sub(v1: Vector3, v2: Vector3, target = v1.clone()) {
+    static sub(v1: VecArrayNum, v2: VecArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
         return target.set(v1).sub(v2);
     }
 
-    sub(x: Vector3 | Array<number> | number, y?: number, z?: number) {
+    sub(x: VecArrayNum, y?: number, z?: number) {
         const p = parseArgs(x, y, z);
         this.x -= p.x;
         this.y -= p.y;
