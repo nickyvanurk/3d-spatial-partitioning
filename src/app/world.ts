@@ -46,7 +46,7 @@ export class World {
         } else if (this.currentAsteroid < this.asteroids.length - 1) {
             this.currentAsteroid++;
         } else {
-            this.ship.arrive(this.home, 45, 0, 0.2);
+            this.ship.arrive(this.home, 45, 0);
         }
 
         this.ship.update(dt);
