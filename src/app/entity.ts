@@ -20,21 +20,21 @@ export class Entity {
     }
 
     update(dt: number) {
-        this.velocity.addInPlace(this.acceleration.multiplyScalar(dt));
+        this.velocity.add(this.acceleration.multiplyScalar(dt));
         this.velocity.limit(this.maxSpeed);
-        this.position.addInPlace(this.velocity.multiplyScalar(dt));
-        this.rotation.addInPlace(this.angularVelocity.multiplyScalar(dt));
+        this.position.add(this.velocity.multiplyScalar(dt));
+        this.rotation.add(this.angularVelocity.multiplyScalar(dt));
     }
 
     render(alpha: number, dt: number) {
-        this.mesh.position.copy(this.position.add(this.velocity.multiplyScalar(dt * alpha)));
+        this.mesh.position.copy(Vector3.add(this.position, this.velocity.multiplyScalar(dt * alpha)));
         if (this.velocity.length() > 0 || this.angularVelocity.length() > 0) {
-            this.mesh.rotation.copy(this.rotation.add(this.angularVelocity.multiplyScalar(dt * alpha)));
+            this.mesh.rotation.copy(Vector3.add(this.rotation, this.angularVelocity.multiplyScalar(dt * alpha)));
         }
         this.mesh.update();
     }
 
     applyForce(force: Vector3) {
-        this.acceleration.addInPlace(force);
+        this.acceleration.add(force);
     }
 }

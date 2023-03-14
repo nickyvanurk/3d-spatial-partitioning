@@ -1,40 +1,33 @@
 export class Vector3 {
-    x: number;
-    y: number;
-    z: number;
+    constructor(public x = 0, public y = 0, public z = 0) {}
 
-    constructor(x = 0, y = 0, z = 0) {
-        this.set(x, y, z);
-    }
-
-    set(x: number, y: number, z: number) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    set(x: Vector3 | Array<number> | number, y?: number, z?: number) {
+        const p = parseArgs(x, y, z);
+        this.x = p.x;
+        this.y = p.y;
+        this.z = p.z;
+        return this;
     }
 
     copy(v: Vector3) {
         this.set(v.x, v.y, v.z);
+        return this;
     }
 
-    add(v: Vector3) {
-        return new Vector3(this.x + v.x, this.y + v.y, this.z + v.z);
+    clone() {
+        return new Vector3().copy(this);
     }
 
-    addScalar(s: number) {
-        return new Vector3(this.x + s, this.y + s, this.z + s);
+    static add(v1: Vector3, v2: Vector3, target = v1.clone()) {
+        return target.set(v1).add(v2);
     }
 
-    addInPlace(v: Vector3) {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
-    }
-
-    addScalarInPlace(s: number) {
-        this.x += s;
-        this.y += s;
-        this.z += s;
+    add(x: Vector3 | Array<number> | number, y?: number, z?: number) {
+        const p = parseArgs(x, y, z);
+        this.x += p.x;
+        this.y += p.y;
+        this.z += p.z;
+        return this;
     }
 
     sub(v: Vector3) {
@@ -107,6 +100,28 @@ export class Vector3 {
             this.setLengthInPlace(s);
         }
     }
+}
+
+function parseArgs(x: Vector3 | Array<number> | number, y?: number, z?: number) {
+    const p = { x: 0, y: 0, z: 0 };
+    if (x instanceof Vector3) {
+        p.x = x.x || 0;
+        p.y = x.y || 0;
+        p.z = x.z || 0;
+    } else if (x instanceof Array) {
+        p.x = x[0] || 0;
+        p.y = x[1] || 0;
+        p.z = x[2] || 0;
+    } else if (!y && !z) {
+        p.x = x || 0;
+        p.y = x || 0;
+        p.z = x || 0;
+    } else {
+        p.x = x || 0;
+        p.y = y || 0;
+        p.z = z || 0;
+    }
+    return p;
 }
 
 export class Vector2 {
