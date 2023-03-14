@@ -58,24 +58,25 @@ export class Vector3 {
         return this.x ** 2 + this.y ** 2 + this.z ** 2;
     }
 
+    get mag() {
+        return Math.sqrt(this.magSq);
+    }
+
+    set mag(s: number) {
+        this.normalizeInPlace();
+        this.mult(s);
+    }
+
     normalize() {
-        const length = this.length();
+        const length = this.mag;
         return new Vector3(this.x / length, this.y / length, this.z / length);
     }
 
     normalizeInPlace() {
-        const length = this.length();
+        const length = this.mag;
         this.x /= length;
         this.y /= length;
         this.z /= length;
-    }
-
-    length() {
-        return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2);
-    }
-
-    setLength(s: number) {
-        return Vector3.mult(this.normalize(), s);
     }
 
     setLengthInPlace(s: number) {
@@ -84,7 +85,7 @@ export class Vector3 {
     }
 
     limit(s: number) {
-        if (this.length() > s) {
+        if (this.mag > s) {
             this.setLengthInPlace(s);
         }
     }
