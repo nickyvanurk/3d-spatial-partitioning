@@ -54,6 +54,10 @@ export class Vector3 {
         return this;
     }
 
+    get magSq() {
+        return this.x ** 2 + this.y ** 2 + this.z ** 2;
+    }
+
     normalize() {
         const length = this.length();
         return new Vector3(this.x / length, this.y / length, this.z / length);
