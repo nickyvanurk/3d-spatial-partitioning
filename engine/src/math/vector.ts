@@ -77,10 +77,12 @@ export class Vector3 {
         return this;
     }
 
-    limit(s: number) {
-        if (this.mag > s) {
-            this.mag = s;
+    limit(max: number) {
+        const mSq = this.magSq;
+        if (mSq > max ** 2) {
+            this.normalize().mult(max);
         }
+        return this;
     }
 }
 
