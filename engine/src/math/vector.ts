@@ -42,24 +42,16 @@ export class Vector3 {
         return this;
     }
 
-    multiply(v: Vector3) {
-        return new Vector3(this.x * v.x, this.y * v.y, this.z * v.z);
+    static mult(v1: VecArrayNum, v2: VecArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
+        return target.set(v1).mult(v2);
     }
 
-    multiplyScalar(s: number) {
-        return new Vector3(this.x * s, this.y * s, this.z * s);
-    }
-
-    multiplyInPlace(v: Vector3) {
-        this.x *= v.x;
-        this.y *= v.y;
-        this.z *= v.z;
-    }
-
-    multiplyScalarInPlace(s: number) {
-        this.x *= s;
-        this.y *= s;
-        this.z *= s;
+    mult(x: VecArrayNum, y?: number, z?: number) {
+        const p = parseArgs(x, y, z);
+        this.x *= p.x;
+        this.y *= p.y;
+        this.z *= p.z;
+        return this;
     }
 
     normalize() {
@@ -79,12 +71,12 @@ export class Vector3 {
     }
 
     setLength(s: number) {
-        return this.normalize().multiplyScalar(s);
+        return Vector3.mult(this.normalize(), s);
     }
 
     setLengthInPlace(s: number) {
         this.normalizeInPlace();
-        this.multiplyScalarInPlace(s);
+        this.mult(s);
     }
 
     limit(s: number) {
@@ -94,7 +86,9 @@ export class Vector3 {
     }
 }
 
-function parseArgs(x: Vector3 | Array<number> | number, y?: number, z?: number) {
+type VecArrayNum = Vector3 | Array<number> | number;
+
+function parseArgs(x: VecArrayNum, y?: number, z?: number) {
     const p = { x: 0, y: 0, z: 0 };
     if (x instanceof Vector3) {
         p.x = x.x || 0;

@@ -37,7 +37,7 @@ export class Ship extends Entity {
     seek(target: Vector3) {
         const desired = Vector3.sub(target, this.position);
         desired.normalizeInPlace();
-        desired.multiplyScalarInPlace(this.maxSpeed);
+        desired.mult(this.maxSpeed);
         const steer = Vector3.sub(desired, this.velocity);
         steer.limit(this.maxForce);
         this.applyForce(steer);
@@ -48,7 +48,7 @@ export class Ship extends Entity {
         const d = desired.length() - targetRadius;
         desired.setLengthInPlace(d > slowRadius ? this.maxSpeed : (d / slowRadius) * this.maxSpeed);
         const steer = Vector3.sub(desired, this.velocity);
-        steer.multiplyScalarInPlace(10); // 0.1s to reach desired speed
+        steer.mult(10); // 0.1s to reach desired speed
         steer.limit(this.maxForce);
         this.applyForce(steer);
 
