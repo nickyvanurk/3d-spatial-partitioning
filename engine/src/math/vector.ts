@@ -1,7 +1,7 @@
 export class Vector3 {
     constructor(public x = 0, public y = 0, public z = 0) {}
 
-    set(x: VecArrayNum, y?: number, z?: number) {
+    set(x: Vec3ArrayNum, y?: number, z?: number) {
         const p = parseArgs(x, y, z);
         this.x = p.x;
         this.y = p.y;
@@ -13,11 +13,11 @@ export class Vector3 {
         return new Vector3().set(this);
     }
 
-    static add(v1: VecArrayNum, v2: VecArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
+    static add(v1: Vec3ArrayNum, v2: Vec3ArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
         return target.set(v1).add(v2);
     }
 
-    add(x: VecArrayNum, y?: number, z?: number) {
+    add(x: Vec3ArrayNum, y?: number, z?: number) {
         const p = parseArgs(x, y, z);
         this.x += p.x;
         this.y += p.y;
@@ -25,11 +25,11 @@ export class Vector3 {
         return this;
     }
 
-    static sub(v1: VecArrayNum, v2: VecArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
+    static sub(v1: Vec3ArrayNum, v2: Vec3ArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
         return target.set(v1).sub(v2);
     }
 
-    sub(x: VecArrayNum, y?: number, z?: number) {
+    sub(x: Vec3ArrayNum, y?: number, z?: number) {
         const p = parseArgs(x, y, z);
         this.x -= p.x;
         this.y -= p.y;
@@ -37,11 +37,11 @@ export class Vector3 {
         return this;
     }
 
-    static mult(v1: VecArrayNum, v2: VecArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
+    static mult(v1: Vec3ArrayNum, v2: Vec3ArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
         return target.set(v1).mult(v2);
     }
 
-    mult(x: VecArrayNum, y?: number, z?: number) {
+    mult(x: Vec3ArrayNum, y?: number, z?: number) {
         const p = parseArgs(x, y, z);
         this.x *= p.x;
         this.y *= p.y;
@@ -81,14 +81,98 @@ export class Vector3 {
     }
 }
 
-type VecArrayNum = Vector3 | number[] | number;
+export class Vector2 {
+    constructor(public x = 0, public y = 0) {}
 
-function parseArgs(x: VecArrayNum, y?: number, z?: number) {
+    set(x: Vec2ArrayNum, y?: number) {
+        const p = parseArgs(x, y);
+        this.x = p.x;
+        this.y = p.y;
+        return this;
+    }
+
+    clone() {
+        return new Vector2().set(this);
+    }
+
+    static add(v1: Vec2ArrayNum, v2: Vec2ArrayNum, target = v1 instanceof Vector2 ? v1.clone() : new Vector2()) {
+        return target.set(v1).add(v2);
+    }
+
+    add(x: Vec2ArrayNum, y?: number) {
+        const p = parseArgs(x, y);
+        this.x += p.x;
+        this.y += p.y;
+        return this;
+    }
+
+    static sub(v1: Vec2ArrayNum, v2: Vec2ArrayNum, target = v1 instanceof Vector2 ? v1.clone() : new Vector2()) {
+        return target.set(v1).sub(v2);
+    }
+
+    sub(x: Vec2ArrayNum, y?: number) {
+        const p = parseArgs(x, y);
+        this.x -= p.x;
+        this.y -= p.y;
+        return this;
+    }
+
+    static mult(v1: Vec2ArrayNum, v2: Vec2ArrayNum, target = v1 instanceof Vector2 ? v1.clone() : new Vector2()) {
+        return target.set(v1).mult(v2);
+    }
+
+    mult(x: Vec2ArrayNum, y?: number) {
+        const p = parseArgs(x, y);
+        this.x *= p.x;
+        this.y *= p.y;
+        return this;
+    }
+
+    get magSq() {
+        return this.x ** 2 + this.y ** 2;
+    }
+
+    get mag() {
+        return Math.sqrt(this.magSq);
+    }
+
+    set mag(s: number) {
+        this.normalize();
+        this.mult(s);
+    }
+
+    static normalize(v: Vector2, target = v.clone()) {
+        return target.set(v).normalize();
+    }
+
+    normalize() {
+        const len = this.mag;
+        if (len !== 0) this.mult(1 / len);
+        return this;
+    }
+
+    limit(max: number) {
+        const mSq = this.magSq;
+        if (mSq > max ** 2) {
+            this.normalize().mult(max);
+        }
+        return this;
+    }
+}
+
+type Vec3ArrayNum = Vector3 | number[] | number;
+type Vec2ArrayNum = Vector2 | number[] | number;
+
+function parseArgs(x: Vec3ArrayNum | Vec2ArrayNum, y?: number, z?: number) {
     const p = { x: 0, y: 0, z: 0 };
     if (x instanceof Vector3) {
         p.x = x.x || 0;
         p.y = x.y || 0;
         p.z = x.z || 0;
+    } else if (x instanceof Vector2) {
+        p.x = x.x || 0;
+        p.y = x.y || 0;
+        p.z = 0;
     } else if (x instanceof Array) {
         p.x = x[0] || 0;
         p.y = x[1] || 0;
@@ -103,91 +187,4 @@ function parseArgs(x: VecArrayNum, y?: number, z?: number) {
         p.z = z || 0;
     }
     return p;
-}
-
-export class Vector2 {
-    x: number;
-    y: number;
-
-    constructor(x = 0, y = 0) {
-        this.set(x, y);
-    }
-
-    set(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-    }
-
-    copy(v: Vector2) {
-        this.set(v.x, v.y);
-    }
-
-    add(v: Vector2) {
-        return new Vector2(this.x + v.x, this.y + v.y);
-    }
-
-    addScalar(s: number) {
-        return new Vector2(this.x + s, this.y + s);
-    }
-
-    addInPlace(v: Vector2) {
-        this.x += v.x;
-        this.y += v.y;
-    }
-
-    addScalarInPlace(s: number) {
-        this.x += s;
-        this.y += s;
-    }
-
-    sub(v: Vector2) {
-        return new Vector2(this.x - v.x, this.y - v.y);
-    }
-
-    subScalar(s: number) {
-        return new Vector2(this.x - s, this.y - s);
-    }
-
-    subInPlace(v: Vector2) {
-        this.x -= v.x;
-        this.y -= v.y;
-    }
-
-    subScalarInPlace(s: number) {
-        this.x -= s;
-        this.y -= s;
-    }
-
-    multiply(v: Vector2) {
-        return new Vector2(this.x * v.x, this.y * v.y);
-    }
-
-    multiplyScalar(s: number) {
-        return new Vector2(this.x * s, this.y * s);
-    }
-
-    multiplyInPlace(v: Vector2) {
-        this.x *= v.x;
-        this.y *= v.y;
-    }
-
-    multiplyScalarInPlace(s: number) {
-        this.x *= s;
-        this.y *= s;
-    }
-
-    normalize() {
-        const length = this.length();
-        return new Vector3(this.x / length, this.y / length);
-    }
-
-    normalizeInPlace() {
-        const length = this.length();
-        this.x /= length;
-        this.y /= length;
-    }
-
-    length() {
-        return Math.sqrt(this.x ** 2 + this.y ** 2);
-    }
 }
