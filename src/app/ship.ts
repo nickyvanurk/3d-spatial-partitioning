@@ -46,7 +46,7 @@ export class Ship extends Entity {
     arrive(target: Vector3, slowRadius = 10, targetRadius = 0, margin = 0.1) {
         const desired = Vector3.sub(target, this.position);
         const d = desired.mag - targetRadius;
-        desired.setLengthInPlace(d > slowRadius ? this.maxSpeed : (d / slowRadius) * this.maxSpeed);
+        desired.mag = d > slowRadius ? this.maxSpeed : (d / slowRadius) * this.maxSpeed;
         const steer = Vector3.sub(desired, this.velocity);
         steer.mult(10); // 0.1s to reach desired speed
         steer.limit(this.maxForce);

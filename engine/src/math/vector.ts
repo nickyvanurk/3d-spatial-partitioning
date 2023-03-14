@@ -77,14 +77,9 @@ export class Vector3 {
         return this;
     }
 
-    setLengthInPlace(s: number) {
-        this.normalize();
-        this.mult(s);
-    }
-
     limit(s: number) {
         if (this.mag > s) {
-            this.setLengthInPlace(s);
+            this.mag = s;
         }
     }
 }
