@@ -81,7 +81,7 @@ export class Vector3 {
     }
 }
 
-type VecArrayNum = Vector3 | Array<number> | number;
+type VecArrayNum = Vector3 | number[] | number;
 
 function parseArgs(x: VecArrayNum, y?: number, z?: number) {
     const p = { x: 0, y: 0, z: 0 };
