@@ -36,7 +36,7 @@ export class Ship extends Entity {
 
     seek(target: Vector3) {
         const desired = Vector3.sub(target, this.position);
-        desired.normalizeInPlace();
+        desired.normalize();
         desired.mult(this.maxSpeed);
         const steer = Vector3.sub(desired, this.velocity);
         steer.limit(this.maxForce);

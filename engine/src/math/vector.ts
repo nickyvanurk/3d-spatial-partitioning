@@ -63,24 +63,22 @@ export class Vector3 {
     }
 
     set mag(s: number) {
-        this.normalizeInPlace();
+        this.normalize();
         this.mult(s);
     }
 
-    normalize() {
-        const length = this.mag;
-        return new Vector3(this.x / length, this.y / length, this.z / length);
+    static normalize(v: Vector3, target = v.clone()) {
+        return target.set(v).normalize();
     }
 
-    normalizeInPlace() {
-        const length = this.mag;
-        this.x /= length;
-        this.y /= length;
-        this.z /= length;
+    normalize() {
+        const len = this.mag;
+        if (len !== 0) this.mult(1 / len);
+        return this;
     }
 
     setLengthInPlace(s: number) {
-        this.normalizeInPlace();
+        this.normalize();
         this.mult(s);
     }
 
