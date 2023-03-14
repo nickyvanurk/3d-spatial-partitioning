@@ -14,8 +14,8 @@ export class Entity {
         this.position = position;
         this.rotation = rotation;
 
-        this.mesh.position.copy(position);
-        this.mesh.rotation.copy(rotation);
+        this.mesh.position.set(position);
+        this.mesh.rotation.set(rotation);
         this.mesh.update();
     }
 
@@ -27,9 +27,9 @@ export class Entity {
     }
 
     render(alpha: number, dt: number) {
-        this.mesh.position.copy(Vector3.add(this.position, Vector3.mult(this.velocity, dt * alpha)));
+        this.mesh.position.set(Vector3.add(this.position, Vector3.mult(this.velocity, dt * alpha)));
         if (this.velocity.mag > 0 || this.angularVelocity.mag > 0) {
-            this.mesh.rotation.copy(Vector3.add(this.rotation, Vector3.mult(this.angularVelocity, dt * alpha)));
+            this.mesh.rotation.set(Vector3.add(this.rotation, Vector3.mult(this.angularVelocity, dt * alpha)));
         }
         this.mesh.update();
     }

@@ -9,13 +9,8 @@ export class Vector3 {
         return this;
     }
 
-    copy(v: Vector3) {
-        this.set(v.x, v.y, v.z);
-        return this;
-    }
-
     clone() {
-        return new Vector3().copy(this);
+        return new Vector3().set(this);
     }
 
     static add(v1: VecArrayNum, v2: VecArrayNum, target = v1 instanceof Vector3 ? v1.clone() : new Vector3()) {
