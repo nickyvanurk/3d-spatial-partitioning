@@ -22,7 +22,7 @@ export class Ship extends Entity {
 
     update(dt: number) {
         super.update(dt);
-        this.acceleration.set(0, 0, 0);
+        this.acceleration.set(0);
 
         obj.lookAt(new THREE.Vector3(this.velocity.x, this.velocity.y, this.velocity.z));
         this.rotation.x = obj.rotation.x;
@@ -38,19 +38,19 @@ export class Ship extends Entity {
         const desired = Vector3.sub(target, this.position);
         desired.normalize();
         desired.mult(this.maxSpeed);
-        const steer = Vector3.sub(desired, this.velocity);
-        steer.limit(this.maxForce);
-        this.applyForce(steer);
+        desired.sub(this.velocity);
+        desired.limit(this.maxForce);
+        this.applyForce(desired);
     }
 
     arrive(target: Vector3, slowRadius = 10, targetRadius = 0, margin = 0.1) {
         const desired = Vector3.sub(target, this.position);
         const d = desired.mag - targetRadius;
         desired.mag = d > slowRadius ? this.maxSpeed : (d / slowRadius) * this.maxSpeed;
-        const steer = Vector3.sub(desired, this.velocity);
-        steer.mult(10); // 0.1s to reach desired speed
-        steer.limit(this.maxForce);
-        this.applyForce(steer);
+        desired.sub(this.velocity);
+        desired.mult(10); // 0.1s to reach desired speed
+        desired.limit(this.maxForce);
+        this.applyForce(desired);
 
         this.arrived = d < margin;
     }
