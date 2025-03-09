@@ -108,7 +108,11 @@ function onWindowResize() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 }
 
-function onDoubleClickEvent() {
+function onDoubleClickEvent(event: MouseEvent) {
+    if (event.target !== canvas) {
+        return;
+    }
+
     if (!document.fullscreenElement) {
         document.querySelector('body').requestFullscreen();
     } else {
