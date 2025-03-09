@@ -40,7 +40,7 @@ let uiObj = {
     separation: 4.5,
     alignment: 0.1,
     cohesion: 0.1,
-    maxSpeed: 2.2,
+    maxSpeed: 1,
     maxForce: 0.25,
     octreeWireframe: true,
 };
