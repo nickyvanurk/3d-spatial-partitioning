@@ -116,17 +116,13 @@
             color: white;
             text-shadow: 1px 1px black;
             border-radius: 1em;
+            max-width: 320px;
         }
 
         #info h1 {
             font-family: "Montserrat", sans-serif;
             margin-bottom: 0.5em;
             font-size: 1.5rem;
-        }
-
-        #info h2 {
-            font-family: "Montserrat", sans-serif;
-            font-size: 1rem;
         }
 
         #info p {
@@ -166,13 +162,16 @@
 </head>
 <body>
     <div id="info">
-        <h2>N. van Urk 2023</h2>
         <h1>Spatial Partitioning</h1>
-        <p>Click and drag to move the camera.</p>
+
+        <p>This project visualizes a 3D implementation of the Boids flocking algorithm using an octree.</p>
+        <p>It was created to explore and demonstrate the spatial partitioning optimization technique, which enhances the performance of simulations involving numerous interacting objects.</p>
+
         <p>
             <button id="pauseBtn">Pause</button>
             <button id="resetBtn">Reset</button>
         </p>
+
         <p>Made with <a target="blank" href="https://threejs.org/">three.js</a>.</p>
     </div>
 
