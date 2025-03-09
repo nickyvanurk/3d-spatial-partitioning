@@ -8,15 +8,9 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { BoundingBox, Octree } from './octree';
 import { Boid } from './boid';
 
-const debug = window.location.hash === '#debug';
+const debug = true;
 
 let stats;
-
-if (debug) {
-    stats = new Stats();
-    stats.showPanel(0);
-    document.body.appendChild(stats.dom);
-}
 
 const regionWidth = 400;
 const regionHeight = 400;
@@ -155,7 +149,7 @@ function update() {
             uiObj.perceptionRadius,
             uiObj.perceptionRadius
         );
-        
+
         const nearbyBoids = octree.query(boidBoundBox);
 
         boid.flock(nearbyBoids);
@@ -219,10 +213,6 @@ let paused = false;
 function animate() {
     requestAnimationFrame(animate);
 
-    if (debug) {
-        stats.begin();
-    }
-
     controls.update();
 
     if (!paused) {
@@ -230,10 +220,6 @@ function animate() {
     }
 
     render();
-
-    if (debug) {
-        stats.end();
-    }
 }
 
 init();
